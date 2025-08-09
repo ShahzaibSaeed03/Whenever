@@ -4,13 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { WorkService } from '../../service/work-service.service';
 import * as pdfjsLib from 'pdfjs-dist/build/pdf.mjs';
-
-// @ts-ignore
-import pdfjsWorkerPath from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
-import { ViewWorkDetailsComponent } from "../view-work-details/view-work-details.component";
-
-(pdfjsLib as any).GlobalWorkerOptions.workerSrc = pdfjsWorkerPath;
-
+import { GlobalWorkerOptions } from 'pdfjs-dist';
+GlobalWorkerOptions.workerSrc = 'assets/pdf.worker.min.js';
 
 
 @Component({
