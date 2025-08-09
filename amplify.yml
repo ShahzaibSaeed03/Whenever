@@ -10,4 +10,13 @@ frontend:
         - npm install     # Install dependencies
     build:
       commands:
-        - npm run build   # Run the build command
+        - echo "Building Angular app..."
+        - npm run build   # Build Angular app
+  artifacts:
+    # Specify the folder where the build artifacts are located
+    baseDirectory: dist/gen-certificate/browser  # Replace 'your-app-name' with the actual output folder name
+    files:
+      - '**/*'  # Include all files in the dist directory
+  cache:
+    paths:
+      - node_modules/**/*  # Cache node_modules to speed up future builds
