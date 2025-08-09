@@ -1,0 +1,6 @@
+table {
+  border-collapse: collapse;
+}
+td {
+  border: 1px solid #e5e7eb; /* Tailwind gray-200 */
+}

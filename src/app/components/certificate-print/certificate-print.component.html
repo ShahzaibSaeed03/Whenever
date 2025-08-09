@@ -1,0 +1,52 @@
+<!-- Certificate Container -->
+<div
+  #pdfContent
+  *ngIf="work"
+  class="print-container bg-white p-6 sm:p-8 text-black max-w-[850px] mx-auto border border-gray-300 rounded-md shadow-sm"
+>
+
+  <!-- Heading -->
+  <h1 class="text-2xl font-bold text-center mb-6">📜 Copyright Certificate</h1>
+
+  <!-- Body -->
+  <p class="mb-4 text-sm sm:text-base"><strong>The file below is copyrighted:</strong></p>
+
+  <div class="space-y-4 text-sm sm:text-base text-gray-800 leading-relaxed">
+
+    <p><strong>Work Title:</strong><br /> {{ work.title }}</p>
+
+    <p><strong>Copyright Owner:</strong><br /> John Doe</p>
+
+    <p><strong>Reference Number:</strong><br /> REF-{{ work.id }}</p>
+
+    <p><strong>Registration Date:</strong><br /> 13 July 2025 10:52:30</p>
+
+    <p><strong>Timestamping Authority:</strong><br /> Open Timestamps</p>
+
+    <p>
+      <strong>Copyrighted File Name:</strong><br />
+      {{ (work.fileUrl ? work.fileUrl.split('/').pop() : 'N/A') }}
+    </p>
+
+    <p>
+      <strong>File SHA256 Fingerprint:</strong><br />
+      <span class="break-all">{{ work.password || 'N/A' }}</span>
+    </p>
+  </div>
+</div>
+
+<!-- Action Buttons (Hide on Print) -->
+<div class="text-center mt-8 print:hidden">
+  <button
+    (click)="print()"
+    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded mr-4 transition"
+  >
+    🖨️ Print Certificate
+  </button>
+  <button
+    (click)="downloadPdf()"
+    class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded transition"
+  >
+    📥 Download PDF
+  </button>
+</div>

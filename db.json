@@ -1,0 +1,11 @@
+{
+  "works": [
+    {
+      "id": "2",
+      "title": "Business Plan Draft",
+      "certificateUrl": "sample_certificate.pdf",
+      "fileUrl": "assets/plan.docx",
+      "password": ""
+    }
+  ]
+}

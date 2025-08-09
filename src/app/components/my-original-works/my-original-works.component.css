@@ -1,0 +1,43 @@
+.card-hover-effect {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+.status-badge {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.375rem;
+}
+.status-active {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+.status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+.expand-button:after {
+    content: '+';
+    display: inline-block;
+    margin-left: 0.5rem;
+    transition: transform 0.3s ease;
+}
+.expanded .expand-button:after {
+    content: '-';
+}
+.expandable-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+.expanded .expandable-content {
+    max-height: 1000px;
+}

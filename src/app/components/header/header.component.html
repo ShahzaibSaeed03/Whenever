@@ -1,0 +1,45 @@
+<header class="bg-gray-900 text-white shadow-md">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <a routerLink="/" class="text-xl font-bold tracking-wide">Wheneverr</a>
+
+    <!-- Mobile Toggle -->
+    <button class="lg:hidden" (click)="toggleMenu()" aria-label="Toggle menu">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+           viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+
+    <!-- Desktop Nav -->
+    <nav class="hidden lg:flex gap-6 text-sm">
+      <a routerLink="/upload" routerLinkActive="font-semibold underline">Upload</a>
+      <a routerLink="/verify" routerLinkActive="font-semibold underline">Verify</a>
+      <a routerLink="/my-original-works" routerLinkActive="font-semibold underline">My Works</a>
+      <a routerLink="/upload-faq" routerLinkActive="font-semibold underline">FAQ</a>
+      <a  (click)="logout()"> LogOut</a>
+    </nav>
+
+  </div>
+
+  <!-- Mobile Nav -->
+  <div *ngIf="menuOpen" class="lg:hidden bg-gray-800">
+    <nav class="flex flex-col px-4 pb-4 pt-2 space-y-2 text-sm">
+      <a routerLink="/upload" routerLinkActive="font-semibold underline"
+         class="block py-2 px-3 rounded hover:bg-gray-700 transition" (click)="closeMenu()">
+        Upload
+      </a>
+      <a routerLink="/verify" routerLinkActive="font-semibold underline"
+         class="block py-2 px-3 rounded hover:bg-gray-700 transition" (click)="closeMenu()">
+        Verify
+      </a>
+      <a routerLink="/my-original-works" routerLinkActive="font-semibold underline"
+         class="block py-2 px-3 rounded hover:bg-gray-700 transition" (click)="closeMenu()">
+        My Works
+      </a>
+      <a routerLink="/upload-faq" routerLinkActive="font-semibold underline"
+         class="block py-2 px-3 rounded hover:bg-gray-700 transition" (click)="closeMenu()">
+        FAQ
+      </a>
+    </nav>
+  </div>
+</header>

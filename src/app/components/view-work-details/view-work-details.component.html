@@ -1,0 +1,6 @@
+<div *ngIf="workData">
+  <p><strong>Status:</strong> {{ workData.status }}</p>
+  <p><strong>Message:</strong> {{ workData.message }}</p>
+  <pre class="bg-gray-100 p-2 rounded">{{ workData.details }}</pre>
+  <p *ngIf="workData.error"><strong>Error:</strong> {{ workData.error }}</p>
+</div>
