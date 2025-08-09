@@ -1,0 +1,13 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - echo "Installing Node.js v20..."
+        - nvm install 20  # Install Node.js v20
+        - nvm use 20      # Use Node.js v20
+        - node -v         # Verify Node version
+        - npm install     # Install dependencies
+    build:
+      commands:
+        - npm run build   # Run the build command
