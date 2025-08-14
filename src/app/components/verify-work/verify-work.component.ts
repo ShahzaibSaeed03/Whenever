@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { WorkService } from '../../service/work-service.service';
-import * as pdfjsLib from 'pdfjs-dist/build/pdf.mjs';
 import { GlobalWorkerOptions } from 'pdfjs-dist';
-GlobalWorkerOptions.workerSrc = 'assets/pdf.worker.min.js';
+    import * as pdfjsLib from 'pdfjs-dist';
 
+
+// Set the worker source path correctly (ensure the file is renamed to pdf.worker.min.js)
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'assets/pdf.worker.min.mjs';
 
 @Component({
   selector: 'app-verify-work',
@@ -43,79 +45,77 @@ export class VerifyWorkComponent {
   backendResponse: any = null; // Add this line to declare backendResponse
 
   // Main verification flow
-async verify() {
-  this.errorMessage = '';
-  this.successMessage = '';
-  this.tsaResult = null;
-  this.backendResponse = null;  // Clear previous response
+  async verify() {
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.tsaResult = null;
+    this.backendResponse = null;  // Clear previous response
 
-  if (!this.file || !this.certificate || !this.otsFile) {
-    this.errorMessage = 'Please first select the file to be verified, its certificate and its .ots file.';
-    console.error("❌ Missing file(s)", {
-      file: this.file,
-      certificate: this.certificate,
-      otsFile: this.otsFile
-    });
-    return;
-  }
-
-  this.isVerifying = true;
-
-  try {
-    const fileFingerprint = await this.calculateSHA256(this.file);
-    const certFingerprint = await this.extractFingerprintFromPDF(this.certificate);
-
-    if (!certFingerprint || fileFingerprint !== certFingerprint) {
-      this.isVerifying = false;
-      this.errorMessage = 'File doesn’t match the certificate.';
-      this.toastr.error(this.errorMessage);
+    if (!this.file || !this.certificate || !this.otsFile) {
+      this.errorMessage = 'Please first select the file to be verified, its certificate and its .ots file.';
+      console.error("❌ Missing file(s)", {
+        file: this.file,
+        certificate: this.certificate,
+        otsFile: this.otsFile
+      });
       return;
     }
 
-    const formData = new FormData();
-    formData.append('originalFile', this.file);
-    formData.append('certificate', this.certificate);
-    formData.append('ots', this.otsFile);
+    this.isVerifying = true;
 
-    this.workService.verifyWork(formData).subscribe(
-      (res: any) => {
-        console.log("✅ Backend Response:", res);
-                this.blocks = res.otsStatus.blocks || []; // Assign blocks from response
+    try {
+      const fileFingerprint = await this.calculateSHA256(this.file);
+      const certFingerprint = await this.extractFingerprintFromPDF(this.certificate);
 
+      if (!certFingerprint || fileFingerprint !== certFingerprint) {
         this.isVerifying = false;
-        
-        // Store the backend response in a variable to display it
-        this.backendResponse = res;
+        this.errorMessage = 'File doesn’t match the certificate.';
+        this.toastr.error(this.errorMessage);
+        return;
+      }
 
-        if (res?.otsStatus) {
-          this.successMessage = res.message || 'Verification completed.';
-          this.tsaResult = {
-            status: res.otsStatus.status,
-            message: res.otsStatus.message,
-            details: res.otsStatus.details,
-            error: res.otsStatus.error
-          };
-        } else {
-          this.errorMessage = 'Unexpected response format.';
+      const formData = new FormData();
+      formData.append('originalFile', this.file);
+      formData.append('certificate', this.certificate);
+      formData.append('ots', this.otsFile);
+
+      this.workService.verifyWork(formData).subscribe(
+        (res: any) => {
+          console.log("✅ Backend Response:", res);
+          this.blocks = res.otsStatus.anchors || []; // Assign blocks from response
+
+          this.isVerifying = false;
+          
+          // Store the backend response in a variable to display it
+          this.backendResponse = res;
+
+          if (res?.otsStatus) {
+            this.successMessage = res.message || 'Verification completed.';
+            this.tsaResult = {
+              status: res.otsStatus.status,
+              message: res.otsStatus.message,
+              details: res.otsStatus.details,
+              error: res.otsStatus.error
+            };
+          } else {
+            this.errorMessage = 'Unexpected response format.';
+            this.toastr.error(this.errorMessage);
+          }
+        },
+        (error) => {
+          this.isVerifying = false;
+          console.error("❌ Backend Error:", error);
+          this.errorMessage = error.error?.message || 'Something went wrong. Please try again.';
           this.toastr.error(this.errorMessage);
         }
-      },
-      (error) => {
-        this.isVerifying = false;
-        console.error("❌ Backend Error:", error);
-        this.errorMessage = error.error?.message || 'Something went wrong. Please try again.';
-        this.toastr.error(this.errorMessage);
-      }
-    );
-  } catch (err) {
-    this.isVerifying = false;
-    console.error("❌ Unexpected Error:", err);
-    this.errorMessage = 'Error reading files. Please try again.';
-    this.toastr.error(this.errorMessage);
+      );
+    } catch (err) {
+      this.isVerifying = false;
+      console.error("❌ Unexpected Error:", err);
+      this.errorMessage = 'Error reading files. Please try again.';
+      this.toastr.error(this.errorMessage);
+    }
   }
-}
-
-
 
   // Calculate SHA256 fingerprint of a file
   private calculateSHA256(file: File): Promise<string> {
@@ -137,12 +137,14 @@ async verify() {
     });
   }
 
-  // Extract SHA256 fingerprint from PDF certificate
+  // Extract SHA256 fingerprint from PDF certificate (without the worker)
   private async extractFingerprintFromPDF(pdfFile: File): Promise<string | null> {
+    // Load PDF directly in the main thread without a worker
     const pdfData = new Uint8Array(await pdfFile.arrayBuffer());
     const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
     let fingerprint: string | null = null;
 
+    // Extract the fingerprint from the text content of each page
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();

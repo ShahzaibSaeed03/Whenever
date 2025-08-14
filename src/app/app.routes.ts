@@ -7,6 +7,7 @@ import { CertificateDisplayComponent } from './components/certificate-display/ce
 import { CertificatePrintComponent } from './components/certificate-print/certificate-print.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterUserComponent } from './components/register-user/register-user.component';
+import { ViewWorkDetailsComponent } from './components/view-work-details/view-work-details.component';
 
 
 export const routes: Routes = [
@@ -19,5 +20,7 @@ export const routes: Routes = [
   { path: 'certificate-print/:id', component: CertificatePrintComponent },
   {path:'login',component:LoginComponent},
   {path:'registerUser',component:RegisterUserComponent},
+    { path: 'view-work', component: ViewWorkDetailsComponent },
+
   { path: '**', redirectTo: 'upload' } // fallback route (404 → redirect to upload)
 ];

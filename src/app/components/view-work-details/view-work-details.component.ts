@@ -1,24 +1,44 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { WorkService } from '../../service/work-service.service';
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-view-work-details',
-  imports: [CommonModule,FormsModule],
+    imports: [CommonModule,FormsModule],
+
   templateUrl: './view-work-details.component.html',
   styleUrls: ['./view-work-details.component.css']
 })
-export class ViewWorkDetailsComponent {
+export class ViewWorkDetailsComponent implements OnInit {
+//  @Input() workId: string = ''; 
+  workData: any = null;
+  errorMessage: string = '';
+  successMessage: string = '';
 
-  @Input() workData: any = null; // Verify ka result yaha milega
+  constructor(private workService: WorkService) {}
 
-  getStatusClass(status: string) {
-    switch (status) {
-      case 'confirmed': return 'bg-green-100 text-green-800';
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'not-found': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
+  ngOnInit(): void {
+ 
+      this.fetchWorkData();  // Call fetch work data if workId is available
+  
   }
 
-}
+  // Fetch work data from the backend API using the workId
+  fetchWorkData(): void {
+    this.workService.getWorkByIds().subscribe(
+      (response) => {
+        console.log('Work data fetched successfully:', response);
+        if (response.success) {
+          this.workData = response.data;
+          this.successMessage = 'Work data retrieved successfully!';
+        } else {
+          this.errorMessage = 'Failed to retrieve work data.';
+        }
+      },
+      (error) => {
+        this.errorMessage = 'An error occurred while fetching the work data.';
+      }
+    );
+  }}

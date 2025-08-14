@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { WorkService } from '../../service/work-service.service';
 import { ToastrService } from 'ngx-toastr';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-upload-work',
-  imports: [CommonModule, NgIf],
+  imports: [CommonModule, NgIf,FormsModule ],
   templateUrl: './upload-work.component.html',
   styleUrls: ['./upload-work.component.css']
 })
@@ -15,6 +16,11 @@ export class UploadWorkComponent {
   workupload = false;
   uploadedData: any = null;
   isUploading = false;
+
+  // Define the properties to bind to the input fields
+  workTitle: string = '';  // Binding to workTitle input
+  additionalOwners: string = '';  // Binding to additionalOwners input
+  copyrightOwner: string = '';  // Binding to copyrightOwner input
 
   constructor(
     private workS: WorkService,
@@ -48,13 +54,13 @@ Please compress your file before retrying.`;
   }
 
   upload() {
-    if (!this.selectedFile) {
-      this.errorMessage = 'Please select a valid file before uploading.';
+    if (!this.selectedFile || !this.workTitle || !this.additionalOwners || !this.copyrightOwner) {
+      this.errorMessage = 'Please complete all fields before uploading.';
       return;
     }
 
     this.isUploading = true;
-    this.workS.uploadedfileed(this.selectedFile).subscribe(
+    this.workS.uploadedfileed(this.selectedFile, this.workTitle, this.additionalOwners, this.copyrightOwner).subscribe(
       (res: any) => {
         this.isUploading = false;
         if (res.status === 'success') {

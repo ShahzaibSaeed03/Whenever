@@ -13,7 +13,7 @@ export interface Work {
 
 @Injectable({ providedIn: 'root' })
 export class WorkService {
-  private apiUrl = 'http://13.238.200.159/api/';
+  private apiUrl = 'https://api.mycopyrightally.com/api/';
   loginUrl = 'users/login'
   registerUrl = 'users'
   uploadfile='works/upload'
@@ -36,6 +36,15 @@ export class WorkService {
   updateTitle(id: number, title: string): Observable<Work> {
     return this.http.patch<Work>(`${this.apiUrl}/${id}`, { title });
   }
+getWorkByIds(): Observable<any> {
+  const token = localStorage.getItem('token'); // Assuming the token is stored under 'authToken'
+  const headers = new HttpHeaders({
+    Authorization: token ? `Bearer ${token}` : ''
+  });
+  console.log(`Calling API: ${this.apiUrl}shares/access/7829401cf976f5abf07da21ec72df32165fcb3ed71b3842bd0d130823e8e115b`);
+
+  return this.http.get<any>(`${this.apiUrl}shares/access/7829401cf976f5abf07da21ec72df32165fcb3ed71b3842bd0d130823e8e115b`, { headers });
+}
 
 
 getWorkById(id: any): Observable<Work> {
@@ -57,12 +66,13 @@ getWorkById(id: any): Observable<Work> {
   register(body: any) {
     return this.http.post(this.apiUrl + this.registerUrl, body)
   }
-  uploadedfileed(file: File) {
+  uploadedfileed( file: File, workTitle: string, additionalOwners: string, copyrightOwner: string) {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('workTitle','Ownership Argeement');
-    formData.append('additionalOwners',"{'test@gmail.com'}")
-    formData.append('copyrightOwner','AR')
+    formData.append('workTitle', workTitle);
+    formData.append('additionalOwners', additionalOwners);
+    formData.append('copyrightOwner', copyrightOwner);
+
     const headers = new HttpHeaders({
       Authorization: this.authToken ? "Bearer "+this.authToken : '',
  

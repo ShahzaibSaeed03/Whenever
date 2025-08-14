@@ -1,6 +1,25 @@
-<div *ngIf="workData">
-  <p><strong>Status:</strong> {{ workData.status }}</p>
-  <p><strong>Message:</strong> {{ workData.message }}</p>
-  <pre class="bg-gray-100 p-2 rounded">{{ workData.details }}</pre>
-  <p *ngIf="workData.error"><strong>Error:</strong> {{ workData.error }}</p>
+<div class="mt-6 max-w-3xl mx-auto">
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="bg-green-50 border border-green-300 text-green-700 p-4 rounded-md">
+    <p>{{ successMessage }}</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="bg-red-50 border border-red-300 text-red-700 p-4 rounded-md">
+    <p>{{ errorMessage }}</p>
+  </div>
+
+  <!-- Work Data -->
+  <div *ngIf="workData" class="bg-white border border-gray-200 p-6 rounded-md shadow-sm">
+    <h2 class="text-xl font-semibold text-gray-800">{{ workData.title }}</h2>
+    <p class="mt-2 text-sm text-gray-600">File: <strong>{{ workData.file_name }}</strong></p>
+
+    <div class="mt-4">
+      <a [href]="workData.downloadUrl" target="_blank" class="text-blue-600 underline">Download File</a>
+    </div>
+
+    <div class="mt-4">
+      <a [href]="workData.certificateUrl" target="_blank" class="text-blue-600 underline">View Certificate</a>
+    </div>
+  </div>
 </div>
