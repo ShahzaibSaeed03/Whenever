@@ -24,7 +24,7 @@ export const routes: Routes = [
 
   // Authentication routes
   { path: 'login', component: LoginComponent },
-  { path: 'registerUser', component: RegisterUserComponent },
+  { path: 'register', component: RegisterUserComponent },
 
   // Fallback
   { path: '**', redirectTo: 'upload' },

@@ -1,21 +1,28 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { WorkService } from '../../service/work-service.service';
-import { ToastrModule,ToastrService } from 'ngx-toastr';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,ToastrModule],
+  imports: [CommonModule, ReactiveFormsModule, ToastrModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   loginForm: FormGroup;
   errorMsg = '';
+  loading = false;  // ✅ loading state
 
-  constructor(private fb: FormBuilder, private authService: WorkService,private _toastrS:ToastrService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: WorkService,
+    private _toastrS: ToastrService,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
     });
@@ -25,32 +32,34 @@ export class LoginComponent {
     return this.loginForm.controls;
   }
 
-onSubmit() {
-  if (this.loginForm.invalid) return;
+  onSubmit() {
+    if (this.loginForm.invalid) return;
 
-  this.authService.login(this.loginForm.value).subscribe(
-    (res: any) => {
-      console.log('Full Login Response:', res); // See full response in console
+    this.loading = true; // ✅ start spinner
 
-      const token = res.token;
-      const userId = res.id;
+    this.authService.login(this.loginForm.value).subscribe(
+      (res: any) => {
+        this.loading = false; // ✅ stop spinner
 
-      if (token && userId) {
-        localStorage.setItem('token', token);
-        localStorage.setItem('userId', userId); // ✅ Store ID here
-        this._toastrS.success('User Login');
-        this.router.navigateByUrl('/upload');
-      } else {
-        this._toastrS.error('Login failed: token or ID missing');
-        console.warn('Login Response missing token or ID:', res);
+
+        const token = res.token;
+        const userId = res.id;
+
+        if (token && userId) {
+          localStorage.setItem('token', token);
+          localStorage.setItem('userId', userId);
+          this._toastrS.success('User Login');
+          this.router.navigateByUrl('/upload');
+        } else {
+          this._toastrS.error('Login failed: token or ID missing');
+          console.warn('Login Response missing token or ID:', res);
+        }
+      },
+      (error) => {
+        this.loading = false; // ✅ stop spinner
+        console.error('Login Error:', error);
+        this._toastrS.error('Login failed. Please try again.');
       }
-    },
-    (error) => {
-      console.error('Login Error:', error);
-      this._toastrS.error('Login failed. Please try again.');
-    }
-  );
-}
-
-
+    );
+  }
 }

@@ -11,7 +11,7 @@
   
         <!-- Heading -->
         <div class="text-center">
-          <h1 class="text-3xl font-bold text-gray-800">Welcome Back</h1>
+          <h1 class="text-3xl font-bold text-gray-800">Welcome</h1>
           <p class="text-sm text-gray-500 mt-1"> Register </p>
         </div>
   
@@ -47,14 +47,25 @@
           </div> -->
   
           <!-- Submit Button -->
-          <button
-            type="submit"
-            [disabled]="registerForm.invalid"
-            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-200"
-          >
-         Register User
-          </button>
-  
+        <button
+  type="submit"
+  [disabled]="registerForm.invalid || loading"
+  class="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-200"
+>
+  <ng-container *ngIf="!loading; else spinner">
+    Register
+  </ng-container>
+  <ng-template #spinner>
+       <span  class="ml-2 animate-spin fas fa-spinner"></span>
+
+  </ng-template>
+</button>
+
+     <p class="text-center text-sm text-gray-600">
+          Already have an account?
+          <a routerLink="/login" class="text-blue-600 hover:text-blue-700 font-medium">Login</a>
+        </p>
+
           <!-- Error -->
           <div *ngIf="errorMsg" class="text-center text-red-600 text-sm">
             {{ errorMsg }}
