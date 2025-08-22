@@ -1,33 +1,37 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { WorkService } from '../../service/work-service.service';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { WorkService } from '../../service/work-service.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-view-work-details',
-    imports: [CommonModule,FormsModule],
-
+  imports: [CommonModule, FormsModule],
   templateUrl: './view-work-details.component.html',
   styleUrls: ['./view-work-details.component.css']
 })
 export class ViewWorkDetailsComponent implements OnInit {
-//  @Input() workId: string = ''; 
   workData: any = null;
   errorMessage: string = '';
   successMessage: string = '';
 
-  constructor(private workService: WorkService) {}
+  constructor(
+    private workService: WorkService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
- 
-      this.fetchWorkData();  // Call fetch work data if workId is available
-  
+    // Get workId from route params
+    const workId = this.route.snapshot.paramMap.get('workId');
+    if (workId) {
+      this.fetchWorkData(workId);
+    } else {
+      this.errorMessage = 'Work ID not provided!';
+    }
   }
 
-  // Fetch work data from the backend API using the workId
-  fetchWorkData(): void {
-    this.workService.getWorkByIds().subscribe(
+  fetchWorkData(workId: any): void {
+    this.workService.getWorkByIds(workId).subscribe(
       (response) => {
         console.log('Work data fetched successfully:', response);
         if (response.success) {
@@ -39,6 +43,8 @@ export class ViewWorkDetailsComponent implements OnInit {
       },
       (error) => {
         this.errorMessage = 'An error occurred while fetching the work data.';
+        console.error(error);
       }
     );
-  }}
+  }
+}

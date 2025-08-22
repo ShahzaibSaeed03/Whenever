@@ -1,102 +1,65 @@
 <div class="max-w-6xl mx-auto">
+    <div *ngIf="!isLoggedIn" class="text-center py-10">
+    <p class="text-lg font-semibold text-red-600">⚠ Please login first to see your work.</p>
+    <button routerLink="/login"
+      class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700">
+      Go to Login
+    </button>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <ng-container *ngFor="let item of data">
+      <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover-effect">
+        <div class="p-6">
+          
+          <!-- Title and Status -->
+          <div class="flex justify-between items-start mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">{{ item?.title }}</h2>
+            <span class="status-badge status-active">{{ item?.status }}</span>
+          </div>
 
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <ng-container *ngFor="let item of data">
-            <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover-effect">
-                <div class="p-6">
-                    <div class="flex justify-between items-start">
-                        <h2 class="text-xl font-semibold text-gray-800 mb-2">{{item?.title}}</h2>
-                        <span class="status-badge status-active">{{item?.status}}</span>
-                    </div>
-
-                    <div class="mb-4">
-                        <div class="flex items-center space-x-2 mb-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-
-                            <span class="text-sm text-gray-500">Document ID: {{item?.displayed_ID}}</span>
-                        </div>
-                        <div class="flex items-center space-x-2 mb-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <span class="text-sm text-gray-500">Registered: {{item?.registration_date |date }}</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            <span class="text-sm text-gray-500">File: {{item?.file_name}}</span>
-                        </div>
-                    </div>
-
-                    <button class="text-blue-600 hover:text-blue-800 text-sm font-medium expand-button"
-                        onclick="toggleDetails('details1')">
-                        View Details
-                    </button>
-                    <!-- Share Work button -->
-    <!-- Button with shareWork method and programmatic navigation -->
-<button *ngIf="item?._id" (click)="shareWork(item?._id)" 
-        class="w-full mt-4 py-2 px-4 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200">
-  <i class="fas fa-share-alt mr-2"></i> Share Work
-</button>
-
-
-
-
-
-                    <!-- Debugging -->
-
-
-                    <div id="details1" class="expandable-content mt-4 border-t border-gray-100 pt-4">
-                        <div class="space-y-3">
-                            <div>
-                                <h3 class="text-sm font-medium text-gray-500">Copyright Owner</h3>
-                                <p class="mt-1 text-sm text-gray-900">{{item?.copyright_owner}}</p>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-medium text-gray-500">Additional Owners</h3>
-                                <p class="mt-1 text-sm text-gray-900">{{item?.additional_copyright_owners}}</p>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-medium text-gray-500">Client</h3>
-                                <p class="mt-1 text-sm text-gray-900">{{item?.client?.email}}</p>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-medium text-gray-500">Certificate</h3>
-                                <div class="mt-1 text-sm text-gray-900">
-                                    <p>Name: {{item?.certificate?.name}}</p>
-                                    <p>Date: {{item?.certificate?.date | date}}</p>
-                                    <p>TSA: <span class="status-badge status-pending">{{item?.certificate?.TSA}}</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- <div class="mt-4 flex space-x-3">
-                                <button class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                    Download File
-                                </button>
-                                <button class="px-4 py-2 bg-white text-gray-700 text-sm font-medium rounded-md border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                    Manage
-                                </button>
-                            </div> -->
-                    </div>
-                </div>
+          <!-- Work Details -->
+          <div class="mb-4 space-y-1">
+            <div class="flex items-center space-x-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span class="text-sm text-gray-500">Document ID: {{ item?.displayed_ID }}</span>
             </div>
-        </ng-container>
-        <!-- Card 1 -->
 
+            <div class="flex items-center space-x-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span class="text-sm text-gray-500">Registered: {{ item?.registration_date | date }}</span>
+            </div>
 
+            <div class="flex items-center space-x-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span class="text-sm text-gray-500">File: {{ item?.file_name }}</span>
+            </div>
+          </div>
 
-    </div>
-</div>
-<!-- <app-view-work-details [workId]="workIdFromParent"></app-view-work-details> -->
+          <!-- Expandable Details -->
+          <button class="text-blue-600 hover:text-blue-800 text-sm font-medium expand-button">
+            View Details
+          </button>
+
+          <!-- Share Work Button -->
+          <button *ngIf="item?._id" (click)="shareWork(item?._id)"
+            class="w-full mt-4 py-2 px-4 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200">
+            <i class="fas fa-share-alt mr-2"></i> Share Work
+          </button>
+
+          <!-- Detailed Info Section -->
+          <div class="expandable-content mt-4 border-t border-gray-100 pt-4">
+            <div class="space-y-3">
+              <div>
+                <h3 class="text-sm font-medium text-gray-500">Copyright Owner</h3>
+                <p class="mt-1 text-sm text-gray-900">{{ item?.copyright_owner }}</p>
+              </div>
+
+              <div>
+                <h3 class="text-sm font-medium text-gray-500">Additional Owners</h3>
+                <p class="mt-1 text-sm text-gray-900">{{ item?.additional_cop_

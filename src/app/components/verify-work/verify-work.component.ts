@@ -3,12 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { WorkService } from '../../service/work-service.service';
-import { GlobalWorkerOptions } from 'pdfjs-dist';
-    import * as pdfjsLib from 'pdfjs-dist';
+import * as pdfjsLib from 'pdfjs-dist';
 
-
-// Set the worker source path correctly (ensure the file is renamed to pdf.worker.min.js)
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'assets/pdf.worker.min.mjs';
+// Set the worker source path correctly
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'assets/pdf.worker.min.mjs';
 
 @Component({
   selector: 'app-verify-work',
@@ -22,10 +20,11 @@ export class VerifyWorkComponent {
   otsFile: File | null = null;
 
   errorMessage = '';
-  successMessage = '';
+successMessage: string | null = null;
   tsaResult: any = null;
   isVerifying = false;
-  blocks: any[] = []; // To store Bitcoin blocks data
+  blocks: any[] = [];
+  backendResponse: any = null;
 
   constructor(
     private workService: WorkService,
@@ -42,21 +41,21 @@ export class VerifyWorkComponent {
     else if (type === 'certificate') this.certificate = selectedFile;
     else if (type === 'otsFile') this.otsFile = selectedFile;
   }
-  backendResponse: any = null; // Add this line to declare backendResponse
 
   // Main verification flow
   async verify() {
     this.errorMessage = '';
     this.successMessage = '';
     this.tsaResult = null;
-    this.backendResponse = null;  // Clear previous response
+    this.backendResponse = null;
 
     if (!this.file || !this.certificate || !this.otsFile) {
-      this.errorMessage = 'Please first select the file to be verified, its certificate and its .ots file.';
-      console.error("❌ Missing file(s)", {
+      this.errorMessage =
+        'Please first select the file to be verified, its certificate and its .ots file.';
+      console.error('❌ Missing file(s)', {
         file: this.file,
         certificate: this.certificate,
-        otsFile: this.otsFile
+        otsFile: this.otsFile,
       });
       return;
     }
@@ -81,12 +80,9 @@ export class VerifyWorkComponent {
 
       this.workService.verifyWork(formData).subscribe(
         (res: any) => {
-          console.log("✅ Backend Response:", res);
-          this.blocks = res.otsStatus.anchors || []; // Assign blocks from response
-
+          console.log('✅ Backend Response:', res);
+          this.blocks = res.otsStatus.anchors || [];
           this.isVerifying = false;
-          
-          // Store the backend response in a variable to display it
           this.backendResponse = res;
 
           if (res?.otsStatus) {
@@ -95,7 +91,7 @@ export class VerifyWorkComponent {
               status: res.otsStatus.status,
               message: res.otsStatus.message,
               details: res.otsStatus.details,
-              error: res.otsStatus.error
+              error: res.otsStatus.error,
             };
           } else {
             this.errorMessage = 'Unexpected response format.';
@@ -104,14 +100,14 @@ export class VerifyWorkComponent {
         },
         (error) => {
           this.isVerifying = false;
-          console.error("❌ Backend Error:", error);
+          console.error('❌ Backend Error:', error);
           this.errorMessage = error.error?.message || 'Something went wrong. Please try again.';
           this.toastr.error(this.errorMessage);
         }
       );
     } catch (err) {
       this.isVerifying = false;
-      console.error("❌ Unexpected Error:", err);
+      console.error('❌ Unexpected Error:', err);
       this.errorMessage = 'Error reading files. Please try again.';
       this.toastr.error(this.errorMessage);
     }
@@ -126,7 +122,7 @@ export class VerifyWorkComponent {
           const buffer = reader.result as ArrayBuffer;
           const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
           const hashArray = Array.from(new Uint8Array(hashBuffer));
-          const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+          const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
           resolve(hashHex);
         } catch (err) {
           reject(err);
@@ -137,19 +133,17 @@ export class VerifyWorkComponent {
     });
   }
 
-  // Extract SHA256 fingerprint from PDF certificate (without the worker)
+  // Extract SHA256 fingerprint from PDF certificate
   private async extractFingerprintFromPDF(pdfFile: File): Promise<string | null> {
-    // Load PDF directly in the main thread without a worker
     const pdfData = new Uint8Array(await pdfFile.arrayBuffer());
     const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
     let fingerprint: string | null = null;
 
-    // Extract the fingerprint from the text content of each page
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();
       const text = textContent.items.map((item: any) => item.str).join(' ');
-      const match = text.match(/[a-f0-9]{64}/i); // SHA256 regex
+      const match = text.match(/[a-f0-9]{64}/i);
       if (match) {
         fingerprint = match[0].toLowerCase();
         break;

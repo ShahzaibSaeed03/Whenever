@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-
-import { PasswordModalComponent } from '../password-modal/password-modal.component';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+
 import { Work, WorkService } from '../../service/work-service.service';
-import { ViewWorkDetailsComponent } from "../view-work-details/view-work-details.component";
 
 @Component({
   selector: 'app-my-original-works',
-  standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './my-original-works.component.html',
 })
@@ -17,63 +15,64 @@ export class MyOriginalWorksComponent implements OnInit {
   works: Work[] = [];
   data: any[] = [];
   workIdFromParent: string = ''; 
-  
-  showPasswordModal = false;
-  selectedWorkTitle = '';
-  selectedWorkId: number | null = null;
+  isLoggedIn: boolean = false;
 
-  constructor(private workService: WorkService, private router: Router) {}
+  constructor(
+    private workService: WorkService,
+    private router: Router,
+    private toastr: ToastrService   // ✅ inject Toastr
+  ) {}
 
   ngOnInit(): void {
-    this.getallworkDetails();
-  }
-
-  getallworkDetails() {
     const userId = localStorage.getItem('userId');
-
-    if (userId) {
-      this.workService.getWorkById(userId).subscribe((res: any) => {
-        console.log('Work details fetched successfully:', res);
-        this.data = res.data;
-      }, (error) => {
-        console.error('Error fetching work details', error);
-      });
+    if (!userId) {
+      this.isLoggedIn = false;
+      this.toastr.warning('Please login first to see your work.');
+      console.warn('User not logged in');
     } else {
-      console.error('User ID not found in localStorage');
+      this.isLoggedIn = true;
+      this.getallworkDetails(userId);
     }
   }
 
-  // Method to share the work by passing the work ID
+  getallworkDetails(userId: string) {
+    this.workService.getWorkById(userId).subscribe(
+      (res: any) => {
+        console.log('Work details fetched successfully:', res);
+        this.data = res.data;
+      },
+      (error) => {
+        console.error('Error fetching work details', error);
+        this.toastr.error('Failed to fetch your works.');
+      }
+    );
+  }
+
   shareWork(workId: any): void {
-    console.log('Sharing work with ID:', workId);
+    if (!this.isLoggedIn) {
+      this.toastr.warning('Please login first to share your work.');
+      this.router.navigate(['/login']);
+      return;
+    }
 
     this.workService.shareWork(workId).subscribe(
       (response) => {
-        console.log('Work shared successfully:', response);
-
-        // Extract the new work ID from the response shareUrl
         this.workIdFromParent = response.shareUrl.split('/').pop()!;
-        console.log('Work ID from Parent:', this.workIdFromParent);
-
-        // Copy the share URL to the clipboard
-        const shareLink = `https://mycopyrightally.com/api/shares/access/${this.workIdFromParent}`;
-        navigator.clipboard.writeText(shareLink).then(
-          () => {
-            console.log('Link copied to clipboard');
-            alert('Work link copied to clipboard!');
-          },
-          (err) => {
+        const shareLink = `https://mycopyrightally.com/view-work/${this.workIdFromParent}`;
+        navigator.clipboard.writeText(shareLink)
+          .then(() => {
+            this.toastr.success('Work link copied to clipboard!');
+          })
+          .catch((err) => {
             console.error('Error copying link to clipboard:', err);
-            alert('Failed to copy link to clipboard. Please try again.');
-          }
-        );
+            this.toastr.error('Failed to copy link to clipboard.');
+          });
 
-        // After sharing work, navigate to the work details page
-        this.router.navigate([`/view-work/${this.workIdFromParent}`]);
+        // this.router.navigate([`/view-work/${this.workIdFromParent}`]);
       },
       (error) => {
         console.error('Error sharing work:', error);
-        alert('Failed to share work. Please try again.');
+        this.toastr.error('Failed to share work. Please try again.');
       }
     );
   }

@@ -1,16 +1,27 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Route, Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   imports: [CommonModule, RouterModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
   menuOpen = false;
-constructor(private router:Router){}
+  isLoggedIn = false;
+
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.checkLogin();
+  }
+
+  checkLogin() {
+    this.isLoggedIn = !!localStorage.getItem('token'); // true if token exists
+  }
+
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }
@@ -18,8 +29,10 @@ constructor(private router:Router){}
   closeMenu() {
     this.menuOpen = false;
   }
-  logout(){
-    localStorage.removeItem('token')
-    this.router.navigateByUrl('/login')
+
+  logout() {
+    localStorage.removeItem('token');
+    this.isLoggedIn = false;
+    this.router.navigateByUrl('/login');
   }
 }

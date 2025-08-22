@@ -11,35 +11,56 @@
     </button>
 
     <!-- Desktop Nav -->
-    <nav class="hidden lg:flex gap-6 text-sm">
-      <a routerLink="/upload" routerLinkActive="font-semibold underline">Upload</a>
-      <a routerLink="/verify" routerLinkActive="font-semibold underline">Verify</a>
-      <a routerLink="/my-original-works" routerLinkActive="font-semibold underline">My Works</a>
-      <a routerLink="/upload-faq" routerLinkActive="font-semibold underline">FAQ</a>
-      <a  (click)="logout()"> LogOut</a>
-    </nav>
+<!-- Desktop Nav -->
+<nav class="hidden lg:flex gap-6 text-sm">
+  <a routerLink="/upload" routerLinkActive="font-semibold underline">Upload</a>
+  <a routerLink="/verify" routerLinkActive="font-semibold underline">Verify</a>
+  <a routerLink="/my-original-works" routerLinkActive="font-semibold underline">My Works</a>
+  <a routerLink="/upload-faq" routerLinkActive="font-semibold underline">FAQ</a>
+
+  <!-- Show Login/Logout -->
+  <a *ngIf="isLoggedIn; else loginBtn" (click)="logout()" class="cursor-pointer">Logout</a>
+  <ng-template #loginBtn>
+    <a routerLink="/login" routerLinkActive="font-semibold underline">Login</a>
+  </ng-template>
+</nav>
+
 
   </div>
 
   <!-- Mobile Nav -->
-  <div *ngIf="menuOpen" class="lg:hidden bg-gray-800">
-    <nav class="flex flex-col px-4 pb-4 pt-2 space-y-2 text-sm">
-      <a routerLink="/upload" routerLinkActive="font-semibold underline"
-         class="block py-2 px-3 rounded hover:bg-gray-700 transition" (click)="closeMenu()">
-        Upload
+<!-- Mobile Nav -->
+<div *ngIf="menuOpen" class="lg:hidden bg-gray-800">
+  <nav class="flex flex-col px-4 pb-4 pt-2 space-y-2 text-sm">
+    <a routerLink="/upload" routerLinkActive="font-semibold underline"
+       class="block py-2 px-3 rounded hover:bg-gray-700 transition" (click)="closeMenu()">
+      Upload
+    </a>
+    <a routerLink="/verify" routerLinkActive="font-semibold underline"
+       class="block py-2 px-3 rounded hover:bg-gray-700 transition" (click)="closeMenu()">
+      Verify
+    </a>
+    <a routerLink="/my-original-works" routerLinkActive="font-semibold underline"
+       class="block py-2 px-3 rounded hover:bg-gray-700 transition" (click)="closeMenu()">
+      My Works
+    </a>
+    <a routerLink="/upload-faq" routerLinkActive="font-semibold underline"
+       class="block py-2 px-3 rounded hover:bg-gray-700 transition" (click)="closeMenu()">
+      FAQ
+    </a>
+
+    <!-- Show Login/Logout -->
+    <a *ngIf="isLoggedIn; else loginBtnMobile" (click)="logout()" 
+       class="block py-2 px-3 rounded hover:bg-gray-700 transition cursor-pointer">
+      Logout
+    </a>
+    <ng-template #loginBtnMobile>
+      <a routerLink="/login" (click)="closeMenu()"
+         class="block py-2 px-3 rounded hover:bg-gray-700 transition">
+        Login
       </a>
-      <a routerLink="/verify" routerLinkActive="font-semibold underline"
-         class="block py-2 px-3 rounded hover:bg-gray-700 transition" (click)="closeMenu()">
-        Verify
-      </a>
-      <a routerLink="/my-original-works" routerLinkActive="font-semibold underline"
-         class="block py-2 px-3 rounded hover:bg-gray-700 transition" (click)="closeMenu()">
-        My Works
-      </a>
-      <a routerLink="/upload-faq" routerLinkActive="font-semibold underline"
-         class="block py-2 px-3 rounded hover:bg-gray-700 transition" (click)="closeMenu()">
-        FAQ
-      </a>
-    </nav>
-  </div>
+    </ng-template>
+  </nav>
+</div>
+
 </header>

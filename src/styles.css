@@ -1,2 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+@font-face {
+  font-family: 'Calibri';
+  src: url('assets/font/calibri-font-family/calibri-regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Calibri', sans-serif;
+}

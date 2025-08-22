@@ -12,3 +12,21 @@
 .animate-slide-in {
   animation: slideIn 0.4s ease-out;
 }
+.bg-image {
+  background-image: url('/Certif.png');
+  background-size: cover;      /* makes sure it covers the whole div */
+  background-position: center; /* centers the image */
+  background-repeat: no-repeat;
+  /* optional: add a subtle overlay */
+  height: 85vh; /* full viewport height */
+  width: 480px;
+  position: relative;
+}
+.bg-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0,0,0,0.5); /* dark overlay */
+  border-radius: inherit; /* keeps rounded corners */
+  z-index: -1;
+}
