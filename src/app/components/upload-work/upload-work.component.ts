@@ -25,95 +25,85 @@ export class UploadWorkComponent {
   additionalOwners: string = '';  // Binding to additionalOwners input
   copyrightOwner: string = '';  // Binding to copyrightOwner input
   owner: string = "";
+showError = false;
 
   constructor(
     private workS: WorkService,
     private toast: ToastrService
   ) { }
 
-  onFileChange(event: any) {
-    this.errorMessage = '';
-    const file: File = event.target.files[0];
-    if (!file) return;
+onFileChange(event: any) {
+  this.errorMessage = '';
+  const file: File = event.target.files[0];
+  if (!file) return;
 
-    const ext = file.name.split('.').pop()?.toLowerCase();
-    const sizeMB = file.size / (1024 * 1024);
+  const ext = file.name.split('.').pop()?.toLowerCase();
+  const sizeMB = file.size / (1024 * 1024);
 
-    // File size limit: 120 MB
-    if (sizeMB > 120) {
-      this.errorMessage = `The size of your file is ${Math.round(sizeMB * 100) / 100} MB.
+  if (sizeMB > 120) {
+    this.errorMessage = `The size of your file is ${Math.round(sizeMB * 100) / 100} MB.
 This exceeds our file size limit of 120 MB.
 Please compress your file before retrying.`;
-      return;
-    }
-
-    // Block .exe and .js
-    if (ext === 'exe' || ext === 'js') {
-      this.errorMessage = `We don’t accept .exe or javascript files`;
-      return;
-    }
-
-    // Passed validation
-    this.selectedFile = file;
+    this.showError = true;
+    return;
   }
 
-  upload() {
-    // Reset previous error
-    this.errorMessage = '';
+  if (ext === 'exe' || ext === 'js') {
+    this.errorMessage = `We don’t accept .exe or javascript files`;
+    this.showError = true;
+    return;
+  }
 
-    // Validate all fields
-    if (!this.selectedFile || !this.workTitle || !this.additionalOwners || !this.copyrightOwner) {
-      this.errorMessage = 'Please complete all fields before uploading.';
-      this.toast.error(this.errorMessage);
-      return;
-    }
+  this.selectedFile = file;
+}
 
-    // Set uploading state
-    this.isUploading = true;
+upload() {
+  this.errorMessage = '';
+  this.showError = false;
 
-    // Call the upload service
-    this.workS.uploadFile(this.selectedFile, this.workTitle, this.additionalOwners, this.copyrightOwner)
-      .subscribe(
-        (res: any) => {
-          this.isUploading = false;
+  if (!this.selectedFile || !this.workTitle || !this.additionalOwners || !this.copyrightOwner) {
+    this.errorMessage = 'Please complete all fields before uploading.';
+    this.showError = true;
+    return;
+  }
 
-          if (res && res.status === 'success') {
-            // Save user inputs locally for display
-            this.uploadedData = {
-              owner: this.copyrightOwner,
-              additionalOwners: this.additionalOwners,
-              title: this.workTitle,
-              file_name: this.selectedFile?.name,
-              original_file_url: '' // If you want, can generate a blob URL here for download
-            };
+  this.isUploading = true;
 
-                this.uploadedDatas = {
-              owner: this.copyrightOwner,
-              additionalOwners: this.additionalOwners,
-              title: this.workTitle,
-              file_name: this.selectedFile?.name,
-              original_file_url: '' // If you want, can generate a blob URL here for download
-            };
-            // Clear form fields
-            this.selectedFile = null;
-            this.workTitle = '';
-            this.additionalOwners = '';
-            this.copyrightOwner = '';
-            this.uploadedData = res.data;
+  this.workS.uploadFile(this.selectedFile, this.workTitle, this.additionalOwners, this.copyrightOwner)
+    .subscribe(
+      (res: any) => {
+        this.isUploading = false;
 
-            this.workupload = true;
-            this.toast.success('Work uploaded successfully');
-          } else {
-            const message = res?.message || 'Error uploading work';
-            this.toast.error(message);
-          }
-        },
-        (error) => {
-          this.isUploading = false;
-          this.toast.error('Error uploading work: ' + (error.message || 'Unknown'));
+        if (res && res.status === 'success') {
+          this.uploadedData = res.data;
+          this.workupload = true;
+
+          // Reset fields
+          this.selectedFile = null;
+          this.workTitle = '';
+          this.additionalOwners = '';
+          this.copyrightOwner = '';
+        } else {
+          this.errorMessage = 'Oops! Something went wrong while uploading your work. Please try again later.';
+          this.showError = true;
+          console.error('Upload error response:', res); // log full response for debugging
         }
-      );
-  }
+      },
+      (error) => {
+        this.isUploading = false;
+        this.errorMessage = 'Oops! Something went wrong while uploading your work. Please try again later.';
+        this.showError = true;
+        console.error('Upload failed:', error); // log real error in console
+      }
+    );
+}
+
+
+// Close error modal
+closeError() {
+  this.showError = false;
+  this.errorMessage = '';
+}
 
 
 

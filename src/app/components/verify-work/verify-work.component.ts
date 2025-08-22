@@ -18,8 +18,8 @@ export class VerifyWorkComponent {
   file: File | null = null;
   certificate: File | null = null;
   otsFile: File | null = null;
+  errorMessage: string | null = null;
 
-  errorMessage = '';
 successMessage: string | null = null;
   tsaResult: any = null;
   isVerifying = false;
@@ -69,7 +69,6 @@ successMessage: string | null = null;
       if (!certFingerprint || fileFingerprint !== certFingerprint) {
         this.isVerifying = false;
         this.errorMessage = 'File doesn’t match the certificate.';
-        this.toastr.error(this.errorMessage);
         return;
       }
 
@@ -95,21 +94,18 @@ successMessage: string | null = null;
             };
           } else {
             this.errorMessage = 'Unexpected response format.';
-            this.toastr.error(this.errorMessage);
           }
         },
         (error) => {
           this.isVerifying = false;
           console.error('❌ Backend Error:', error);
           this.errorMessage = error.error?.message || 'Something went wrong. Please try again.';
-          this.toastr.error(this.errorMessage);
         }
       );
     } catch (err) {
       this.isVerifying = false;
       console.error('❌ Unexpected Error:', err);
       this.errorMessage = 'Error reading files. Please try again.';
-      this.toastr.error(this.errorMessage);
     }
   }
 
