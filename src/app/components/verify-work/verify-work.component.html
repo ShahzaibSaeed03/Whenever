@@ -1,5 +1,5 @@
 <div class="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-6 sm:py-10">
-  <div class="w-full max-w-lg sm:max-w-5xl bg-blue-100 border border-gray-200 shadow-md rounded-xl p-4 sm:p-8">
+  <div class="w-full max-w-lg sm:max-w-3xl bg-blue-100 border border-gray-200 shadow-md rounded-xl p-4 sm:p-8">
 
     <!-- Heading -->
     <div class="mb-5 sm:mb-6">
@@ -16,39 +16,33 @@
     <div class="space-y-5 sm:space-y-6 text-sm text-gray-700">
 
       <!-- Original File -->
-      <div class="mb-4 flex items-center gap-3">
-        <label class="font-medium text-gray-800 w-[25%] text-sm sm:text-base">
-          File to verify:
-        </label>
-        <div class=" bg-[#507897] text-white uppercase font-medium w-32 flex items-center gap-2  px-1 py-2 rodded-md">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+        <label class="font-medium text-gray-800 w-full sm:w-[25%] text-sm sm:text-base">File to verify:</label>
+        <div class="bg-[#507897] text-white uppercase font-medium w-full sm:w-32 flex items-center justify-center px-2 py-2 rounded-md cursor-pointer">
           Choose File
         </div>
         <input type="file" (change)="onFileChange($event, 'file')"
-          class="block w-full border border-gray-300 rounded-md px-3 bg-white py-2 focus:ring-blue-500 text-sm" />
+          class="block w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 bg-white focus:ring-blue-500 text-sm" />
       </div>
 
       <!-- Certificate -->
-      <div class="mb-4 flex items-center gap-3">
-        <label class="font-medium text-gray-800 w-[25%] text-sm sm:text-base">
-          Certificate:
-        </label>
-        <div class=" bg-[#507897] text-white uppercase font-medium flex items-center gap-2 w-32 px-1 py-2 rodded-md">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+        <label class="font-medium text-gray-800 w-full sm:w-[25%] text-sm sm:text-base">Certificate:</label>
+        <div class="bg-[#507897] text-white uppercase font-medium w-full sm:w-32 flex items-center justify-center px-2 py-2 rounded-md cursor-pointer">
           Choose File
         </div>
         <input type="file" accept=".pdf" (change)="onFileChange($event, 'certificate')"
-          class="block w-full border border-gray-300 bg-white rounded px-3 py-2 focus:ring-purple-500 text-sm" />
+          class="block w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 bg-white focus:ring-purple-500 text-sm" />
       </div>
 
       <!-- Timestamp File -->
-      <div class="mb-4 flex items-center gap-3">
-        <label class="font-medium text-gray-800 w-[25%] text-sm sm:text-base">
-         .ots File: 
-        </label>
-        <div class=" bg-[#507897] text-white uppercase font-medium flex items-center gap-2 w-32 px-1 py-2 rodded">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+        <label class="font-medium text-gray-800 w-full sm:w-[25%] text-sm sm:text-base">.ots File:</label>
+        <div class="bg-[#507897] text-white uppercase font-medium w-full sm:w-32 flex items-center justify-center px-2 py-2 rounded-md cursor-pointer">
           Choose File
         </div>
         <input type="file" accept=".ots" (change)="onFileChange($event, 'otsFile')"
-          class="block w-full border border-gray-300 bg-white rounded-md px-3 py-2 focus:ring-orange-500 text-sm" />
+          class="block w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 bg-white focus:ring-orange-500 text-sm" />
       </div>
 
       <!-- Error Message -->
@@ -69,9 +63,9 @@
       </div>
 
       <!-- Verify Button -->
-      <div>
+      <div class="flex justify-center sm:justify-start">
         <button (click)="verify()" [disabled]="isVerifying"
-          class=" bg-[#507897] hover:bg-blue-400 text-white px-5 ml-16 py-2 rounded-md text-sm font-medium flex items-center justify-center gap-2 w-fit">
+          class="bg-[#507897] hover:bg-blue-400 text-white px-5 py-2 rounded-md text-sm sm:text-base font-medium flex items-center justify-center gap-2 w-full sm:w-auto">
           <i class="fas fa-check-circle"></i> Verify Work
         </button>
       </div>
@@ -81,9 +75,9 @@
 
 <!-- Success Result Overlay -->
 <div *ngIf="successMessage"
- class="fixed inset-0 bg-black/60 flex justify-center items-center z-50 px-4">
-  <div class="bg-green-50 border border-green-300 text-green-700 p-6 rounded-lg shadow-lg max-w-3xl w-full">
-    <div class="flex justify-between items-center mb-4">
+ class="fixed inset-0 bg-black/60 flex justify-center items-center z-50 px-4 overflow-auto">
+  <div class="bg-green-50 border border-green-300 text-green-700 p-6 rounded-lg shadow-lg max-w-full sm:max-w-3xl w-full">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
       <div class="flex items-center gap-2">
         <i class="fas fa-check-circle text-green-600 text-xl"></i>
         <span class="font-semibold text-lg">{{ successMessage }}</span>
@@ -92,11 +86,11 @@
         class="text-white bg-red-600 hover:bg-red-700 rounded-full px-3 py-1 text-lg">&times;</button>
     </div>
 
-    <div *ngIf="backendResponse">
+    <div *ngIf="backendResponse" class="overflow-x-auto">
       <h4 class="text-lg font-medium text-gray-800">Bitcoin Block Verification</h4>
       <h5>{{ backendResponse.otsStatus.message }}</h5>
 
-      <table class="min-w-full table-auto mt-2 border-collapse border border-gray-200">
+      <table class="min-w-full table-auto mt-2 border-collapse border border-gray-200 text-sm">
         <thead>
           <tr class="bg-gray-100">
             <th class="text-left p-2 border border-gray-300">Block Number</th>
@@ -105,8 +99,8 @@
         </thead>
         <tbody>
           <tr *ngFor="let block of blocks" class="border-b">
-            <td class="p-2 text-sm text-gray-700">{{ block.block }}</td>
-            <td class="p-2 text-sm text-blue-600">{{ block.merkleroot }}</td>
+            <td class="p-2 text-gray-700">{{ block.block }}</td>
+            <td class="p-2 text-blue-600 break-words">{{ block.merkleroot }}</td>
           </tr>
         </tbody>
       </table>
@@ -116,9 +110,10 @@
   </div>
 </div>
 
-<div *ngIf="errorMessage" class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4">
-  <div class="bg-red-50 border border-red-300 text-red-700 p-6 rounded-lg shadow-lg max-w-3xl w-full">
-    <div class="flex justify-between items-center mb-4">
+<!-- Error Overlay -->
+<div *ngIf="errorMessage" class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4 overflow-auto">
+  <div class="bg-red-50 border border-red-300 text-red-700 p-6 rounded-lg shadow-lg max-w-full sm:max-w-3xl w-full">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
       <div class="flex items-center gap-2">
         <i class="fas fa-exclamation-circle text-red-600 text-xl"></i>
         <span class="font-semibold text-lg">Error</span>

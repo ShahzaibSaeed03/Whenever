@@ -57,6 +57,7 @@ export class MyOriginalWorksComponent implements OnInit {
 
     this.workService.shareWork(workId).subscribe(
       (response) => {
+        console.log('Work shared successfully:', response);
         this.workIdFromParent = response.shareUrl.split('/').pop()!;
         const shareLink = `https://mycopyrightally.com/view-work/${this.workIdFromParent}`;
         navigator.clipboard.writeText(shareLink)
