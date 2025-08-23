@@ -67,30 +67,78 @@
 
 <!-- Certificate Display -->
 <ng-container *ngIf="workupload">
-  <div class="fixed inset-0 bg-black/60 flex justify-center flex-col items-center z-50 px-4 sm:px-0">
+  <div class="fixed inset-0 bg-black/60 flex justify-center flex-col items-center z-50 px-0 sm:px-0 ">
     <button class="absolute top-2 right-4 sm:right-10 border-white border text-white bg-red-700 rounded-md px-3 sm:px-4 py-1 sm:py-2 text-2xl"
         (click)="closeDetailbox()">&times;</button>
-    <div class="rounded-lg shadow-lg p-4 sm:p-6 relative bg-white w-full sm:max-w-2xl">
-      <div class="certificate space-y-4 sm:space-y-6 mt-8 sm:mt-12 text-sm sm:text-base text-gray-700">
-        <p><strong>Work Title:</strong> {{ uploadedData?.title }}</p>
-        <p><strong>Copyright Owner:</strong> {{ uploadedDatas?.owner || copyrightOwner }}</p>
-        <p *ngIf="uploadedData?.additionalOwners"><strong>Additional Copyright Owners:</strong> {{ uploadedData?.additionalOwners }}</p>
-        <p><strong>Reference Number:</strong> {{ uploadedData?.displayed_id }}</p>
-        <p><strong>Registration Date:</strong> {{ uploadedData?.registration_date | date:'dd MMM yyyy HH:mm:ss' }}</p>
-        <p><strong>Timestamping Authority:</strong> Open Timestamps</p>
-        <p><strong>Copyrighted File Name:</strong>
-          <a [href]="uploadedData?.original_file_url" target="_blank" class="text-blue-600 underline">{{ uploadedDatas?.file_name }}</a>
-        </p>
-        <p><strong>File SHA256 Fingerprint:</strong> {{ uploadedData?.fingerprint }}</p>
-      </div>
+ <div class="rounded-lg shadow-lg p-4 sm:p-6 relative bg-white w-full max-w-full sm:max-w-2xl  bg-image">
+  <div class="certificate space-y-3 mt-12 sm:space-y-6 sm:mt-12 text-sm sm:text-base text-gray-700 break-words">
 
-      <div class="mt-4 flex flex-col sm:flex-row justify-center gap-3">
-        <a [href]="uploadedData?.certificate_url" target="_blank"
-          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-center">Download Certificate</a>
-        <a [href]="uploadedData?.ots_url" target="_blank"
-          class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-center">Download OTS</a>
-      </div>
-    </div>
+    <!-- Work Title -->
+    <p>
+      <strong class="block sm:inline">Work Title:</strong>
+      <span class="block sm:inline">{{ uploadedData?.title }}</span>
+    </p>
+
+    <!-- Copyright Owner -->
+   <p>
+  <strong class="block sm:inline">Copyright Owner:</strong>
+  <span class="block sm:inline">{{ uploadedData?.copyrightOwner }}</span>
+</p>
+
+
+    <!-- Additional Owners -->
+    <p *ngIf="uploadedData?.additionalOwners">
+      <strong class="block sm:inline">Additional Owners:</strong>
+      <span class="block sm:inline">{{ uploadedData?.additionalOwners }}</span>
+    </p>
+
+    <!-- Reference Number -->
+    <p>
+      <strong class="block sm:inline">Reference Number:</strong>
+      <span class="block sm:inline">{{ uploadedData?.displayed_id }}</span>
+    </p>
+
+    <!-- Registration Date -->
+    <p>
+      <strong class="block sm:inline">Registration Date:</strong>
+      <span class="block sm:inline">{{ uploadedData?.registration_date | date:'dd MMM yyyy HH:mm:ss' }}</span>
+    </p>
+
+    <!-- Timestamp -->
+    <p>
+      <strong class="block sm:inline">Timestamping Authority:</strong>
+      <span class="block sm:inline">Open Timestamps</span>
+    </p>
+
+    <!-- File Name -->
+ <p>
+  <strong class="block sm:inline">Copyrighted File:</strong>
+  <a [href]="uploadedData?.original_file_url" target="_blank"
+     class="text-blue-600 underline break-all block sm:inline">
+    {{ uploadedData?.fileName }}
+  </a>
+</p>
+
+    <!-- Fingerprint -->
+    <p>
+      <strong class="block sm:inline">File SHA256 Fingerprint:</strong>
+      <span class="break-all block sm:inline">{{ uploadedData?.fingerprint }}</span>
+    </p>
+  </div>
+
+  <!-- Buttons -->
+  <div class="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+    <a [href]="uploadedData?.certificate_url" target="_blank"
+       class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-center w-full sm:w-auto">
+       Download Certificate
+    </a>
+    <a [href]="uploadedData?.ots_url" target="_blank"
+       class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-center w-full sm:w-auto">
+       Download OTS
+    </a>
+  </div>
+</div>
+
   </div>
 </ng-container>
 
