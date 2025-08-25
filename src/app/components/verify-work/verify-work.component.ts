@@ -25,6 +25,9 @@ successMessage: string | null = null;
   isVerifying = false;
   blocks: any[] = [];
   backendResponse: any = null;
+fileName: string = '';
+certificateName: string = '';
+otsFileName: string = '';
 
   constructor(
     private workService: WorkService,
@@ -33,14 +36,27 @@ successMessage: string | null = null;
 
   // Handle file selection
   onFileChange(event: Event, type: 'file' | 'certificate' | 'otsFile') {
-    const input = event.target as HTMLInputElement;
-    if (!input.files?.length) return;
+  const input = event.target as HTMLInputElement;
+  if (!input.files?.length) return;
 
-    const selectedFile = input.files[0];
-    if (type === 'file') this.file = selectedFile;
-    else if (type === 'certificate') this.certificate = selectedFile;
-    else if (type === 'otsFile') this.otsFile = selectedFile;
+  const selectedFile = input.files[0];
+
+  switch(type) {
+    case 'file':
+      this.file = selectedFile;
+      this.fileName = selectedFile.name;
+      break;
+    case 'certificate':
+      this.certificate = selectedFile;
+      this.certificateName = selectedFile.name;
+      break;
+    case 'otsFile':
+      this.otsFile = selectedFile;
+      this.otsFileName = selectedFile.name;
+      break;
   }
+}
+
 
   // Main verification flow
   async verify() {
@@ -66,11 +82,7 @@ successMessage: string | null = null;
       const fileFingerprint = await this.calculateSHA256(this.file);
       const certFingerprint = await this.extractFingerprintFromPDF(this.certificate);
 
-      if (!certFingerprint || fileFingerprint !== certFingerprint) {
-        this.isVerifying = false;
-        this.errorMessage = 'File doesn’t match the certificate.';
-        return;
-      }
+  
 
       const formData = new FormData();
       formData.append('originalFile', this.file);
@@ -96,11 +108,25 @@ successMessage: string | null = null;
             this.errorMessage = 'Unexpected response format.';
           }
         },
-        (error) => {
-          this.isVerifying = false;
-          console.error('❌ Backend Error:', error);
-          this.errorMessage = error.error?.message || 'Something went wrong. Please try again.';
-        }
+ (error) => {
+  this.isVerifying = false;
+  console.error('❌ Backend Error:', error);
+
+  // Try to show the most meaningful message
+  if (error?.error?.message) {
+    this.errorMessage = error.error.message;
+  } else if (error?.error?.error) {
+    this.errorMessage = error.error.error;
+  } else if (error?.message) {
+    this.errorMessage = error.message;
+  } else {
+    // fallback: show raw response
+    this.errorMessage = typeof error.error === 'string'
+      ? error.error
+      : JSON.stringify(error.error || error);
+  }
+}
+
       );
     } catch (err) {
       this.isVerifying = false;

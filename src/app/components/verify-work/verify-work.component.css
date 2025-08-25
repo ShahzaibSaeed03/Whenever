@@ -1,0 +1,14 @@
+.loader-spinner {
+  position: absolute;
+  width: 100%;
+  max-width: 120px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  animation: spinLoader 600ms steps(12, end) infinite;
+}
+
+@keyframes spinLoader {
+  from { transform: translate(-50%, -50%) rotate(0turn); }
+  to   { transform: translate(-50%, -50%) rotate(1turn); }
+}

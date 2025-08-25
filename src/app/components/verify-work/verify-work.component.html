@@ -1,51 +1,62 @@
-<div class="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-6 sm:py-10">
-  <div class="w-full max-w-lg sm:max-w-3xl bg-blue-100 border border-gray-200 shadow-md rounded-xl p-4 sm:p-8">
+<div class="min-h-screen bg-gray-50 flex items-center justify-center px-4 ">
+  <div class="w-full max-w-lg sm:max-w-3xl bg-[#cfe6ef] border text-[#3f85ae]  border-gray-200 shadow-md rounded-xl p-4 sm:p-8">
 
     <!-- Heading -->
     <div class="mb-5 sm:mb-6">
-      <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 flex items-center gap-2">
-        <i class="fas fa-shield-check text-green-600 text-base sm:text-lg"></i>
-        Verify a Work Registration
-      </h2>
-      <p class="text-xs sm:text-sm text-gray-500 mt-1">
-        Upload the original file, certificate, and timestamp file to validate authenticity.
+     
+      <p class="text-md   mt-1">
+      Please upload your original file, its certificate and the corresponding .ots file, and we will verify its registration.
       </p>
     </div>
 
     <!-- Upload Fields -->
-    <div class="space-y-5 sm:space-y-6 text-sm text-gray-700">
+  <div class="space-y-5 sm:space-y-6 text-md ">
 
-      <!-- Original File -->
-      <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-        <label class="font-medium text-gray-800 w-full sm:w-[25%] text-sm sm:text-base">File to verify:</label>
-        <div class="bg-[#507897] text-white uppercase font-medium w-full sm:w-32 flex items-center justify-center px-2 py-2 rounded-md cursor-pointer">
-          Choose File
-        </div>
-        <input type="file" (change)="onFileChange($event, 'file')"
-          class="block w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 bg-white focus:ring-blue-500 text-sm" />
+ <!-- Original File -->
+<div class="flex flex-col sm:flex-row sm:items-center gap-5">
+  <label class="font-medium  w-full sm:w-[20%] text-right ">File to verify:</label>
+  <button type="button"
+          class="bg-[#507897] text-white uppercase font-medium w-full sm:w-32 px-2 py-2 rounded-md cursor-pointer"
+          (click)="fileInput.click()">Choose File</button>
+  <input type="text" [value]="fileName" readonly
+         class="block w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 bg-white text-sm" />
+  <input type="file" #fileInput (change)="onFileChange($event, 'file')" hidden />
+</div>
+
+<!-- Certificate -->
+<div class="flex flex-col sm:flex-row sm:items-center gap-5">
+  <label class="font-medium  w-full sm:w-[20%] text-right ">Certificate:</label>
+  <button type="button"
+          class="bg-[#507897] text-white uppercase font-medium w-full sm:w-32 px-2 py-2 rounded-md cursor-pointer"
+          (click)="certInput.click()">Choose File</button>
+  <input type="text" [value]="certificateName" readonly
+         class="block w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 bg-white text-sm" />
+  <input type="file" #certInput accept=".pdf" (change)="onFileChange($event, 'certificate')" hidden />
+</div>
+
+<!-- .ots File -->
+<div class="flex flex-col sm:flex-row sm:items-center gap-5">
+  <label class="font-medium  w-full sm:w-[20%] text-right ">.ots File:</label>
+  <button type="button"
+          class="bg-[#507897] text-white uppercase font-medium w-full sm:w-32 px-2 py-2 rounded-md cursor-pointer"
+          (click)="otsInput.click()">Choose File</button>
+  <input type="text" [value]="otsFileName" readonly
+         class="block w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 bg-white text-sm" />
+  <input type="file" #otsInput accept=".ots" (change)="onFileChange($event, 'otsFile')" hidden />
+</div>
+
+ 
+
+ 
+
+      <!-- Verify Button -->
+      <div class="flex justify-center sm:justify-start sm:ml-40 ml-6">
+        <button (click)="verify()" [disabled]="isVerifying"
+          class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md text-sm sm:text-base font-medium flex items-center justify-center gap-2 w-full sm:w-auto">
+          Verify Work
+        </button>
       </div>
-
-      <!-- Certificate -->
-      <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-        <label class="font-medium text-gray-800 w-full sm:w-[25%] text-sm sm:text-base">Certificate:</label>
-        <div class="bg-[#507897] text-white uppercase font-medium w-full sm:w-32 flex items-center justify-center px-2 py-2 rounded-md cursor-pointer">
-          Choose File
-        </div>
-        <input type="file" accept=".pdf" (change)="onFileChange($event, 'certificate')"
-          class="block w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 bg-white focus:ring-purple-500 text-sm" />
-      </div>
-
-      <!-- Timestamp File -->
-      <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-        <label class="font-medium text-gray-800 w-full sm:w-[25%] text-sm sm:text-base">.ots File:</label>
-        <div class="bg-[#507897] text-white uppercase font-medium w-full sm:w-32 flex items-center justify-center px-2 py-2 rounded-md cursor-pointer">
-          Choose File
-        </div>
-        <input type="file" accept=".ots" (change)="onFileChange($event, 'otsFile')"
-          class="block w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 bg-white focus:ring-orange-500 text-sm" />
-      </div>
-
-      <!-- Error Message -->
+        <!-- Error Message -->
       <div *ngIf="errorMessage"
         class="bg-red-50 border border-red-300 text-red-700 px-4 py-2 rounded flex items-center gap-2 text-sm">
         <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
@@ -53,74 +64,39 @@
 
       <!-- Success Message -->
       <div *ngIf="successMessage"
-        class="bg-green-50 border border-green-300 text-green-700 px-4 py-2 rounded-md flex items-center gap-2 text-sm">
-        <i class="fas fa-check-circle"></i> {{ successMessage }}
+        class="bg-blue-50 border border-[#3f85ae]  text-[#3f85ae] px-4 py-2 rounded-md flex flex-col  gap-2 text-sm">
+      <p>  <i class="fas fa-check-circle"> </i> {{ successMessage }}</p>
+           <p class="text-sm text-gray-600 mt-1">
+      Bitcoin Block <span class="text-blue-400">{{ blocks[0].block }}</span>
+      Attests existence as of 
+      <span class="font-medium">{{ backendResponse.otsStatus.calendars }}</span>
+    </p>
       </div>
+</div>
 
-      <!-- Loader -->
-      <div *ngIf="isVerifying" class="flex justify-center items-center gap-2 text-gray-500 text-sm">
-        <i class="fas fa-spinner animate-spin"></i> Verifying, please wait...
-      </div>
-
-      <!-- Verify Button -->
-      <div class="flex justify-center sm:justify-start">
-        <button (click)="verify()" [disabled]="isVerifying"
-          class="bg-[#507897] hover:bg-blue-400 text-white px-5 py-2 rounded-md text-sm sm:text-base font-medium flex items-center justify-center gap-2 w-full sm:w-auto">
-          <i class="fas fa-check-circle"></i> Verify Work
-        </button>
-      </div>
-    </div>
   </div>
 </div>
 
 <!-- Success Result Overlay -->
-<div *ngIf="successMessage"
- class="fixed inset-0 bg-black/60 flex justify-center items-center z-50 px-4 overflow-auto">
-  <div class="bg-green-50 border border-green-300 text-green-700 p-6 rounded-lg shadow-lg max-w-full sm:max-w-3xl w-full">
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
-      <div class="flex items-center gap-2">
-        <i class="fas fa-check-circle text-green-600 text-xl"></i>
-        <span class="font-semibold text-lg">{{ successMessage }}</span>
-      </div>
-      <button (click)="successMessage=null"
-        class="text-white bg-red-600 hover:bg-red-700 rounded-full px-3 py-1 text-lg">&times;</button>
-    </div>
 
-    <div *ngIf="backendResponse" class="overflow-x-auto">
-      <h4 class="text-lg font-medium text-gray-800">Bitcoin Block Verification</h4>
-      <h5>{{ backendResponse.otsStatus.message }}</h5>
 
-      <table class="min-w-full table-auto mt-2 border-collapse border border-gray-200 text-sm">
-        <thead>
-          <tr class="bg-gray-100">
-            <th class="text-left p-2 border border-gray-300">Block Number</th>
-            <th class="text-left p-2 border border-gray-300">Merkle Root</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let block of blocks" class="border-b">
-            <td class="p-2 text-gray-700">{{ block.block }}</td>
-            <td class="p-2 text-blue-600 break-words">{{ block.merkleroot }}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h5 class="mt-3"><span class="text-black">Status</span>: {{ backendResponse.otsStatus.status }}</h5>
-    </div>
-  </div>
-</div>
 
 <!-- Error Overlay -->
 <div *ngIf="errorMessage" class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4 overflow-auto">
   <div class="bg-red-50 border border-red-300 text-red-700 p-6 rounded-lg shadow-lg max-w-full sm:max-w-3xl w-full">
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-5">
       <div class="flex items-center gap-2">
         <i class="fas fa-exclamation-circle text-red-600 text-xl"></i>
-        <span class="font-semibold text-lg">Error</span>
+        <span class="font-semibold text-lg">Pay Attention</span>
       </div>
       <button (click)="errorMessage=null"
         class="text-white bg-red-600 hover:bg-red-700 rounded-full px-3 py-1 text-lg">&times;</button>
     </div>
     <p>{{ errorMessage }}</p>
   </div>
+</div>
+<div *ngIf="isVerifying"
+     class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+  <img class="loader-spinner"
+       src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/loader-spinner.png" />
 </div>
