@@ -1,53 +1,55 @@
 <div class="min-h-screen bg-gray-50 flex items-center justify-center px-4 ">
-  <div class="w-full max-w-lg sm:max-w-3xl bg-[#cfe6ef] border text-[#3f85ae]  border-gray-200 shadow-md rounded-xl p-4 sm:p-8">
+  <div
+    class="w-full max-w-lg sm:max-w-3xl bg-[#cfe6ef] border text-[#3f85ae]  border-gray-200 shadow-md rounded-xl p-4 sm:p-8">
 
     <!-- Heading -->
     <div class="mb-5 sm:mb-6">
-     
+
       <p class="text-md   mt-1">
-      Please upload your original file, its certificate and the corresponding .ots file, and we will verify its registration.
+        Please upload your original file, its certificate and the corresponding .ots file, and we will verify its
+        registration.
       </p>
     </div>
 
     <!-- Upload Fields -->
-  <div class="space-y-5 sm:space-y-6 text-md ">
+    <div class="space-y-5 sm:space-y-6 text-md ">
 
- <!-- Original File -->
-<div class="flex flex-col sm:flex-row sm:items-center gap-5">
-  <label class="font-medium  w-full sm:w-[20%] text-right ">File to verify:</label>
-  <button type="button"
+      <!-- Original File -->
+      <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+        <label class="font-medium  w-full sm:w-[20%] text-right ">File to verify:</label>
+        <button type="button"
           class="bg-[#507897] text-white uppercase font-medium w-full sm:w-32 px-2 py-2 rounded-md cursor-pointer"
           (click)="fileInput.click()">Choose File</button>
-  <input type="text" [value]="fileName" readonly
-         class="block w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 bg-white text-sm" />
-  <input type="file" #fileInput (change)="onFileChange($event, 'file')" hidden />
-</div>
+        <input type="text" [value]="fileName" readonly
+          class="block w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 bg-white text-sm" />
+        <input type="file" #fileInput (change)="onFileChange($event, 'file')" hidden />
+      </div>
 
-<!-- Certificate -->
-<div class="flex flex-col sm:flex-row sm:items-center gap-5">
-  <label class="font-medium  w-full sm:w-[20%] text-right ">Certificate:</label>
-  <button type="button"
+      <!-- Certificate -->
+      <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+        <label class="font-medium  w-full sm:w-[20%] text-right ">Certificate:</label>
+        <button type="button"
           class="bg-[#507897] text-white uppercase font-medium w-full sm:w-32 px-2 py-2 rounded-md cursor-pointer"
           (click)="certInput.click()">Choose File</button>
-  <input type="text" [value]="certificateName" readonly
-         class="block w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 bg-white text-sm" />
-  <input type="file" #certInput accept=".pdf" (change)="onFileChange($event, 'certificate')" hidden />
-</div>
+        <input type="text" [value]="certificateName" readonly
+          class="block w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 bg-white text-sm" />
+        <input type="file" #certInput accept=".pdf" (change)="onFileChange($event, 'certificate')" hidden />
+      </div>
 
-<!-- .ots File -->
-<div class="flex flex-col sm:flex-row sm:items-center gap-5">
-  <label class="font-medium  w-full sm:w-[20%] text-right ">.ots File:</label>
-  <button type="button"
+      <!-- .ots File -->
+      <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+        <label class="font-medium  w-full sm:w-[20%] text-right ">.ots File:</label>
+        <button type="button"
           class="bg-[#507897] text-white uppercase font-medium w-full sm:w-32 px-2 py-2 rounded-md cursor-pointer"
           (click)="otsInput.click()">Choose File</button>
-  <input type="text" [value]="otsFileName" readonly
-         class="block w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 bg-white text-sm" />
-  <input type="file" #otsInput accept=".ots" (change)="onFileChange($event, 'otsFile')" hidden />
-</div>
+        <input type="text" [value]="otsFileName" readonly
+          class="block w-full sm:flex-1 border border-gray-300 rounded-md px-3 py-2 bg-white text-sm" />
+        <input type="file" #otsInput accept=".ots" (change)="onFileChange($event, 'otsFile')" hidden />
+      </div>
 
- 
 
- 
+
+
 
       <!-- Verify Button -->
       <div class="flex justify-center sm:justify-start sm:ml-40 ml-6">
@@ -56,7 +58,7 @@
           Verify Work
         </button>
       </div>
-        <!-- Error Message -->
+      <!-- Error Message -->
       <div *ngIf="errorMessage"
         class="bg-red-50 border border-red-300 text-red-700 px-4 py-2 rounded flex items-center gap-2 text-sm">
         <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
@@ -65,14 +67,14 @@
       <!-- Success Message -->
       <div *ngIf="successMessage"
         class="bg-blue-50 border border-[#3f85ae]  text-[#3f85ae] px-4 py-2 rounded-md flex flex-col  gap-2 text-sm">
-      <p>  <i class="fas fa-check-circle"> </i> {{ successMessage }}</p>
-           <p class="text-sm text-gray-600 mt-1">
-      Bitcoin Block <span class="text-blue-400">{{ blocks[0].block }}</span>
-      Attests existence as of 
-      <span class="font-medium">{{ backendResponse.otsStatus.calendars }}</span>
-    </p>
+        <p> <i class="fas fa-check-circle"> </i> {{ successMessage }}</p>
+        <p *ngIf="false" class="text-sm text-gray-600 mt-1">
+          Bitcoin Block <span class="text-blue-400">{{ blocks[0].block }}</span>
+          Attests existence as of
+          <span class="font-medium" *ngIf="false">{{ formatUtcToAmPm(blocks[1].timestamp) }}</span>
+        </p>
       </div>
-</div>
+    </div>
 
   </div>
 </div>
@@ -95,8 +97,6 @@
     <p>{{ errorMessage }}</p>
   </div>
 </div>
-<div *ngIf="isVerifying"
-     class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-  <img class="loader-spinner"
-       src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/loader-spinner.png" />
+<div *ngIf="isVerifying" class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+  <img class="loader-spinner" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/loader-spinner.png" />
 </div>

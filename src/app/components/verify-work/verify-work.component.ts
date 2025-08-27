@@ -18,121 +18,148 @@ export class VerifyWorkComponent {
   file: File | null = null;
   certificate: File | null = null;
   otsFile: File | null = null;
+
+  fileName = '';
+  certificateName = '';
+  otsFileName = '';
+
   errorMessage: string | null = null;
-
-successMessage: string | null = null;
+  successMessage: string | null = null;
   tsaResult: any = null;
-  isVerifying = false;
-  blocks: any[] = [];
   backendResponse: any = null;
-fileName: string = '';
-certificateName: string = '';
-otsFileName: string = '';
+  blocks: any[] = [];
 
-  constructor(
-    private workService: WorkService,
-    private toastr: ToastrService
-  ) {}
+  isVerifying = false;
+
+  constructor(private workService: WorkService, private toastr: ToastrService) { }
+  formatUtcToAmPm(utcString: string): string {
+    if (!utcString) return '';
+    // Remove the " UTC" part if it exists
+    const cleanString = utcString.replace(' UTC', '');
+    // Create a Date object in UTC
+    const date = new Date(cleanString + 'Z'); // "Z" ensures it's treated as UTC
+    // Get hours, minutes, seconds
+    let hours = date.getUTCHours();
+    const minutes = date.getUTCMinutes();
+    const seconds = date.getUTCSeconds();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    if (hours === 0) hours = 12; // midnight or noon
+    // Format numbers with leading zeros
+    const mm = minutes.toString().padStart(2, '0');
+    const ss = seconds.toString().padStart(2, '0');
+    return `${hours}:${mm}:${ss} ${ampm} UTC`;
+  }
 
   // Handle file selection
   onFileChange(event: Event, type: 'file' | 'certificate' | 'otsFile') {
-  const input = event.target as HTMLInputElement;
-  if (!input.files?.length) return;
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
 
-  const selectedFile = input.files[0];
+    const selectedFile = input.files[0];
 
-  switch(type) {
-    case 'file':
-      this.file = selectedFile;
-      this.fileName = selectedFile.name;
-      break;
-    case 'certificate':
-      this.certificate = selectedFile;
-      this.certificateName = selectedFile.name;
-      break;
-    case 'otsFile':
-      this.otsFile = selectedFile;
-      this.otsFileName = selectedFile.name;
-      break;
+    switch (type) {
+      case 'file':
+        this.file = selectedFile;
+        this.fileName = selectedFile.name;
+        break;
+      case 'certificate':
+        this.certificate = selectedFile;
+        this.certificateName = selectedFile.name;
+        break;
+      case 'otsFile':
+        this.otsFile = selectedFile;
+        this.otsFileName = selectedFile.name;
+        break;
+    }
   }
-}
-
 
   // Main verification flow
   async verify() {
-    this.errorMessage = '';
-    this.successMessage = '';
-    this.tsaResult = null;
-    this.backendResponse = null;
+    this.resetStatus();
 
     if (!this.file || !this.certificate || !this.otsFile) {
-      this.errorMessage =
-        'Please first select the file to be verified, its certificate and its .ots file.';
-      console.error('❌ Missing file(s)', {
-        file: this.file,
-        certificate: this.certificate,
-        otsFile: this.otsFile,
-      });
+      this.setError('Please select the file, its certificate, and the .ots file.');
       return;
     }
 
     this.isVerifying = true;
 
     try {
+      // Optional: calculate file fingerprint if needed
       const fileFingerprint = await this.calculateSHA256(this.file);
       const certFingerprint = await this.extractFingerprintFromPDF(this.certificate);
-
-  
 
       const formData = new FormData();
       formData.append('originalFile', this.file);
       formData.append('certificate', this.certificate);
       formData.append('ots', this.otsFile);
 
+      console.log('🔍 Verifying with FormData:', formData);
+
       this.workService.verifyWork(formData).subscribe(
-        (res: any) => {
-          console.log('✅ Backend Response:', res);
-          this.blocks = res.otsStatus.anchors || [];
-          this.isVerifying = false;
-          this.backendResponse = res;
-
-          if (res?.otsStatus) {
-            this.successMessage = res.message || 'Verification completed.';
-            this.tsaResult = {
-              status: res.otsStatus.status,
-              message: res.otsStatus.message,
-              details: res.otsStatus.details,
-              error: res.otsStatus.error,
-            };
-          } else {
-            this.errorMessage = 'Unexpected response format.';
-          }
-        },
- (error) => {
-  this.isVerifying = false;
-  console.error('❌ Backend Error:', error);
-
-  // Try to show the most meaningful message
-  if (error?.error?.message) {
-    this.errorMessage = error.error.message;
-  } else if (error?.error?.error) {
-    this.errorMessage = error.error.error;
-  } else if (error?.message) {
-    this.errorMessage = error.message;
-  } else {
-    // fallback: show raw response
-    this.errorMessage = typeof error.error === 'string'
-      ? error.error
-      : JSON.stringify(error.error || error);
-  }
-}
-
+        (res: any) => this.handleSuccess(res),
+        (error) => this.handleError(error)
       );
     } catch (err) {
-      this.isVerifying = false;
       console.error('❌ Unexpected Error:', err);
-      this.errorMessage = 'Error reading files. Please try again.';
+      this.setError('Error reading files. Please try again.');
+      this.isVerifying = false;
     }
+  }
+
+  private handleSuccess(res: any) {
+    this.isVerifying = false;
+    this.backendResponse = res;
+
+    if (res?.otsStatus) {
+      this.blocks = res.otsStatus.anchors || [];
+
+      // Check if the timestamp status is pending
+      if (res.otsStatus.status === 'pending') {
+        this.successMessage = "Verification is pending. It may take 2 to 24 hours for approval. Please try later.";
+      } else if (res.otsStatus.status === 'verified') {
+        this.successMessage = res.message || 'Verification successful.';
+      } else {
+        this.successMessage = res.message || 'Verification completed with unknown status.';
+      }
+
+      this.tsaResult = {
+        status: res.otsStatus.status,
+        message: res.otsStatus.message,
+        details: res.otsStatus.details,
+        error: res.otsStatus.error,
+      };
+    } else {
+      this.setError('Unexpected response format.');
+    }
+
+    console.log('✅ Backend Response:', res);
+  }
+
+
+  private handleError(error: any) {
+    this.isVerifying = false;
+
+    console.error('❌ Backend Error:', error);
+    if (error?.error?.message) this.setError(error.error.message);
+    else if (error?.error?.error) this.setError(error.error.error);
+    else if (error?.message) this.setError(error.message);
+    else this.setError(typeof error.error === 'string' ? error.error : JSON.stringify(error.error || error));
+  }
+
+  private setError(msg: string) {
+    this.errorMessage = msg;
+    this.successMessage = null;
+    this.tsaResult = null;
+  }
+
+  private resetStatus() {
+    this.errorMessage = null;
+    this.successMessage = null;
+    this.tsaResult = null;
+    this.blocks = [];
+    this.backendResponse = null;
   }
 
   // Calculate SHA256 fingerprint of a file
