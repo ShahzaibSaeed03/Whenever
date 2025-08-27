@@ -68,7 +68,7 @@
       <div *ngIf="successMessage"
         class="bg-blue-50 border border-[#3f85ae]  text-[#3f85ae] px-4 py-2 rounded-md flex flex-col  gap-2 text-sm">
         <p> <i class="fas fa-check-circle"> </i> {{ successMessage }}</p>
-        <p *ngIf="false" class="text-sm text-gray-600 mt-1">
+        <p  class="text-sm text-gray-600 mt-1">
           Bitcoin Block <span class="text-blue-400">{{ blocks[0].block }}</span>
           Attests existence as of
           <span class="font-medium" *ngIf="false">{{ formatUtcToAmPm(blocks[1].timestamp) }}</span>
