@@ -112,7 +112,7 @@ private triggerDownload(url: string) {
   }
 }
 
-private handleUploadSuccess(data: any) {
+private async handleUploadSuccess(data: any) {
   this.uploadedData = {
     ...data,
     fileName: this.selectedFile?.name || '',
@@ -122,19 +122,40 @@ private handleUploadSuccess(data: any) {
 
   this.workupload = true;
 
-  if (this.uploadedData.certificate_url) {
-    this.triggerDownload(this.uploadedData.certificate_url);
-  }
-
-  if (this.uploadedData.ots_url) {
-    // ⏳ wait 1 second before second download
-    setTimeout(() => {
-      this.triggerDownload(this.uploadedData.ots_url);
-    }, 1000);
+  try {
+    if (this.uploadedData.certificate_url) {
+      await this.triggerSequentialDownload(this.uploadedData.certificate_url);
+    }
+    if (this.uploadedData.ots_url) {
+      await this.triggerSequentialDownload(this.uploadedData.ots_url);
+    }
+  } catch (err) {
+    console.error("Download sequence failed", err);
+    this.setError("Failed to download files.");
   }
 
   this.resetFormFields();
 }
+
+private triggerSequentialDownload(url: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    try {
+      const link = document.createElement('a');
+      link.href = url;
+   // ensures browser handles it better
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setTimeout(() => resolve(), 1000); // wait a bit before next download
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
+
+
 
 
 
