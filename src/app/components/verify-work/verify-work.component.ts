@@ -108,34 +108,36 @@ export class VerifyWorkComponent {
     }
   }
 
-  private handleSuccess(res: any) {
-    this.isVerifying = false;
-    this.backendResponse = res;
+ private handleSuccess(res: any) {
+  this.isVerifying = false;
+  this.backendResponse = res;
 
-    if (res?.otsStatus) {
-      this.blocks = res.otsStatus.anchors || [];
+  if (res?.otsStatus) {
+    this.blocks = res.otsStatus.anchors || [];
 
-      // Check if the timestamp status is pending
-      if (res.otsStatus.status === 'pending') {
-        this.successMessage = "Verification is pending. It may take 2 to 24 hours for approval. Please try later.";
-      } else if (res.otsStatus.status === 'verified') {
-        this.successMessage = res.message || 'Verification successful.';
-      } else {
-        this.successMessage = res.message || 'Verification completed with unknown status.';
-      }
-
-      this.tsaResult = {
-        status: res.otsStatus.status,
-        message: res.otsStatus.message,
-        details: res.otsStatus.details,
-        error: res.otsStatus.error,
-      };
+    if (res.otsStatus.status === 'pending') {
+      this.successMessage = "Verification is pending. It may take 2 to 24 hours for approval. Please try later.";
+    } else if (res.otsStatus.status === 'verified') {
+      this.successMessage = res.message || 'Verification successful.';
+    } else if (res.otsStatus.status === 'error') {
+      this.setError(res.otsStatus.error || res.message || "Verification failed.");
     } else {
-      this.setError('Unexpected response format.');
+      this.setError(res.message || 'Verification completed with unknown status.');
     }
 
-    console.log('✅ Backend Response:', res);
+    this.tsaResult = {
+      status: res.otsStatus.status,
+      message: res.otsStatus.message,
+      details: res.otsStatus.details,
+      error: res.otsStatus.error,
+    };
+  } else {
+    this.setError('Unexpected response format.');
   }
+
+  console.log('✅ Backend Response:', res);
+}
+
 
 
   private handleError(error: any) {

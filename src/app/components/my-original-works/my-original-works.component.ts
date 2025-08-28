@@ -14,14 +14,16 @@ import { Work, WorkService } from '../../service/work-service.service';
 export class MyOriginalWorksComponent implements OnInit {
   works: Work[] = [];
   data: any[] = [];
-  workIdFromParent: string = ''; 
+  workIdFromParent: string = '';
   isLoggedIn: boolean = false;
+  loading: boolean = false;   // ✅ loader flag
+
 
   constructor(
     private workService: WorkService,
     private router: Router,
     private toastr: ToastrService   // ✅ inject Toastr
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const userId = localStorage.getItem('userId');
@@ -36,14 +38,20 @@ export class MyOriginalWorksComponent implements OnInit {
   }
 
   getallworkDetails(userId: string) {
+    this.loading = true;  // ✅ show spinner
+
     this.workService.getWorkById(userId).subscribe(
       (res: any) => {
         console.log('Work details fetched successfully:', res);
         this.data = res.data;
+        this.loading = false; // ✅ hide spinner
+
       },
       (error) => {
         console.error('Error fetching work details', error);
         this.toastr.error('Failed to fetch your works.');
+        this.loading = false;   // ❌ you forgot this before
+
       }
     );
   }

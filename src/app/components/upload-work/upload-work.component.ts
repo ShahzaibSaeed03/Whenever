@@ -71,7 +71,7 @@ export class UploadWorkComponent {
       .subscribe(
         (res: any) => {
           this.isUploading = false;
-
+console.log(res)
           if (res?.status === 'success') {
             this.handleUploadSuccess(res.data);
           } else {
@@ -97,35 +97,48 @@ export class UploadWorkComponent {
       );
   }
 
-  private handleUploadSuccess(data: any) {
-    this.uploadedData = {
-      ...data,
-      fileName: this.selectedFile?.name || '',
-      copyrightOwner: this.copyrightOwner,
-      additionalOwners: this.additionalOwners
-    };
 
-    this.workupload = true;
-    this.resetFormFields();
-
-    if (this.uploadedData.certificate_url) {
-      this.triggerDownload(this.uploadedData.certificate_url, `Certificate_${this.uploadedData.displayed_id}.pdf`);
-    }
-
-    if (this.uploadedData.ots_url) {
-      this.triggerDownload(this.uploadedData.ots_url, `timestamp_${this.uploadedData.displayed_id}.ots`);
-    }
-  }
-
-  triggerDownload(url: string, filename: string) {
+private triggerDownload(url: string) {
+  try {
     const link = document.createElement('a');
     link.href = url;
-    link.download = filename;
-    link.target = '_blank';
+    // ❌ don’t set `download` → browser will use the name from backend
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  } catch (err) {
+    console.error('Download failed:', err);
+    this.setError("Failed to download file. Please try again.");
   }
+}
+
+private handleUploadSuccess(data: any) {
+  this.uploadedData = {
+    ...data,
+    fileName: this.selectedFile?.name || '',
+    copyrightOwner: this.copyrightOwner,
+    additionalOwners: this.additionalOwners
+  };
+
+  this.workupload = true;
+
+  if (this.uploadedData.certificate_url) {
+    this.triggerDownload(this.uploadedData.certificate_url);
+  }
+
+  if (this.uploadedData.ots_url) {
+    // ⏳ wait 1 second before second download
+    setTimeout(() => {
+      this.triggerDownload(this.uploadedData.ots_url);
+    }, 1000);
+  }
+
+  this.resetFormFields();
+}
+
+
+
+
 
   closeError() {
     this.showError = false;

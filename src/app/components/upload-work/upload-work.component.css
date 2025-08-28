@@ -33,15 +33,15 @@
 
 .loader-spinner {
   position: absolute;
-  width: 100%;
-  max-width: 120px;
+  width: 50px;
+  height: 50px;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  animation: spinLoader 600ms steps(12, end) infinite;
+  animation: spinLoader 1s linear infinite;
 }
 
 @keyframes spinLoader {
-  from { transform: translate(-50%, -50%) rotate(0turn); }
-  to   { transform: translate(-50%, -50%) rotate(1turn); }
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
 }
