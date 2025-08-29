@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withEnabledBlockingInitialNavigation, withRouterConfig } from '@angular/router';
 
 import { routes } from './app.routes';
 import {  provideHttpClient } from '@angular/common/http';
@@ -10,5 +10,11 @@ export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
     provideAnimations(),  // ✅ required for toast animations
     provideToastr(),
-     provideRouter(routes),provideHttpClient()]
+     provideRouter(
+      routes,
+      withEnabledBlockingInitialNavigation(),
+      withRouterConfig({ onSameUrlNavigation: 'ignore' })
+      ),
+      provideHttpClient()
+     ]
 };

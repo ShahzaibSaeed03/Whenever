@@ -116,7 +116,7 @@ export class VerifyWorkComponent {
     this.blocks = res.otsStatus.anchors || [];
 
     if (res.otsStatus.status === 'pending') {
-      this.successMessage = "Verification is pending. It may take 2 to 24 hours for approval. Please try later.";
+      this.successMessage = "The Bitcoin transaction is unconfirmed. The attestation is still pending. Please try later on.";
     } else if (res.otsStatus.status === 'verified') {
       this.successMessage = res.message || 'Verification successful.';
     } else if (res.otsStatus.status === 'error') {
