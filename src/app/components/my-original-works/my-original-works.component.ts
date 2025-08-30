@@ -16,21 +16,25 @@ export class MyOriginalWorksComponent implements OnInit {
   data: any[] = [];
   workIdFromParent: string = '';
   isLoggedIn: boolean = false;
-  loading: boolean = false;   // ✅ loader flag
+  loading: boolean = false;
 
+  // 🔹 Modal states
+  showPasswordModal: boolean = false;
+  sharePassword: string = '';
+  showPassword: boolean = false;
+  selectedWorkId: string = '';
 
   constructor(
     private workService: WorkService,
     private router: Router,
-    private toastr: ToastrService   // ✅ inject Toastr
-  ) { }
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     const userId = localStorage.getItem('userId');
     if (!userId) {
       this.isLoggedIn = false;
       this.toastr.warning('Please login first to see your work.');
-      console.warn('User not logged in');
     } else {
       this.isLoggedIn = true;
       this.getallworkDetails(userId);
@@ -38,51 +42,60 @@ export class MyOriginalWorksComponent implements OnInit {
   }
 
   getallworkDetails(userId: string) {
-    this.loading = true;  // ✅ show spinner
-
+    this.loading = true;
     this.workService.getWorkById(userId).subscribe(
       (res: any) => {
-        console.log('Work details fetched successfully:', res);
         this.data = res.data;
-        this.loading = false; // ✅ hide spinner
-
+        this.loading = false;
       },
-      (error) => {
-        console.error('Error fetching work details', error);
+      () => {
         this.toastr.error('Failed to fetch your works.');
-        this.loading = false;   // ❌ you forgot this before
-
+        this.loading = false;
       }
     );
   }
 
+  // 🔹 When clicking Share
   shareWork(workId: any): void {
     if (!this.isLoggedIn) {
       this.toastr.warning('Please login first to share your work.');
       this.router.navigate(['/login']);
       return;
     }
+    this.selectedWorkId = workId;
+    this.showPasswordModal = true;
+  }
 
-    this.workService.shareWork(workId).subscribe(
+  // 🔹 Close modal
+  closeModal() {
+    this.showPasswordModal = false;
+    this.sharePassword = '';
+    this.showPassword = false;
+  }
+
+  // 🔹 Toggle password view
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  // 🔹 Generate Share Link with password
+  generateShareLink() {
+    if (this.sharePassword.length !== 6) {
+      this.toastr.error('Password must be exactly 6 characters.');
+      return;
+    }
+
+    this.workService.shareWork(this.selectedWorkId, this.sharePassword).subscribe(
       (response) => {
-        console.log('Work shared successfully:', response);
         this.workIdFromParent = response.shareUrl.split('/').pop()!;
         const shareLink = `https://mycopyrightally.com/view-work/${this.workIdFromParent}`;
         navigator.clipboard.writeText(shareLink)
-          .then(() => {
-            this.toastr.success('Work link copied to clipboard!');
-          })
-          .catch((err) => {
-            console.error('Error copying link to clipboard:', err);
-            this.toastr.error('Failed to copy link to clipboard.');
-          });
+          .then(() => this.toastr.success('Work link copied to clipboard!'))
+          .catch(() => this.toastr.error('Failed to copy link.'));
 
-        // this.router.navigate([`/view-work/${this.workIdFromParent}`]);
+        this.closeModal();
       },
-      (error) => {
-        console.error('Error sharing work:', error);
-        this.toastr.error('Failed to share work. Please try again.');
-      }
+      () => this.toastr.error('Failed to share work. Please try again.')
     );
   }
 }

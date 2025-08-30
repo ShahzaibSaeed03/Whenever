@@ -89,11 +89,13 @@ export class WorkService {
   }
 
   // Share work
-  shareWork(workId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}shares/create`, { workId }, {
-      headers: this.setHeaders()
-    });
-  }
+shareWork(workId: string, password: string): Observable<any> {
+  return this.http.post(`${this.apiUrl}shares/create`, 
+    { workId, password }, 
+    { headers: this.setHeaders() }
+  );
+}
+
 
   // Login
   login(body: any): Observable<any> {
@@ -113,9 +115,13 @@ export class WorkService {
   }
 
   // Retrieve work access data
-  getWorkByIds(workId:any): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}shares/access/${workId}`, {
-      headers: this.setHeaders()
-    });
-  }
+getWorkByIds(workId: string, password: string): Observable<any> {
+  return this.http.post<any>(
+    `${this.apiUrl}shares/access/${workId}`,
+    { password },
+    { headers: this.setHeaders() }
+  );
+}
+
+
 }

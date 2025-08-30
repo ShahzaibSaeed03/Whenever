@@ -33,14 +33,48 @@
       </a>
     </div>
 
-    <!-- Additional Info (Optional) -->
-    <!-- <div class="mt-6 text-sm text-gray-500">
-      <p><span class="font-semibold">Uploaded on:</span> {{ workData.uploaded_at | date:'medium' }}</p>
-      <p><span class="font-semibold">Copyright Owner:</span> {{ workData.copyright_owner }}</p>
-      <p *ngIf="workData.additional_owners?.length > 0">
-        <span class="font-semibold">Additional Owners:</span> {{ workData.additional_owners.join(', ') }}
-      </p>
-    </div> -->
 
+
+  </div>
+</div>
+<!-- Password Modal -->
+<div *ngIf="showPasswordModal" class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+  <div class="bg-white rounded-xl shadow-lg p-6 w-96 relative">
+    <h2 class="text-lg font-semibold text-gray-800 flex items-center mb-4">
+      <i class="fas fa-lock mr-2 text-[#507897]"></i>
+      Enter Password
+    </h2>
+
+    <p class="text-sm text-gray-600 mb-3">
+      This work is protected. Please enter the password to access it.
+    </p>
+
+    <!-- Error -->
+    <div *ngIf="errorMessage" class="bg-red-50 border-l-4 border-red-400 text-red-800 p-2 rounded-md mb-3">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Password Input -->
+    <div class="relative">
+      <input [(ngModel)]="enteredPassword"
+             type="{{ showPassword ? 'text' : 'password' }}"
+             placeholder="Enter 6-char password"
+             maxlength="6"
+             class="w-full border rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#507897]" />
+
+      <!-- Toggle visibility -->
+      <button type="button" (click)="togglePassword()" 
+        class="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700">
+        <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+      </button>
+    </div>
+
+    <!-- Access Button -->
+    <button (click)="submitPassword()" 
+            [disabled]="enteredPassword.length !== 6 || loading"
+            class="w-full mt-5 py-2 px-4 bg-[#507897] text-white text-sm font-medium rounded-md hover:bg-[#2c6794] disabled:opacity-50">
+      <i class="fas fa-unlock mr-2"></i> 
+      {{ loading ? 'Accessing...' : 'Access' }}
+    </button>
   </div>
 </div>

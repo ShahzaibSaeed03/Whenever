@@ -15,34 +15,58 @@ export class ViewWorkDetailsComponent implements OnInit {
   errorMessage: string = '';
   successMessage: string = '';
 
+  // Password modal
+  showPasswordModal: boolean = true;   // ✅ always open on page load
+  enteredPassword: string = '';
+  showPassword: boolean = false;
+  workId: string | null = null;
+  loading: boolean = false;
+
   constructor(
     private workService: WorkService,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    // Get workId from route params
-    const workId = this.route.snapshot.paramMap.get('workId');
-    if (workId) {
-      this.fetchWorkData(workId);
-    } else {
+    this.workId = this.route.snapshot.paramMap.get('workId');
+    if (!this.workId) {
       this.errorMessage = 'Work ID not provided!';
+      // ❌ do NOT close modal here, user still needs to see error
     }
   }
 
-  fetchWorkData(workId: any): void {
-    this.workService.getWorkByIds(workId).subscribe(
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  submitPassword() {
+    if (!this.workId) return;
+
+    if (this.enteredPassword.length !== 6) {
+      this.errorMessage = 'Password must be 6 characters.';
+      return;
+    }
+
+    this.loading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.workService.getWorkByIds(this.workId, this.enteredPassword).subscribe(
       (response) => {
-        console.log('Work data fetched successfully:', response);
+        this.loading = false;
+
         if (response.success) {
+          console.log('Work data:', response.data);
           this.workData = response.data;
-          this.successMessage = 'Work data retrieved successfully!';
+          this.successMessage = 'Access granted!';
+          this.showPasswordModal = false;   // ✅ close modal only after success
         } else {
-          this.errorMessage = 'Failed to retrieve work data.';
+          this.errorMessage = response.message || 'Invalid password!';
         }
       },
       (error) => {
-        this.errorMessage = 'An error occurred while fetching the work data.';
+        this.loading = false;
+        this.errorMessage = 'Invalid password or failed to fetch work.';
         console.error(error);
       }
     );
