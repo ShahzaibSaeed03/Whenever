@@ -19,7 +19,7 @@
   background-repeat: no-repeat;
   /* optional: add a subtle overlay */
   height: 85vh; /* full viewport height */
-  width: 480px;
+  width: 450px;
   position: relative;
 }
 .bg-image::before {

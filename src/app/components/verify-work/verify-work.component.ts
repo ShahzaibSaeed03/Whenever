@@ -53,6 +53,8 @@ export class VerifyWorkComponent {
 
   // Handle file selection
   onFileChange(event: Event, type: 'file' | 'certificate' | 'otsFile') {
+        this.successMessage = null;
+
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
 
@@ -151,6 +153,10 @@ export class VerifyWorkComponent {
   }
 
   private setError(msg: string) {
+     if (msg.includes("File doesn't match the certificate")) {
+    msg = "File doesn't match the certificate.";
+  }
+
     this.errorMessage = msg;
     this.successMessage = null;
     this.tsaResult = null;

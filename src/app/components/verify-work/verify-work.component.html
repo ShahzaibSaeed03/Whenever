@@ -54,7 +54,7 @@
       <!-- Verify Button -->
       <div class="flex justify-center sm:justify-start sm:ml-[185px] ml-7">
         <button (click)="verify()" [disabled]="isVerifying"
-          class="bg-green-600 hover:bg-green-600 text-white px-10.5 py-1 rounded-md text-sm sm:text-base font-medium flex items-center justify-center gap-2 w-full sm:w-auto">
+          class="bg-[#00ff0e] hover:bg-green-500 text-white px-10.5 py-1 rounded-md text-sm sm:text-base font-medium flex items-center justify-center gap-2 w-full sm:w-auto">
           VERIFY
         </button>
       </div>
@@ -94,19 +94,25 @@
 
 
 <!-- Error Overlay -->
-<div *ngIf="errorMessage" class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4 overflow-auto">
-  <div class="bg-red-50 border border-red-300 text-red-700 p-6 rounded-lg shadow-lg max-w-full sm:max-w-3xl w-full">
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-5">
-      <div class="flex items-center gap-2">
-        <i class="fas fa-exclamation-circle text-red-600 text-xl"></i>
-        <span class="font-semibold text-lg">Pay Attention</span>
-      </div>
-      <button (click)="errorMessage=null"
-        class="text-white bg-red-600 hover:bg-red-700 rounded-full px-3 py-1 text-lg">&times;</button>
+<div *ngIf="errorMessage" 
+     class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4 overflow-auto">
+  <div class="relative bg-red-50 border border-red-300 text-red-700 p-6 rounded-sm shadow-lg max-w-full sm:max-w-xl w-full">
+    
+    <!-- Close button in top-right -->
+    <button (click)="errorMessage=null"
+      class="absolute -top-7 right-0 text-white bg-red-600 hover:bg-red-700 px-3 py-1 text-sm rounded">
+      CLOSE
+    </button>
+
+    <div class="flex items-center gap-2 mb-4">
+      <i class="fas fa-exclamation-circle text-red-600 text-xl"></i>
+      <span class="font-semibold text-lg">Pay Attention</span>
     </div>
+
     <p>{{ errorMessage }}</p>
   </div>
 </div>
+
 <div *ngIf="isVerifying" class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
   <img class="loader-spinner" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/loader-spinner.png" />
 </div>

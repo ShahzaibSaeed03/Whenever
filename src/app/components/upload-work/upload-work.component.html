@@ -91,14 +91,14 @@
 
       <!-- Close Button (relative to certificate) -->
       <!-- Close Button (relative to certificate) -->
-<button class="absolute -top-10 right-2 border border-gray-300 bg-red-700 text-white 
-  rounded-md px-5 py-1 text-2xl shadow-lg"
+<button class="absolute -top-9 right-0 border border-gray-300 bg-[#ff5758] text-white 
+  rounded-sm px-3 py-1 text-lg shadow-sm"
   (click)="closeDetailbox()">
  CLOSE
 </button>
 
 
-      <div class="certificate space-y-3 mt-12 sm:space-y-6 sm:mt-12 text-sm sm:text-base text-gray-700 break-words">
+      <div class="certificate space-y-3 mt-2 sm:space-y-6 sm:mt-12 text-sm sm:text-base text-gray-700 break-words">
         
  <table class="w-full text-sm relative z-10 border-separate border-spacing-y-3">
   <tr>
@@ -155,16 +155,28 @@
 <!-- Error Modal -->
 <ng-container *ngIf="showError">
   <div class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4 sm:px-0">
-    <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6 relative max-w-sm w-full">
-      <button class="absolute top-2 right-2 text-xl font-bold text-gray-700" (click)="closeError()">&times;</button>
-      <div class="flex items-center gap-2 mb-3 ">
+  <div class="relative bg-red-50 border border-red-300 text-red-700 p-6 rounded-sm shadow-lg max-w-full sm:max-w-xl w-full">
+      <!-- Top-right close (X) -->
+      <button class="absolute -top-7 right-0 text-md font-bold text-white px-2 py-1 bg-red-600 hover:bg-red-700 " 
+              (click)="closeError()">CLOSE</button>
+      
+      <!-- Header -->
+      <div class="flex items-center gap-2 mb-3">
         <i class="fas fa-exclamation-circle text-red-600 text-2xl"></i>
         <h2 class="text-red-600 text-lg font-semibold">Pay Attention</h2>
       </div>
-      <p class="text-gray-700 whitespace-pre-line">{{ errorMessage }}</p>
+      
+      <!-- Error message -->
+      <p class="text-gray-700 whitespace-pre-line mb-4">{{ errorMessage }}</p>
+
+      <!-- Close text button -->
+      <div class="flex justify-end">
+      
+      </div>
     </div>
   </div>
 </ng-container>
+
 <!-- Spinner Overlay -->
 <div *ngIf="isUploading"
      class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
