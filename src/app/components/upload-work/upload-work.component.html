@@ -20,21 +20,21 @@
     <div class="mb-3 flex flex-col sm:flex-row">
       <label class="block text-[13px] w-[100%] sm:w-[40%]  mb-1">Title of your Work</label>
       <input id="workTitle" [(ngModel)]="workTitle" type="text" placeholder="up to 200 characters"
-        class="w-full border border-gray-400 bg-white px-2  text-sm rounded-none" />
+        class="w-full border border-gray-400 bg-white px-2  sm:py-0 py-1  text-sm rounded-none" />
     </div>
 
     <!-- Copyright Owner -->
     <div class="mb-3 flex flex-col sm:flex-row">
       <label class="block text-[13px] w-[100%] sm:w-[40%]  mb-1">Copyright Owner Name</label>
       <input id="copyrightOwner" [(ngModel)]="copyrightOwner" type="text"
-        class="w-full border border-gray-400 bg-white px-2  text-sm rounded-none" />
+        class="w-full border border-gray-400 bg-white px-2  sm:py-0 py-1  text-sm rounded-none" />
     </div>
 <br>
     <!-- Additional Owners -->
     <div class="mb-3 flex flex-col sm:flex-row">
       <label class="block text-[13px] w-[100%] sm:w-[40%]  mb-1">Additional Copyright Owners</label>
       <input id="additionalOwners" [(ngModel)]="additionalOwners" type="text"
-        class="w-full border border-gray-400 bg-white px-2  text-sm rounded-none" />
+        class="w-full border border-gray-400 bg-white px-2  sm:py-0 py-1  text-sm rounded-none" />
     </div>
 <br>
     <!-- File Upload -->
@@ -51,7 +51,7 @@
     placeholder=""
     
     readonly
-    class=" border border-gray-400 bg-white px-2  text-sm rounded-none ml-0 mt-2 w-full sm:w-64"
+    class=" border border-gray-400 bg-white px-2  sm:py-0 py-1  text-sm rounded-none ml-0 mt-2 w-full sm:w-64"
   />
 
   <!-- Hidden actual file input -->
