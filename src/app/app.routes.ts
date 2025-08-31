@@ -10,15 +10,14 @@ import { AuthGuard } from './guards/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 
 export const routes: Routes = [
-  // Root → UploadWorkComponent (protected)
-  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+  // Root → HomeComponent (PUBLIC)
+  { path: '', component: HomeComponent },
 
   // Auth-protected routes
   { path: 'my-original-works', component: MyOriginalWorksComponent, canActivate: [AuthGuard] },
 
   // Public routes
-    { path: 'upload', component: UploadWorkComponent },
-
+  { path: 'upload', component: UploadWorkComponent },
   { path: 'upload-faq', component: UploadFAQComponent },
   { path: 'verify', component: VerifyWorkComponent },
   { path: 'view-work/:workId', component: ViewWorkDetailsComponent },
@@ -30,3 +29,4 @@ export const routes: Routes = [
   // Fallback
   { path: '**', redirectTo: '' },
 ];
+

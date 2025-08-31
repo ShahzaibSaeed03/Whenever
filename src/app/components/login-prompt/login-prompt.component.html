@@ -1,0 +1,15 @@
+<div *ngIf="show" class="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+  <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 text-center relative">
+    <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-800" (click)="close()">✖</button>
+
+    <h2 class="text-xl font-bold text-[#507897] mb-4">Login Required</h2>
+    <p class="text-gray-600 mb-6">
+      To protect and manage your works, please log in to your account.
+    </p>
+
+    <a routerLink="/login" 
+       class="px-6 py-3 bg-[#507897] text-white rounded-xl shadow hover:bg-[#40607a] transition font-semibold">
+      Go to Login
+    </a>
+  </div>
+</div>

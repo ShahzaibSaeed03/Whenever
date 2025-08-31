@@ -1,26 +1,37 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import * as AOS from 'aos';
+import { LoginPromptComponent } from '../login-prompt/login-prompt.component';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule,RouterLink],
+  standalone: true,
+  imports: [CommonModule, RouterLink, LoginPromptComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
- ngOnInit(): void {
+  showLoginModal = false;
+
+  ngOnInit(): void {
     AOS.init({
-      duration: 900,      // animation duration
+      duration: 900,
       easing: 'ease-in-out',
-      once: false,        // false = animate every time element comes into view
-      delay: 200,         // global delay before animations trigger
-      offset: 120         // start animating before element fully in viewport
+      once: false,
+      delay: 200,
+      offset: 120
     });
 
-    // re-initialize on navigation back to homepage
     setTimeout(() => {
       AOS.refresh();
-    }, 400);  // 🔥 add delay when you revisit page
-  }}
+    }, 400);
+
+    // ⏳ Show login modal after 5s if not logged in
+    if (!localStorage.getItem('userId')) {
+      setTimeout(() => {
+        this.showLoginModal = true;
+      }, 5000);
+    }
+  }
+}

@@ -129,3 +129,7 @@
     </a>
   </div>
 </section>
+<app-login-prompt 
+  [show]="showLoginModal" 
+  (closed)="showLoginModal=false">
+</app-login-prompt>

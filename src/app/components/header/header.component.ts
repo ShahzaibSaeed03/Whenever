@@ -1,16 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, RouterModule],
+  standalone: true,
+  imports: [CommonModule, RouterModule,RouterLink],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
   menuOpen = false;
   isLoggedIn = false;
+  showLoginPopup = false;
 
   constructor(private router: Router) {}
 
@@ -19,7 +21,7 @@ export class HeaderComponent {
   }
 
   checkLogin() {
-    this.isLoggedIn = !!localStorage.getItem('token'); // true if token exists
+    this.isLoggedIn = !!localStorage.getItem('token');
   }
 
   toggleMenu() {
@@ -33,6 +35,23 @@ export class HeaderComponent {
   logout() {
     localStorage.removeItem('token');
     this.isLoggedIn = false;
+    this.router.navigateByUrl('/login');
+  }
+
+  handleProtectedNav(route: string) {
+    if (this.isLoggedIn) {
+      this.router.navigateByUrl(route);
+    } else {
+      this.showLoginPopup = true;
+    }
+  }
+
+  closeLoginPopup() {
+    this.showLoginPopup = false;
+  }
+
+  goToLogin() {
+    this.showLoginPopup = false;
     this.router.navigateByUrl('/login');
   }
 }
