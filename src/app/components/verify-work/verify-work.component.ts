@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { WorkService } from '../../service/work-service.service';
 import * as pdfjsLib from 'pdfjs-dist';
 
+
 // Set the worker source path correctly
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'assets/pdf.worker.min.mjs';
 
@@ -81,7 +82,7 @@ export class VerifyWorkComponent {
     this.resetStatus();
 
     if (!this.file || !this.certificate || !this.otsFile) {
-      this.setError('Please select the file, its certificate, and the .ots file.');
+      this.setError('Please first select the file to be verified, its certificate and its .ots file.');
       return;
     }
 

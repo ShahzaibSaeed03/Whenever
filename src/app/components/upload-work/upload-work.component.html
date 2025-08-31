@@ -119,7 +119,7 @@
   </tr>
   <tr>
     <td class="font-semibold pr-4 whitespace-nowrap">Registration Date:</td>
-    <td>{{ uploadedData?.registration_date | date:'MM/dd/yyyy, h:mm:ss a' }}</td>
+    <td >{{ uploadedData?.registration_date }}</td>
   </tr>
   <tr>
     <td class="font-semibold pr-4 whitespace-nowrap">Timestamping Authority:</td>
@@ -138,7 +138,7 @@
   File SHA256 fingerprint:
 </td>
 <td class="align-top break-all w-full">
-  <span class="font-mono text-sm">{{ uploadedData?.fingerprint }}</span>
+  <span class="font-mono text-[13px]">{{ uploadedData?.fingerprint }}</span>
 </td>
 
 

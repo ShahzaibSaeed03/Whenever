@@ -75,12 +75,13 @@
   <!-- Show block details ONLY if block number exists -->
   <p *ngIf="blocks.length > 0 && blocks[0]?.block"
      class="text-sm text-gray-600 mt-1">
-    Bitcoin Block
+    Bitcoin block
     <span class="text-blue-400">{{ blocks[0].block }}</span>
-    Attests existence as of
-    <span class="font-medium">
-      {{ formatUtcToAmPm(blocks[0]?.timestamp) }}
-    </span>
+    attests the existence of your file as of
+   <span class="font-medium">
+    {{ backendResponse?.registeration_date }}
+</span>
+
   </p>
 </div>
 
@@ -96,16 +97,16 @@
 <!-- Error Overlay -->
 <div *ngIf="errorMessage" 
      class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4 overflow-auto">
-  <div class="relative bg-red-50 border border-red-300 text-red-700 p-6 rounded-sm shadow-lg max-w-full sm:max-w-xl w-full">
+  <div class="relative bg-red-50 border border-red-300 text-red-600 p-6 rounded-sm shadow-lg max-w-full sm:max-w-xl w-full">
     
     <!-- Close button in top-right -->
     <button (click)="errorMessage=null"
-      class="absolute -top-7 right-0 text-white bg-red-600 hover:bg-red-700 px-3 py-1 text-sm rounded">
+      class="absolute -top-7 right-0 text-white bg-[#df1c22] hover:bg-red-700 px-3 py-1 text-sm rounded">
       CLOSE
     </button>
 
     <div class="flex items-center gap-2 mb-4">
-      <i class="fas fa-exclamation-circle text-red-600 text-xl"></i>
+      <i class="fas fa-exclamation-circle text-[#df1c22] text-xl"></i>
       <span class="font-semibold text-lg">Pay Attention</span>
     </div>
 

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router, RouterLink, RouterModule } from '@angular/router';
+import { AuthService } from '../../service/auth-service.service';
 
 @Component({
   selector: 'app-header',
@@ -14,11 +15,14 @@ export class HeaderComponent {
   isLoggedIn = false;
   showLoginPopup = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,private cdr: ChangeDetectorRef,private auth: AuthService) {}
 
-  ngOnInit() {
-    this.checkLogin();
-  }
+ngOnInit() {
+  this.auth.isLoggedIn$.subscribe(status => {
+    this.isLoggedIn = status;
+    this.cdr.detectChanges(); // ensure view updates
+  });
+}
 
   checkLogin() {
     this.isLoggedIn = !!localStorage.getItem('token');
@@ -32,19 +36,23 @@ export class HeaderComponent {
     this.menuOpen = false;
   }
 
-  logout() {
-    localStorage.removeItem('token');
-    this.isLoggedIn = false;
-    this.router.navigateByUrl('/login');
-  }
+logout() {
+  this.auth.logout(); // this updates the observable and localStorage inside the service
+  this.router.navigateByUrl('/login'); // redirect
+}
 
-  handleProtectedNav(route: string) {
-    if (this.isLoggedIn) {
-      this.router.navigateByUrl(route);
-    } else {
-      this.showLoginPopup = true;
-    }
+
+handleProtectedNav(route: string) {
+  this.checkLogin(); // <-- remove this
+  if (this.isLoggedIn) {
+    this.router.navigateByUrl(route);
+  } else {
+    this.showLoginPopup = true;
+    this.cdr.detectChanges();
   }
+}
+
+
 
   closeLoginPopup() {
     this.showLoginPopup = false;

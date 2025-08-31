@@ -6,7 +6,6 @@ import { UploadFAQComponent } from './components/upload-faq/upload-faq.component
 import { LoginComponent } from './components/login/login.component';
 import { RegisterUserComponent } from './components/register-user/register-user.component';
 import { ViewWorkDetailsComponent } from './components/view-work-details/view-work-details.component';
-import { AuthGuard } from './guards/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 
 export const routes: Routes = [
@@ -14,7 +13,7 @@ export const routes: Routes = [
   { path: '', component: HomeComponent },
 
   // Auth-protected routes
-  { path: 'my-original-works', component: MyOriginalWorksComponent, canActivate: [AuthGuard] },
+  { path: 'my-original-works', component: MyOriginalWorksComponent},
 
   // Public routes
   { path: 'upload', component: UploadWorkComponent },
