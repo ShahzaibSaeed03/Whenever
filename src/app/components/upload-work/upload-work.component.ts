@@ -27,38 +27,38 @@ export class UploadWorkComponent {
   additionalOwners: string = '';
   owner: string = "";
 
-  constructor(private workS: WorkService, private toast: ToastrService) {}
+  constructor(private workS: WorkService, private toast: ToastrService) { }
 
- onFileChange(event: any) {
-  const fileInput = event.target as HTMLInputElement;
-  const file: File | null = fileInput.files?.[0] || null;
+  onFileChange(event: any) {
+    const fileInput = event.target as HTMLInputElement;
+    const file: File | null = fileInput.files?.[0] || null;
 
-  if (!file) return;
+    if (!file) return;
 
-  const ext = file.name.split('.').pop()?.toLowerCase();
-  const sizeMB = file.size / (1024 * 1024);
+    const ext = file.name.split('.').pop()?.toLowerCase();
+    const sizeMB = file.size / (1024 * 1024);
 
-  // File size check
-  if (sizeMB > 120) {
-    this.setError(
-      `The size of your file is ${sizeMB.toFixed(2)} MB. This exceeds our limit of 120 MB. Please compress your file and try again.`
-    );
-    fileInput.value = ''; // ✅ reset input so same file can trigger again
-    return;
+    // File size check
+    if (sizeMB > 120) {
+      this.setError(
+        `The size of your file is ${sizeMB.toFixed(2)} MB. This exceeds our limit of 120 MB. Please compress your file and try again.`
+      );
+      fileInput.value = ''; // ✅ reset input so same file can trigger again
+      return;
+    }
+
+    // File type restriction
+    if (ext === 'exe' || ext === 'js') {
+      this.setError(`We don’t accept .exe or .js files`);
+      fileInput.value = ''; // ✅ reset input here too
+      return;
+    }
+
+    // valid file
+    this.resetError();
+    this.selectedFile = file;
+    this.fileName = file.name;
   }
-
-  // File type restriction
-  if (ext === 'exe' || ext === 'js') {
-    this.setError(`We don’t accept .exe or .js files`);
-    fileInput.value = ''; // ✅ reset input here too
-    return;
-  }
-
-  // valid file
-  this.resetError();
-  this.selectedFile = file;
-  this.fileName = file.name;
-}
 
 
   upload() {
@@ -76,7 +76,7 @@ export class UploadWorkComponent {
       .subscribe(
         (res: any) => {
           this.isUploading = false;
-console.log(res)
+          console.log(res)
           if (res?.status === 'success') {
             this.handleUploadSuccess(res.data);
           } else {
@@ -102,68 +102,68 @@ console.log(res)
       );
   }
 
-private async handleUploadSuccess(data: any) {
-  this.uploadedData = {
-    ...data,
-    fileName: this.selectedFile?.name || '',
-    copyrightOwner: this.copyrightOwner,
-    additionalOwners: this.additionalOwners
-  };
+  private async handleUploadSuccess(data: any) {
+    this.uploadedData = {
+      ...data,
+      fileName: this.selectedFile?.name || '',
+      copyrightOwner: this.copyrightOwner,
+      additionalOwners: this.additionalOwners
+    };
 
-  this.workupload = true;
+    this.workupload = true;
 
-  try {
-    // 1. Download certificate first
-    if (this.uploadedData.certificate_url) {
-      await this.triggerDownloadWithDelay(this.uploadedData.certificate_url, 0); // no delay for cert
+    try {
+      // 1. Download certificate first
+      if (this.uploadedData.certificate_url) {
+        await this.triggerDownloadWithDelay(this.uploadedData.certificate_url, 0); // no delay for cert
+      }
+
+      // 2. Download OTS after 2s delay
+      if (this.uploadedData.ots_url) {
+        await this.triggerDownloadWithDelay(this.uploadedData.ots_url, 2000);
+      }
+    } catch (err) {
+      console.error("Download sequence failed", err);
+      this.setError("Failed to download files.");
     }
 
-    // 2. Download OTS after 2s delay
-    if (this.uploadedData.ots_url) {
-      await this.triggerDownloadWithDelay(this.uploadedData.ots_url, 2000);
-    }
-  } catch (err) {
-    console.error("Download sequence failed", err);
-    this.setError("Failed to download files.");
+    this.resetFormFields();
   }
 
-  this.resetFormFields();
-}
+  private triggerDownloadWithDelay(url: string, delay: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          const link = document.createElement('a');
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
+      }, delay);
+    });
+  }
 
-private triggerDownloadWithDelay(url: string, delay: number): Promise<void> {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
+
+  private triggerSequentialDownload(url: string): Promise<void> {
+    return new Promise((resolve, reject) => {
       try {
         const link = document.createElement('a');
         link.href = url;
+        // ensures browser handles it better
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        resolve();
+
+        setTimeout(() => resolve(), 1000); // wait a bit before next download
       } catch (err) {
         reject(err);
       }
-    }, delay);
-  });
-}
-
-
-private triggerSequentialDownload(url: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    try {
-      const link = document.createElement('a');
-      link.href = url;
-   // ensures browser handles it better
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      setTimeout(() => resolve(), 1000); // wait a bit before next download
-    } catch (err) {
-      reject(err);
-    }
-  });
-}
+    });
+  }
 
 
 
@@ -179,23 +179,23 @@ private triggerSequentialDownload(url: string): Promise<void> {
   }
 
   closeDetailbox() {
+    this.resetAll();
     this.workupload = false;
-    this.uploadedData = null;
     this.selectedFile = null;
     this.errorMessage = '';
     this.fileName = '';
   }
 
-private setError(msg: string) {
-  // Reset first to force change detection
-  this.errorMessage = '';
-  this.showError = false;
+  private setError(msg: string) {
+    // Reset first to force change detection
+    this.errorMessage = '';
+    this.showError = false;
 
-  setTimeout(() => {
-    this.errorMessage = msg;
-    this.showError = true;
-  });
-}
+    setTimeout(() => {
+      this.errorMessage = msg;
+      this.showError = true;
+    });
+  }
 
 
   private resetError() {
@@ -205,7 +205,15 @@ private setError(msg: string) {
 
   private resetFormFields() {
     this.selectedFile = null;
-  
+   
+    this.fileName = '';
+  }
+  private resetAll() {
+      this.workTitle = '';
+     this.copyrightOwner = '';
+     this.additionalOwners = '';
+     this.selectedFile = null;
+   
     this.fileName = '';
   }
 }
