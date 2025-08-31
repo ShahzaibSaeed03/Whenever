@@ -7,15 +7,18 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterUserComponent } from './components/register-user/register-user.component';
 import { ViewWorkDetailsComponent } from './components/view-work-details/view-work-details.component';
 import { AuthGuard } from './guards/auth.guard';
+import { HomeComponent } from './components/home/home.component';
 
 export const routes: Routes = [
   // Root → UploadWorkComponent (protected)
-  { path: '', component: UploadWorkComponent, canActivate: [AuthGuard] },
+  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
 
   // Auth-protected routes
   { path: 'my-original-works', component: MyOriginalWorksComponent, canActivate: [AuthGuard] },
 
   // Public routes
+    { path: 'upload', component: UploadWorkComponent },
+
   { path: 'upload-faq', component: UploadFAQComponent },
   { path: 'verify', component: VerifyWorkComponent },
   { path: 'view-work/:workId', component: ViewWorkDetailsComponent },
