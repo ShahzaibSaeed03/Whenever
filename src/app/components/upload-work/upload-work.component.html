@@ -100,50 +100,47 @@
 
       <div class="certificate space-y-3 mt-2 sm:space-y-6 sm:mt-12 text-sm sm:text-base text-gray-700 break-words">
         
- <table class="w-full text-sm relative z-10 border-separate border-spacing-y-3">
+<table class="w-full text-sm relative z-10 border-separate border-spacing-y-3">
   <tr>
-    <td class="font-semibold pr-4">Work Title:</td>
-    <td>{{ uploadedData?.title }}</td>
+    <td class="font-semibold pr-4 align-top">Work Title:</td>
+    <td class="align-top">{{ uploadedData?.title }}</td>
   </tr>
   <tr>
-    <td class="font-semibold pr-4">Copyright Owner:</td>
-    <td>{{ uploadedData?.copyrightOwner }}</td>
+    <td class="font-semibold pr-4 align-top">Copyright Owner:</td>
+    <td class="align-top">{{ uploadedData?.copyrightOwner }}</td>
   </tr>
   <tr *ngIf="uploadedData?.additionalOwners">
-    <td class="font-semibold pr-4 whitespace-nowrap">Additional Owners:</td>
-    <td>{{ uploadedData?.additionalOwners }}</td>
+    <td class="font-semibold pr-4 whitespace-nowrap align-top">Additional Owners:</td>
+    <td class="align-top">{{ uploadedData?.additionalOwners }}</td>
   </tr>
   <tr>
-    <td class="font-semibold pr-4 whitespace-nowrap">Reference number:</td>
-    <td>{{ uploadedData?.displayed_id }}</td>
+    <td class="font-semibold pr-4 whitespace-nowrap align-top">Reference number:</td>
+    <td class="align-top">{{ uploadedData?.displayed_id }}</td>
   </tr>
   <tr>
-    <td class="font-semibold pr-4 whitespace-nowrap">Registration Date:</td>
-    <td >{{ uploadedData?.registration_date }}</td>
+    <td class="font-semibold pr-4 whitespace-nowrap align-top">Registration Date:</td>
+    <td class="align-top">{{ uploadedData?.registration_date }}</td>
   </tr>
   <tr>
-    <td class="font-semibold pr-4 whitespace-nowrap">Timestamping Authority:</td>
-    <td>Open Timestamps</td>
+    <td class="font-semibold pr-4 whitespace-nowrap align-top">Timestamping Authority:</td>
+    <td class="align-top">Open Timestamps</td>
   </tr>
   <tr>
-    <td class="font-semibold pr-4 whitespace-nowrap">Copyrighted File name:</td>
-    <td>  <a [href]="uploadedData?.original_file_url" target="_blank"
-     class=" break-all block sm:inline">
-    {{ uploadedData?.fileName }}
-  </a></td>
-    
+    <td class="font-semibold pr-4 whitespace-nowrap align-top">Copyrighted File name:</td>
+    <td class="align-top">
+      <a [href]="uploadedData?.original_file_url" target="_blank" class="break-all block sm:inline">
+        {{ uploadedData?.fileName }}
+      </a>
+    </td>
   </tr>
   <tr>
-<td class="font-semibold pr-4 align-top whitespace-nowrap">
-  File SHA256 fingerprint:
-</td>
-<td class="align-top break-all w-full">
-  <span class="font-mono text-[13px]">{{ uploadedData?.fingerprint }}</span>
-</td>
-
-
+    <td class="font-semibold pr-4 align-top whitespace-nowrap">File SHA256 fingerprint:</td>
+    <td class="align-top break-all w-full">
+      <span class="font-mono text-[13px]">{{ uploadedData?.fingerprint }}</span>
+    </td>
   </tr>
 </table>
+
 
 
       </div>
