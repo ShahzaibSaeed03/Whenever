@@ -102,33 +102,38 @@ export class UploadWorkComponent {
       );
   }
 
-  private async handleUploadSuccess(data: any) {
-    this.uploadedData = {
-      ...data,
-      fileName: this.selectedFile?.name || '',
-      copyrightOwner: this.copyrightOwner,
-      additionalOwners: this.additionalOwners
-    };
+private async handleUploadSuccess(data: any) {
+  // Prepare uploaded data
+  this.uploadedData = {
+    ...data,
+    fileName: this.selectedFile?.name || '',
+    copyrightOwner: this.copyrightOwner,
+    additionalOwners: this.additionalOwners
+  };
 
-    this.workupload = true;
 
-    try {
-      // 1. Download certificate first
-      if (this.uploadedData.certificate_url) {
-        await this.triggerDownloadWithDelay(this.uploadedData.certificate_url, 0); // no delay for cert
-      }
 
-      // 2. Download OTS after 2s delay
-      if (this.uploadedData.ots_url) {
-        await this.triggerDownloadWithDelay(this.uploadedData.ots_url, 2000);
-      }
-    } catch (err) {
-      console.error("Download sequence failed", err);
-      this.setError("Failed to download files.");
+  // Reset form fields
+  this.resetFormFields();
+
+  // Start downloads in background
+  try {
+    // Download certificate first
+    if (this.uploadedData.certificate_url) {
+      this.triggerDownloadWithDelay(this.uploadedData.certificate_url, 0);
     }
-
-    this.resetFormFields();
+  // Show certificate immediately
+  this.workupload = true;
+    // Download OTS file after 2s delay
+    if (this.uploadedData.ots_url) {
+      this.triggerDownloadWithDelay(this.uploadedData.ots_url, 2000);
+    }
+  } catch (err) {
+    console.error("Download sequence failed", err);
+    this.setError("Failed to download files.");
   }
+}
+
 
   private triggerDownloadWithDelay(url: string, delay: number): Promise<void> {
     return new Promise((resolve, reject) => {

@@ -1,145 +1,135 @@
 <ng-container *ngIf="!workupload">
-    <div class="w-full flex justify-center px-3 sm:px-6 mt-8">
+  <div class="w-full flex justify-center items-center  px-3 sm:px-6 mt-8">
 
-  <div class="max-w-3xl mx-auto mt-8 bg-[#cfe6ef] font-semibold text-[#3f85ae] border border-gray-300 p-6">
+    <div class="max-w-3xl mx-auto mt-8 bg-[#cfe6ef] font-semibold text-[#3f85ae] border border-gray-300 p-6">
 
-    <!-- Instructions -->
-    <p class="text-[14px]  mb-4">
-      In addition to your work, we advise you to upload your drafts (even handwritten - take photos) <br> 
-      and the various intermediate versions. 
-      <span class="text-green-700 font-bold cursor-pointer" routerLink="/upload-faq">
-        For more information, please read this FAQ.
-      </span>
+      <!-- Instructions -->
+      <p class="text-[14px]  mb-4 leading-4">
+        In addition to your work, we advise you to upload your drafts (even handwritten - take photos) <br>
+        and the various intermediate versions.
+        <span class="text-green-700 font-bold cursor-pointer" routerLink="/upload-faq">
+          For more information, please read this FAQ.
+        </span>
+        <br>
+        Gather all your files in a zip file, and upload it.<br>
+        Please note that the size of the uploaded file is limited to 120 MB.<br>
+        Javascript and .exe files are not accepted.
+      </p>
+
+      <!-- Title -->
+      <div class="mb-4 flex sm:items-center flex-col sm:flex-row">
+        <label class="block text-[13px] w-[100%] sm:w-[29%]  ">Title of your Work</label>
+        <input id="workTitle" [(ngModel)]="workTitle" type="text" placeholder="up to 200 characters"
+          class="w-full border border-gray-400 bg-white px-2  sm:py-0 py-1  text-sm rounded-none" />
+      </div>
+
+      <!-- Copyright Owner -->
+      <div class="mb-4 flex sm:items-center flex-col sm:flex-row">
+        <label class="block text-[13px] w-[100%] sm:w-[29%]  ">Copyright Owner Name</label>
+        <input id="copyrightOwner" [(ngModel)]="copyrightOwner" type="text"
+          class="w-full border border-gray-400 bg-white px-2  sm:py-0 py-1  text-sm rounded-none" />
+      </div>
+      <!-- Additional Owners -->
+      <div class="mb-4 sm:items-center flex flex-col sm:flex-row">
+        <label class="block text-[13px] w-[100%] sm:w-[29%]  ">Additional Copyright Owners</label>
+        <input id="additionalOwners" [(ngModel)]="additionalOwners" type="text"
+          class="w-full border border-gray-400 bg-white px-2  sm:py-0 py-1  text-sm rounded-none" />
+      </div>
+      <!-- File Upload -->
+      <div class="flex  sm:items-center mb-4 w-full flex-col sm:flex-row gap-3 sm:w-[750px] ">
+        <button type="button" class="bg-[#507897] w-28 cursor-pointer ml-9 hover:bg-[#406480] rounded-md text-white  px-3 py-1 text-sm font-semibold"
+          (click)="fileInput.click()">
+          CHOOSE FILE
+        </button>
+
+        <!-- Text input to show file name -->
+        <input type="text" [value]="fileName" placeholder="" readonly
+          class=" border border-gray-400 bg-white px-2  sm:py-0 py-1  text-sm rounded-none   w-full sm:w-64" />
+
+        <!-- Hidden actual file input -->
+        <input type="file" #fileInput (change)="onFileChange($event)" hidden />
+      </div>
+
       <br>
-      Gather all your files in a zip file, and upload it.<br>
-      Please note that the size of the uploaded file is limited to 120 MB.<br>
-      Javascript and .exe files are not accepted.
-    </p>
 
-    <!-- Title -->
-    <div class="mb-3 flex flex-col sm:flex-row">
-      <label class="block text-[13px] w-[100%] sm:w-[40%]  mb-1">Title of your Work</label>
-      <input id="workTitle" [(ngModel)]="workTitle" type="text" placeholder="up to 200 characters"
-        class="w-full border border-gray-400 bg-white px-2  sm:py-0 py-1  text-sm rounded-none" />
+      <div class="sm:w-2xl px-0 w-fit mx-auto">
+
+        <!-- Warning -->
+        <p class="text-[13px] sm:text-[14px] md:text-[15px] text-red-500 leading-4 mb-2 uppercase break-words  px-2">
+          PLEASE PAY ATTENTION: AFTER CLICKING ON THE “UPLOAD THIS WORK” BUTTON,<br>
+          YOU WON’T BE ABLE TO MODIFY THE UPLOADED FILE, NOR ANY INFORMATION IN <br> THE ABOVE FIELDS.
+        </p>
+
+
+
+        <!-- Upload Button -->
+        <button (click)="upload()" [disabled]="isUploading"
+          class="bg-red-500 rounded-md cursor-pointer hover:bg-red-700 text-white px-2 mx-2 py-1 text-sm  uppercase w-full sm:w-auto">
+          UPLOAD THIS WORK
+        </button>
+      </div>
+
     </div>
-
-    <!-- Copyright Owner -->
-    <div class="mb-3 flex flex-col sm:flex-row">
-      <label class="block text-[13px] w-[100%] sm:w-[40%]  mb-1">Copyright Owner Name</label>
-      <input id="copyrightOwner" [(ngModel)]="copyrightOwner" type="text"
-        class="w-full border border-gray-400 bg-white px-2  sm:py-0 py-1  text-sm rounded-none" />
-    </div>
-<br>
-    <!-- Additional Owners -->
-    <div class="mb-3 flex flex-col sm:flex-row">
-      <label class="block text-[13px] w-[100%] sm:w-[40%]  mb-1">Additional Copyright Owners</label>
-      <input id="additionalOwners" [(ngModel)]="additionalOwners" type="text"
-        class="w-full border border-gray-400 bg-white px-2  sm:py-0 py-1  text-sm rounded-none" />
-    </div>
-<br>
-    <!-- File Upload -->
- <div class="flex  sm:items-center mb-5 w-full flex-col sm:flex-row sm:w-[750px] mx-auto">
-  <button type="button"
-    class="bg-[#507897] rounded-md text-white mx-0 sm:mx-12 px-4 py-1 text-sm font-semibold"
-    (click)="fileInput.click()">
-    CHOOSE FILE
-  </button>
-
-  <!-- Text input to show file name -->
-  <input type="text"
-    [value]="fileName"
-    placeholder=""
-    
-    readonly
-    class=" border border-gray-400 bg-white px-2  sm:py-0 py-1  text-sm rounded-none ml-0 mt-2 w-full sm:w-64"
-  />
-
-  <!-- Hidden actual file input -->
-  <input type="file" #fileInput (change)="onFileChange($event)" hidden />
-</div>
-
-<br>
-  
-<div class="sm:w-2xl px-4 w-fit mx-auto">
-
-    <!-- Warning -->
-<p class="text-[13px] sm:text-[14px] md:text-[15px] text-red-500  uppercase break-words leading-relaxed px-2">
-  PLEASE PAY ATTENTION: AFTER CLICKING ON THE “UPLOAD THIS WORK” BUTTON,<br>
-  YOU WON’T BE ABLE TO MODIFY THE UPLOADED FILE, NOR ANY INFORMATION IN <br>  THE ABOVE FIELDS.
-</p>
-
-
-
-    <!-- Upload Button -->
-    <button (click)="upload()" [disabled]="isUploading"
-      class="bg-red-500 rounded-md hover:bg-red-700 text-white px-2 mx-2 py-1 text-sm  uppercase w-full sm:w-auto">
-      UPLOAD THIS WORK
-    </button>
-    </div>
-
   </div>
-    </div>
 </ng-container>
 
 
 <!-- Certificate Display -->
 <ng-container *ngIf="workupload">
   <div class="fixed inset-0 bg-black/60 flex justify-center flex-col items-center z-50 px-0 sm:px-0 ">
-    
+
     <!-- Certificate Box -->
     <div class="rounded-lg shadow-lg p-4 sm:p-6 relative bg-white w-full max-w-full sm:max-w-2xl bg-image">
 
       <!-- Close Button (relative to certificate) -->
-      <!-- Close Button (relative to certificate) -->
-<button class="absolute -top-9 right-0 border border-gray-300 bg-[#ff5758] text-white 
-  rounded-sm px-3 py-1 text-lg shadow-sm"
-  (click)="closeDetailbox()">
- CLOSE
-</button>
+      <button class="absolute cursor-pointer -top-9 right-0 border border-gray-300 bg-[#ff5758] text-white 
+  rounded-sm px-3 py-1 text-lg shadow-sm" (click)="closeDetailbox()">
+        CLOSE
+      </button>
 
 
       <div class="certificate space-y-3 mt-2 sm:space-y-6 sm:mt-12 text-sm sm:text-base text-gray-700 break-words">
-        
-<table class="w-full text-sm relative z-10 border-separate border-spacing-y-3">
-  <tr>
-    <td class="font-semibold pr-4 align-top">Work Title:</td>
-    <td class="align-top">{{ uploadedData?.title }}</td>
-  </tr>
-  <tr>
-    <td class="font-semibold pr-4 align-top">Copyright Owner:</td>
-    <td class="align-top">{{ uploadedData?.copyrightOwner }}</td>
-  </tr>
-  <tr *ngIf="uploadedData?.additionalOwners">
-    <td class="font-semibold pr-4 whitespace-nowrap align-top">Additional Owners:</td>
-    <td class="align-top">{{ uploadedData?.additionalOwners }}</td>
-  </tr>
-  <tr>
-    <td class="font-semibold pr-4 whitespace-nowrap align-top">Reference number:</td>
-    <td class="align-top">{{ uploadedData?.displayed_id }}</td>
-  </tr>
-  <tr>
-    <td class="font-semibold pr-4 whitespace-nowrap align-top">Registration Date:</td>
-    <td class="align-top">{{ uploadedData?.registration_date }}</td>
-  </tr>
-  <tr>
-    <td class="font-semibold pr-4 whitespace-nowrap align-top">Timestamping Authority:</td>
-    <td class="align-top">Open Timestamps</td>
-  </tr>
-  <tr>
-    <td class="font-semibold pr-4 whitespace-nowrap align-top">Copyrighted File name:</td>
-    <td class="align-top">
-      <a [href]="uploadedData?.original_file_url" target="_blank" class="break-all block sm:inline">
-        {{ uploadedData?.fileName }}
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td class="font-semibold pr-4 align-top whitespace-nowrap">File SHA256 fingerprint:</td>
-    <td class="align-top break-all w-full">
-      <span class="font-mono text-[13px]">{{ uploadedData?.fingerprint }}</span>
-    </td>
-  </tr>
-</table>
+
+        <table class="w-full text-sm relative z-10 border-separate border-spacing-y-3">
+          <tr>
+            <td class="font-semibold pr-4 align-top">Work Title:</td>
+            <td class="align-top">{{ uploadedData?.title }}</td>
+          </tr>
+          <tr>
+            <td class="font-semibold pr-4 align-top">Copyright Owner:</td>
+            <td class="align-top">{{ uploadedData?.copyrightOwner }}</td>
+          </tr>
+          <tr *ngIf="uploadedData?.additionalOwners">
+            <td class="font-semibold pr-4 whitespace-nowrap align-top">Additional Owners:</td>
+            <td class="align-top">{{ uploadedData?.additionalOwners }}</td>
+          </tr>
+          <tr>
+            <td class="font-semibold pr-4 whitespace-nowrap align-top">Reference Number:</td>
+            <td class="align-top">{{ uploadedData?.displayed_id }}</td>
+          </tr>
+          <tr>
+            <td class="font-semibold pr-4 whitespace-nowrap align-top">Registration Date:</td>
+            <td class="align-top">{{ uploadedData?.registration_date }}</td>
+          </tr>
+          <tr>
+            <td class="font-semibold pr-4 whitespace-nowrap align-top">Timestamping Authority:</td>
+            <td class="align-top">Open Timestamps</td>
+          </tr>
+          <tr>
+            <td class="font-semibold pr-4 whitespace-nowrap align-top">Copyrighted File Name:</td>
+            <td class="align-top">
+              <a [href]="uploadedData?.original_file_url" target="_blank" class="break-all block sm:inline">
+                {{ uploadedData?.fileName }}
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td class="font-semibold pr-4 align-top whitespace-nowrap">File SHA256 Fingerprint:</td>
+            <td class="align-top break-all w-full">
+              <span class="font-mono text-[13px]">{{ uploadedData?.fingerprint }}</span>
+            </td>
+          </tr>
+        </table>
 
 
 
@@ -152,31 +142,27 @@
 <!-- Error Modal -->
 <ng-container *ngIf="showError">
   <div class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4 sm:px-0">
-  <div class="relative bg-red-50 border border-red-300 text-red-700 p-6 rounded-sm shadow-lg max-w-full sm:max-w-xl w-full">
+    <div
+      class="relative bg-red-50 border border-red-300 text-red-700 p-6 rounded-sm shadow-lg max-w-full sm:max-w-xl w-full">
       <!-- Top-right close (X) -->
-      <button class="absolute -top-7 right-0 text-md font-bold text-white px-2 py-1 bg-red-600 hover:bg-red-700 " 
-              (click)="closeError()">CLOSE</button>
-      
+      <button class="absolute -top-6 right-0 cursor-pointer rounded-sm text-md font-bold text-white px-2 py-0 bg-red-600 hover:bg-red-700 "
+        (click)="closeError()">CLOSE</button>
+
       <!-- Header -->
       <div class="flex items-center gap-2 mb-3">
         <i class="fas fa-exclamation-circle text-red-600 text-2xl"></i>
         <h2 class="text-red-600 text-lg font-semibold">Pay Attention</h2>
       </div>
-      
-      <!-- Error message -->
-      <p class="text-gray-700 whitespace-pre-line mb-4">{{ errorMessage }}</p>
 
-      <!-- Close text button -->
-      <div class="flex justify-end">
-      
-      </div>
+      <!-- Error message -->
+      <p class="text-[#507897] whitespace-pre-line mb-4">{{ errorMessage }}</p>
+
+   
     </div>
   </div>
 </ng-container>
 
 <!-- Spinner Overlay -->
-<div *ngIf="isUploading"
-     class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-  <img class="loader-spinner"
-       src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/loader-spinner.png" />
+<div *ngIf="isUploading" class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+  <img class="loader-spinner" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/loader-spinner.png" />
 </div>

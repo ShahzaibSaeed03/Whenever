@@ -60,7 +60,7 @@
       </div>
       <!-- Error Message -->
       <div *ngIf="errorMessage"
-        class="bg-red-50 border border-red-300 text-red-700 px-4 py-2 rounded flex items-center gap-2 text-sm">
+        class="bg-red-50 border border-red-300 text-[#507897] px-4 py-2 rounded flex items-center gap-2 text-sm">
         <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
       </div>
 
@@ -97,7 +97,7 @@
 <!-- Error Overlay -->
 <div *ngIf="errorMessage" 
      class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4 overflow-auto">
-  <div class="relative bg-red-50 border border-red-300 text-red-600 p-6 rounded-sm shadow-lg max-w-full sm:max-w-xl w-full">
+  <div class="relative bg-red-50 border border-red-300 p-6 rounded-sm shadow-lg max-w-full sm:max-w-xl w-full">
     
     <!-- Close button in top-right -->
     <button (click)="errorMessage=null"
@@ -107,10 +107,10 @@
 
     <div class="flex items-center gap-2 mb-4">
       <i class="fas fa-exclamation-circle text-[#df1c22] text-xl"></i>
-      <span class="font-semibold text-lg">Pay Attention</span>
+      <span class="font-semibold text-red-600 text-lg">Pay Attention</span>
     </div>
 
-    <p>{{ errorMessage }}</p>
+    <p class="text-[#507897]">{{ errorMessage }}</p>
   </div>
 </div>
 

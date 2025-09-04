@@ -54,7 +54,7 @@ export class VerifyWorkComponent {
 
   // Handle file selection
   onFileChange(event: Event, type: 'file' | 'certificate' | 'otsFile') {
-        this.successMessage = null;
+    this.successMessage = null;
 
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;
@@ -110,36 +110,51 @@ export class VerifyWorkComponent {
       this.isVerifying = false;
     }
   }
+  // 🔧 NEW: normalize backend error strings
+  private prettifyBackendError(msg: string): string {
+    const text = (msg || '').replace(/\s+/g, ' ').trim(); // collapse spaces
+    const lower = text.toLowerCase();
 
- private handleSuccess(res: any) {
-  this.isVerifying = false;
-  this.backendResponse = res;
-
-  if (res?.otsStatus) {
-    this.blocks = res.otsStatus.anchors || [];
-
-    if (res.otsStatus.status === 'pending') {
-      this.successMessage = "The Bitcoin transaction is unconfirmed. The attestation is still pending. Please try later on.";
-    } else if (res.otsStatus.status === 'verified') {
-      this.successMessage = res.message || 'Verification successful.';
-    } else if (res.otsStatus.status === 'error') {
-      this.setError(res.otsStatus.error || res.message || "Verification failed.");
-    } else {
-      this.setError(res.message || 'Verification completed with unknown status.');
+    // Normalize: "Failed to calculate fingerprint of the file" → with "the" + trailing period
+    if (lower.startsWith('failed to calculate fingerprint of the file')) {
+      return 'Failed to calculate the fingerprint of the file.';
+    }
+    if (lower.startsWith('Verification output did not match expected patterns')) {
+      return "File doesn't match the certificate. The uploaded file and certificate are different. Please upload the related files.";
     }
 
-    this.tsaResult = {
-      status: res.otsStatus.status,
-      message: res.otsStatus.message,
-      details: res.otsStatus.details,
-      error: res.otsStatus.error,
-    };
-  } else {
-    this.setError('Unexpected response format.');
+    return text;
   }
 
-  console.log('✅ Backend Response:', res);
-}
+  private handleSuccess(res: any) {
+    this.isVerifying = false;
+    this.backendResponse = res;
+
+    if (res?.otsStatus) {
+      this.blocks = res.otsStatus.anchors || [];
+
+      if (res.otsStatus.status === 'pending') {
+        this.successMessage = "The Bitcoin transaction is unconfirmed. The attestation is still pending. It may take 2 to 24 hours.Please try again later on.";
+      } else if (res.otsStatus.status === 'verified') {
+        this.successMessage = res.message || 'Verification successful.';
+      } else if (res.otsStatus.status === 'error') {
+        this.setError(res.otsStatus.error || res.message || "Verification failed.");
+      } else {
+        this.setError(res.message || 'Verification completed with unknown status.');
+      }
+
+      this.tsaResult = {
+        status: res.otsStatus.status,
+        message: res.otsStatus.message,
+        details: res.otsStatus.details,
+        error: res.otsStatus.error,
+      };
+    } else {
+      this.setError('Unexpected response format.');
+    }
+
+    console.log('✅ Backend Response:', res);
+  }
 
 
 
@@ -147,16 +162,19 @@ export class VerifyWorkComponent {
     this.isVerifying = false;
 
     console.error('❌ Backend Error:', error);
-    if (error?.error?.message) this.setError(error.error.message);
-    else if (error?.error?.error) this.setError(error.error.error);
-    else if (error?.message) this.setError(error.message);
-    else this.setError(typeof error.error === 'string' ? error.error : JSON.stringify(error.error || error));
+    let msg =
+      error?.error?.message ||
+      error?.error?.error ||
+      error?.message ||
+      (typeof error?.error === 'string' ? error.error : JSON.stringify(error?.error || error));
+
+    // 🔧 apply normalization here
+    msg = this.prettifyBackendError(msg);
+    this.setError(msg);
   }
 
   private setError(msg: string) {
-     if (msg.includes("File doesn't match the certificate")) {
-    msg = "File doesn't match the certificate.";
-  }
+
 
     this.errorMessage = msg;
     this.successMessage = null;
