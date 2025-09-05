@@ -52,12 +52,10 @@ export class LoginComponent {
           this.router.navigateByUrl('/upload');
         } else {
           this._toastrS.error('Login failed: token or ID missing');
-          console.warn('Login Response missing token or ID:', res);
         }
       },
       (error) => {
         this.loading = false; // ✅ stop spinner
-        console.error('Login Error:', error);
         this._toastrS.error('Login failed. Please try again.');
       }
     );

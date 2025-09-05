@@ -56,7 +56,6 @@ export class ViewWorkDetailsComponent implements OnInit {
         this.loading = false;
 
         if (response.success) {
-          console.log('Work data:', response.data);
           this.workData = response.data;
           this.successMessage = 'Access granted!';
           this.showPasswordModal = false;   // ✅ close modal only after success
@@ -67,7 +66,6 @@ export class ViewWorkDetailsComponent implements OnInit {
       (error) => {
         this.loading = false;
         this.errorMessage = 'Invalid password or failed to fetch work.';
-        console.error(error);
       }
     );
   }

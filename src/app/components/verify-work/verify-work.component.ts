@@ -33,6 +33,27 @@ export class VerifyWorkComponent {
   isVerifying = false;
 
   constructor(private workService: WorkService, private toastr: ToastrService) { }
+  formatUtcToDate(utcString: string): string {
+  if (!utcString) return '';
+
+  // Normalize whitespace/newlines and trim
+  const s = utcString.replace(/\s+/g, ' ').trim();
+
+  // If text like "26 August 2025 at 06:13 UTC" → take everything before " at "
+  const idx = s.toLowerCase().indexOf(' at ');
+  if (idx !== -1) return s.slice(0, idx).trim();
+
+  // Fallback: try to parse and format (UTC)
+  const cleaned = s.replace(/\s*UTC$/i, '');
+  const d = new Date(cleaned.endsWith('Z') ? cleaned : cleaned + 'Z');
+  if (!isNaN(d.getTime())) {
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric', timeZone: 'UTC' });
+  }
+
+  // Last resort: original (normalized) string
+  return s;
+}
+
   formatUtcToAmPm(utcString: string): string {
     if (!utcString) return '';
     // Remove the " UTC" part if it exists
@@ -98,14 +119,12 @@ export class VerifyWorkComponent {
       formData.append('certificate', this.certificate);
       formData.append('ots', this.otsFile);
 
-      console.log('🔍 Verifying with FormData:', formData);
 
       this.workService.verifyWork(formData).subscribe(
         (res: any) => this.handleSuccess(res),
         (error) => this.handleError(error)
       );
     } catch (err) {
-      console.error('❌ Unexpected Error:', err);
       this.setError('Error reading files. Please try again.');
       this.isVerifying = false;
     }
@@ -153,7 +172,6 @@ export class VerifyWorkComponent {
       this.setError('Unexpected response format.');
     }
 
-    console.log('✅ Backend Response:', res);
   }
 
 
@@ -161,7 +179,6 @@ export class VerifyWorkComponent {
   private handleError(error: any) {
     this.isVerifying = false;
 
-    console.error('❌ Backend Error:', error);
     let msg =
       error?.error?.message ||
       error?.error?.error ||

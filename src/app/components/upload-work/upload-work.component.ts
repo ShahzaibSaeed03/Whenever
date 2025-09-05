@@ -76,7 +76,6 @@ export class UploadWorkComponent {
       .subscribe(
         (res: any) => {
           this.isUploading = false;
-          console.log(res)
           if (res?.status === 'success') {
             this.handleUploadSuccess(res.data);
           } else {
@@ -97,7 +96,6 @@ export class UploadWorkComponent {
             this.setError("Oops! Something went wrong while uploading your work.");
           }
 
-          console.error('Upload failed:', error);
         }
       );
   }
@@ -129,7 +127,6 @@ private async handleUploadSuccess(data: any) {
       this.triggerDownloadWithDelay(this.uploadedData.ots_url, 2000);
     }
   } catch (err) {
-    console.error("Download sequence failed", err);
     this.setError("Failed to download files.");
   }
 }

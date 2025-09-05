@@ -51,7 +51,6 @@ export class RegisterUserComponent {
     },
     (error) => {
       this.loading = false; // stop loading
-      console.error('Registration error:', error);
       this._toastr.error('Something went wrong. Please try again.');
     }
   );
