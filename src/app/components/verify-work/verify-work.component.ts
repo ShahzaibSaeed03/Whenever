@@ -120,35 +120,64 @@ export class VerifyWorkComponent {
       formData.append('ots', this.otsFile);
 
 
-      this.workService.verifyWork(formData).subscribe(
-        (res: any) => this.handleSuccess(res),
-        (error) => this.handleError(error)
-      );
+    this.workService.verifyWork(formData).subscribe(
+  (res: any) => {
+    console.log('✅ Backend Response:', res); // <-- log success response
+    this.handleSuccess(res);
+  },
+  (error) => {
+    console.error('❌ Backend Error:', error); // <-- log error response
+    this.handleError(error);
+  }
+);
+
+      
     } catch (err) {
       this.setError('Error reading files. Please try again.');
       this.isVerifying = false;
     }
   }
   // 🔧 NEW: normalize backend error strings
-  private prettifyBackendError(msg: string): string {
-    const text = (msg || '').replace(/\s+/g, ' ').trim(); // collapse spaces
-    const lower = text.toLowerCase();
+private prettifyBackendError(msg: string): string {
+  const text = (msg || '').replace(/\s+/g, ' ').trim();
+  const lower = text.toLowerCase();
 
-    // Normalize: "Failed to calculate fingerprint of the file" → with "the" + trailing period
-    if (lower.startsWith('failed to calculate fingerprint of the file')) {
-      return 'Failed to calculate the fingerprint of the file.';
-    }
-    if (lower.startsWith('Verification output did not match expected patterns')) {
-      return "File doesn't match the certificate. The uploaded file and certificate are different. Please upload the related files.";
-    }
-
-    return text;
+  // Case 1: Failed fingerprint
+  if (lower.includes('failed to calculate fingerprint of the file')) {
+    console.error('Backend error:', text);
+    return "File doesn't match the certificate.";
   }
+
+  // Case 2: Verification output mismatch (handles "Verification" or "verification")
+  if (lower.includes('verification output did not match expected patterns')) {
+    console.error('Backend error:', text);
+    return "File doesn't match the certificate.";
+  }
+
+  // Case 3: Fingerprint not found
+  if (lower.includes("fingerprint not found in certificate")) {
+    console.error('Backend error:', text);
+    return "File doesn't match the certificate.";
+  }
+
+  // Case 4: Already starts with clean message
+  if (lower.startsWith("file doesn't match the certificate.")) {
+    console.error('Backend error:', text);
+    return "File doesn't match the certificate.";
+  }
+
+  // Default → just log and return original
+  console.error('Backend error (unmatched):', text);
+  return text;
+}
+
+
 
   private handleSuccess(res: any) {
     this.isVerifying = false;
     this.backendResponse = res;
 
+    console.log('Backend response:', this.backendResponse);
     if (res?.otsStatus) {
       this.blocks = res.otsStatus.anchors || [];
 
@@ -184,6 +213,7 @@ export class VerifyWorkComponent {
       error?.error?.error ||
       error?.message ||
       (typeof error?.error === 'string' ? error.error : JSON.stringify(error?.error || error));
+      console.error('Backend error:', msg);
 
     // 🔧 apply normalization here
     msg = this.prettifyBackendError(msg);
