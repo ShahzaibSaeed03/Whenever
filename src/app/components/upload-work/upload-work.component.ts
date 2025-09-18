@@ -7,59 +7,65 @@ import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-upload-work',
+  standalone: true,
   imports: [CommonModule, NgIf, FormsModule, RouterLink],
   templateUrl: './upload-work.component.html',
   styleUrls: ['./upload-work.component.css']
 })
 export class UploadWorkComponent {
+  // UI / State
   selectedFile: File | null = null;
-  fileName: string = '';
-  errorMessage: string = '';
+  fileName = '';
+  errorMessage = '';
   showError = false;
   isUploading = false;
   workupload = false;
 
+  // Response / Data
   uploadedData: any = null;
+  certificateImg = 'Certif.png';
 
   // Form fields
-  workTitle: string = '';
-  copyrightOwner: string = '';
-  additionalOwners: string = '';
-  owner: string = "";
+  workTitle = '';
+  copyrightOwner = '';
+  additionalOwners = '';
+  owner = '';
 
-  constructor(private workS: WorkService, private toast: ToastrService) { }
+  // Download control (prevents duplicates/races)
+  private isDownloading = false;
+  private lastDownloadBatchId = 0;
+  private batchDownloadedUrls = new Set<string>();
 
-  onFileChange(event: any) {
+  constructor(private workS: WorkService, private toast: ToastrService) {}
+
+  onFileChange(event: Event) {
     const fileInput = event.target as HTMLInputElement;
     const file: File | null = fileInput.files?.[0] || null;
-
     if (!file) return;
 
     const ext = file.name.split('.').pop()?.toLowerCase();
     const sizeMB = file.size / (1024 * 1024);
 
-    // File size check
+    // size limit
     if (sizeMB > 120) {
       this.setError(
         `The size of your file is ${sizeMB.toFixed(2)} MB. This exceeds our limit of 120 MB. Please compress your file and try again.`
       );
-      fileInput.value = ''; // ✅ reset input so same file can trigger again
+      fileInput.value = '';
       return;
     }
 
-    // File type restriction
+    // type restriction
     if (ext === 'exe' || ext === 'js') {
-      this.setError(`We don’t accept .exe or .js files`);
-      fileInput.value = ''; // ✅ reset input here too
+      this.setError(`We don’t accept .exe or .js files.`);
+      fileInput.value = '';
       return;
     }
 
-    // valid file
     this.resetError();
     this.selectedFile = file;
     this.fileName = file.name;
   }
-
 
   upload() {
     this.resetError();
@@ -88,91 +94,124 @@ export class UploadWorkComponent {
           const backendMsg = error?.error?.message || error?.error?.error || error?.message;
           if (backendMsg) {
             if (backendMsg.includes('.exe') || backendMsg.includes('.js')) {
-              this.setError("We don’t accept .exe or javascript files");
+              this.setError('We don’t accept .exe or javascript files');
             } else {
               this.setError(backendMsg);
             }
           } else {
-            this.setError("Oops! Something went wrong while uploading your work.");
+            this.setError('Oops! Something went wrong while uploading your work.');
           }
-
         }
       );
   }
 
-private async handleUploadSuccess(data: any) {
-  // Prepare uploaded data
-  this.uploadedData = {
-    ...data,
-    fileName: this.selectedFile?.name || '',
-    copyrightOwner: this.copyrightOwner,
-    additionalOwners: this.additionalOwners
-  };
+  private async handleUploadSuccess(data: any) {
+    // keep a copy of what we need from the form BEFORE clearing it
+    this.uploadedData = {
+      ...data,
+      fileName: this.selectedFile?.name || '',
+      copyrightOwner: this.copyrightOwner,
+      additionalOwners: this.additionalOwners
+    };
 
+    // Show overlay
+    this.workupload = true;
 
+    // Clear form inputs now that we’ve copied data
+    this.resetFormFields();
 
-  // Reset form fields
-  this.resetFormFields();
+    // Start a new exclusive download batch
+    const myBatchId = Date.now();
+    this.lastDownloadBatchId = myBatchId;
+    this.batchDownloadedUrls = new Set<string>();
 
-  // Start downloads in background
-  try {
-    // Download certificate first
-    if (this.uploadedData.certificate_url) {
-      this.triggerDownloadWithDelay(this.uploadedData.certificate_url, 0);
+    try {
+      await this.startSequentialDownloads(
+        myBatchId,
+        this.uploadedData?.ots_url,
+        this.uploadedData?.certificate_url
+      );
+    } catch {
+      this.setError('Failed to download files.');
     }
-  // Show certificate immediately
-  this.workupload = true;
-    // Download OTS file after 2s delay
-    if (this.uploadedData.ots_url) {
-      this.triggerDownloadWithDelay(this.uploadedData.ots_url, 2000);
-    }
-  } catch (err) {
-    this.setError("Failed to download files.");
-  }
-}
-
-
-  private triggerDownloadWithDelay(url: string, delay: number): Promise<void> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        try {
-          const link = document.createElement('a');
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          resolve();
-        } catch (err) {
-          reject(err);
-        }
-      }, delay);
-    });
   }
 
+  /**
+   * Runs OTS first; waits 2s; then Certificate.
+   * Guarded so only the newest batch executes; older batches auto-cancel.
+   */
+  private async startSequentialDownloads(
+    batchId: number,
+    otsUrl?: string,
+    certUrl?: string
+  ) {
+    this.isDownloading = true;
+    const stillMine = () => batchId === this.lastDownloadBatchId;
 
-  private triggerSequentialDownload(url: string): Promise<void> {
+    try {
+      if (otsUrl && stillMine()) {
+        await this.triggerDownloadOnce(batchId, otsUrl);
+      }
+
+      if (certUrl && stillMine()) {
+        await this.delay(2000);
+        await this.triggerDownloadOnce(batchId, certUrl);
+      }
+    } finally {
+      if (batchId === this.lastDownloadBatchId) {
+        this.isDownloading = false;
+      }
+    }
+  }
+
+  /**
+   * Ensures a URL is downloaded at most once within the same batch.
+   */
+  private async triggerDownloadOnce(batchId: number, url: string): Promise<void> {
+    if (batchId !== this.lastDownloadBatchId) return; // canceled by newer batch
+
+    if (this.batchDownloadedUrls.has(url)) return; // already fired in this batch
+    this.batchDownloadedUrls.add(url);
+
+    await this.triggerDownloadHard(url);
+  }
+
+  /**
+   * Single, reliable programmatic download using <a download>.
+   * Avoids extra iframe/path that can cause double hits.
+   */
+  private triggerDownloadHard(url: string): Promise<void> {
     return new Promise((resolve, reject) => {
       try {
-        const link = document.createElement('a');
-        link.href = url;
-        // ensures browser handles it better
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = '';      // hint for download
+        a.rel = 'noopener';
+        a.target = '_self';
+        a.style.display = 'none';
 
-        setTimeout(() => resolve(), 1000); // wait a bit before next download
-      } catch (err) {
-        reject(err);
+        const evt = new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          view: window
+        });
+
+        document.body.appendChild(a);
+        a.dispatchEvent(evt);
+        document.body.removeChild(a);
+
+        setTimeout(() => resolve(), 200);
+      } catch (e) {
+        reject(e);
       }
     });
   }
 
+  private delay(ms: number) {
+    return new Promise<void>((res) => setTimeout(res, ms));
+  }
 
-
-
-
-
-
+  // ===== UI helpers =====
 
   closeError() {
     this.showError = false;
@@ -189,7 +228,6 @@ private async handleUploadSuccess(data: any) {
   }
 
   private setError(msg: string) {
-    // Reset first to force change detection
     this.errorMessage = '';
     this.showError = false;
 
@@ -199,7 +237,6 @@ private async handleUploadSuccess(data: any) {
     });
   }
 
-
   private resetError() {
     this.errorMessage = '';
     this.showError = false;
@@ -207,15 +244,14 @@ private async handleUploadSuccess(data: any) {
 
   private resetFormFields() {
     this.selectedFile = null;
-   
     this.fileName = '';
   }
+
   private resetAll() {
-      this.workTitle = '';
-     this.copyrightOwner = '';
-     this.additionalOwners = '';
-     this.selectedFile = null;
-   
+    this.workTitle = '';
+    this.copyrightOwner = '';
+    this.additionalOwners = '';
+    this.selectedFile = null;
     this.fileName = '';
   }
 }

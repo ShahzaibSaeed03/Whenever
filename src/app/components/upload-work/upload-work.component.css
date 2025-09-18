@@ -13,10 +13,7 @@
   animation: slideIn 0.4s ease-out;
 }
 .bg-image {
-  background-image: url('/Certif.png');
-  background-size: cover;      /* makes sure it covers the whole div */
-  background-position: center; /* centers the image */
-  background-repeat: no-repeat;
+ 
   /* optional: add a subtle overlay */
   height: 85vh; /* full viewport height */
   width: 450px;

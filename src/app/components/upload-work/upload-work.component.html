@@ -76,67 +76,91 @@
 
 <!-- Certificate Display -->
 <ng-container *ngIf="workupload">
-  <div class="fixed inset-0 bg-black/60 flex justify-center flex-col items-center z-50 px-0 sm:px-0 ">
+  <div class="fixed  inset-0 bg-black/60 flex justify-center z-50">
 
-    <!-- Certificate Box -->
-    <div class="rounded-lg shadow-lg p-4 sm:p-6 relative bg-white w-full max-w-full sm:max-w-2xl bg-image">
+    <!-- Certificate Box (20px from top) -->
+    <div class="relative w-full max-w-full sm:max-w-[470px] mb-50  mt-10">
 
-      <!-- Close Button (relative to certificate) -->
-      <button class="absolute cursor-pointer -top-9 right-0 border border-gray-300 bg-[#ff5758] text-white 
-  rounded-sm px-3 py-1 text-lg shadow-sm" (click)="closeDetailbox()">
+      <!-- Close -->
+      <button
+        class="absolute -top-9 right-0 border border-gray-300 bg-[#ff5758] text-white rounded-sm px-3 py-1 text-lg shadow-sm z-20"
+        (click)="closeDetailbox()">
         CLOSE
       </button>
 
+      <!-- Template image (not a background) -->
+      <img
+        [src]="certificateImg"
+        alt="Certificate template"
+        class="w-full h-[80vh] sm:h-[70vh] md:h-[93vh] rounded-lg shadow-lg select-none pointer-events-none" />
 
-      <div class="certificate space-y-3 mt-2 sm:space-y-6 sm:mt-12 text-sm sm:text-base text-gray-700 break-words">
+      <!-- Overlayed data -->
+      <div
+        class="absolute inset-0 z-10 text-gray-800"
+        [ngClass]="[
+          'pt-[80px] pr-[28px] pb-[28px] pl-[28px]',
+          'sm:pt-[96px] sm:pl-[44px] sm:pr-[44px]',
+          'md:pt-[110px] md:pl-[25px] md:pr-[25px]'
+        ]">
 
-        <table class="w-full text-sm relative z-10 border-separate border-spacing-y-3">
-          <tr>
-            <td class="font-semibold pr-4 align-top">Work Title:</td>
-            <td class="align-top">{{ uploadedData?.title }}</td>
-          </tr>
-          <tr>
-            <td class="font-semibold pr-4 align-top">Copyright Owner:</td>
-            <td class="align-top">{{ uploadedData?.copyrightOwner }}</td>
-          </tr>
-          <tr *ngIf="uploadedData?.additionalOwners">
-            <td class="font-semibold pr-4 whitespace-nowrap align-top">Additional Owners:</td>
-            <td class="align-top">{{ uploadedData?.additionalOwners }}</td>
-          </tr>
-          <tr>
-            <td class="font-semibold pr-4 whitespace-nowrap align-top">Reference Number:</td>
-            <td class="align-top">{{ uploadedData?.displayed_id }}</td>
-          </tr>
-          <tr>
-            <td class="font-semibold pr-4 whitespace-nowrap align-top">Registration Date:</td>
-            <td class="align-top">{{ uploadedData?.registration_date }}</td>
-          </tr>
-          <tr>
-            <td class="font-semibold pr-4 whitespace-nowrap align-top">Timestamping Authority:</td>
-            <td class="align-top">Open Timestamps</td>
-          </tr>
-          <tr>
-            <td class="font-semibold pr-4 whitespace-nowrap align-top">Copyrighted File Name:</td>
-            <td class="align-top">
-              <a [href]="uploadedData?.original_file_url" target="_blank" class="break-all block sm:inline">
-                {{ uploadedData?.fileName }}
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td class="font-semibold pr-4 align-top whitespace-nowrap">File SHA256 Fingerprint:</td>
-            <td class="align-top break-all w-full">
-              <span class="font-mono text-[13px]">{{ uploadedData?.fingerprint }}</span>
-            </td>
-          </tr>
-        </table>
+        <div class="text-sm sm:text-base">
+          <table class="w-full border-separate border-spacing-y-3">
+            <tr>
+              <td class="font-semibold pr-4 align-top whitespace-nowrap">Work Title:</td>
+              <td class="align-top">{{ uploadedData?.title }}</td>
+            </tr>
 
+            <tr>
+              <td class="font-semibold pr-4 align-top whitespace-nowrap">Copyright Owner:</td>
+              <td class="align-top">{{ uploadedData?.copyrightOwner }}</td>
+            </tr>
 
+            <tr *ngIf="uploadedData?.additionalOwners">
+              <td class="font-semibold pr-4 align-top whitespace-nowrap">Additional Owners:</td>
+              <td class="align-top">{{ uploadedData?.additionalOwners }}</td>
+            </tr>
 
+            <tr>
+              <td class="font-semibold pr-4 align-top whitespace-nowrap">Reference Number:</td>
+              <td class="align-top">{{ uploadedData?.displayed_id }}</td>
+            </tr>
+
+            <tr>
+              <td class="font-semibold pr-4 align-top whitespace-nowrap">Registration Date:</td>
+              <td class="align-top">{{ uploadedData?.registration_date }}</td>
+            </tr>
+
+            <tr>
+              <td class="font-semibold pr-4 align-top whitespace-nowrap">Timestamping Authority:</td>
+              <td class="align-top">Open Timestamps</td>
+            </tr>
+
+            <tr>
+              <td class="font-semibold  pr-4 align-top whitespace-nowrap">Copyrighted File Name:</td>
+              <td class="align-top ">
+                <a
+                  [href]="uploadedData?.original_file_url"
+                  target="_blank"
+                  class="break-all ">
+                  {{ uploadedData?.fileName }}
+                </a>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="font-semibold pr-4 align-top whitespace-nowrap">File SHA256 Fingerprint:</td>
+              <td class="align-top break-all">
+                <span class="font-mono text-[13px]">{{ uploadedData?.fingerprint }}</span>
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
+
     </div>
   </div>
 </ng-container>
+
 
 
 <!-- Error Modal -->
