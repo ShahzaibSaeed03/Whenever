@@ -45,7 +45,8 @@
         Take control of your creative rights and protect your hard work.
         Join our platform and ensure that your creations are safe, recognized, and respected.
       </p>
-      <button class="bg-[#183462] text-white px-6 py-2 rounded mb-3" (click)="subscribe()">
+      <button *ngIf="isSubscriptionInactive" class="bg-[#183462] text-white px-6 py-2 rounded mb-3"
+        (click)="subscribe()">
         Start Subscription
       </button>
       <p class="font-semibold">

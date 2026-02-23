@@ -49,7 +49,10 @@ export class LoginComponent implements OnInit {
 
       next: (res) => {
         localStorage.setItem('userId', res.id);
+        localStorage.setItem('subscriptionStatus', res.subscriptionStatus);   // ⭐ add
+        localStorage.setItem('tokens', res.tokens);
 
+        this.auth.login(res.token);
         /* SAVE TOKEN */
         this.auth.login(res.token);
 

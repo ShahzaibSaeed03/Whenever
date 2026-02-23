@@ -1,0 +1,29 @@
+<div class="min-h-screen flex items-center justify-center bg-[#eaf3f9] px-4">
+
+  <div class="bg-white rounded-2xl shadow-xl p-10 max-w-md w-full text-center">
+
+    <div class="mx-auto w-20 h-20 rounded-full bg-green-500 flex items-center justify-center text-white text-4xl mb-6">
+      ✓
+    </div>
+
+    <h1 class="text-2xl font-bold text-[#183462] mb-2">
+      Payment Successful
+    </h1>
+
+    <p class="text-gray-600 mb-4">
+      Your transaction completed successfully.
+    </p>
+
+    <p class="text-xs text-gray-400 mb-6" *ngIf="sessionId">
+      Reference: {{ sessionId }}
+    </p>
+
+    <button
+      (click)="goDashboard()"
+      class="bg-[#183462] hover:bg-[#244a87] text-white px-6 py-2 rounded-lg font-semibold w-full">
+      Continue
+    </button>
+
+  </div>
+
+</div>

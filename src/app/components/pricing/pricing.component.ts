@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { StripeService } from '../../service/stripe.service';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../environment/environment';
@@ -11,67 +11,74 @@ import { Router } from '@angular/router';
   templateUrl: './pricing.component.html',
   styleUrl: './pricing.component.css'
 })
-export class PricingComponent {
+export class PricingComponent implements OnInit {
+  subscriptionStatus: string | null = null;
 
-  stripe:any;
-  checkoutInstance:any=null;
+  stripe: any;
+  checkoutInstance: any = null;
 
-  showCheckout=false;
-  showLoginGate=false;
-  loading=false;
+  showCheckout = false;
+  showLoginGate = false;
+  loading = false;
 
   constructor(
-    private stripeService:StripeService,
-    private router:Router
-  ){}
+    private stripeService: StripeService,
+    private router: Router
+  ) { }
 
-  isLoggedIn(){
-    return !!localStorage.getItem('token'); // adjust if you store differently
+  ngOnInit(): void {
+    this.subscriptionStatus = localStorage.getItem('subscriptionStatus');
   }
 
-  async subscribe(){
+  isLoggedIn() {
+    return !!localStorage.getItem('token'); 
+  }
+get isSubscriptionInactive(): boolean {
+  return this.subscriptionStatus !== 'active';
+}
+  async subscribe() {
 
-    if(!this.isLoggedIn()){
-      this.showLoginGate=true;
+    if (!this.isLoggedIn()) {
+      this.showLoginGate = true;
       return;
     }
 
-    if(this.loading) return;
-    this.loading=true;
+    if (this.loading) return;
+    this.loading = true;
 
-    if(this.checkoutInstance){
+    if (this.checkoutInstance) {
       this.checkoutInstance.destroy();
-      this.checkoutInstance=null;
+      this.checkoutInstance = null;
     }
 
-    this.showCheckout=true;
+    this.showCheckout = true;
 
     this.stripe = await loadStripe(environment.stripePublishableKey);
 
-    this.stripeService.createSubscription().subscribe(async (res:any)=>{
+    this.stripeService.createSubscription().subscribe(async (res: any) => {
       const checkout = await this.stripe.initEmbeddedCheckout({
-        clientSecret:res.clientSecret
+        clientSecret: res.clientSecret
       });
 
-      this.checkoutInstance=checkout;
+      this.checkoutInstance = checkout;
       checkout.mount('#subscription-checkout');
-      this.loading=false;
+      this.loading = false;
     });
   }
 
-  close(){
-    if(this.checkoutInstance){
+  close() {
+    if (this.checkoutInstance) {
       this.checkoutInstance.destroy();
-      this.checkoutInstance=null;
+      this.checkoutInstance = null;
     }
-    this.showCheckout=false;
+    this.showCheckout = false;
   }
 
-  goLogin(){
+  goLogin() {
     this.router.navigate(['/login']);
   }
 
-  goRegister(){
+  goRegister() {
     this.router.navigate(['/register']);
   }
 }
