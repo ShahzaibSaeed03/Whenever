@@ -14,7 +14,7 @@
         <label class="label">
           Email <span class="star">*</span>
         </label>
-        <input class="input w-full" formControlName="email" />
+        <input class="input w-full" formControlName="email" autocomplete="off" />
       </div>
 
       <!-- PASSWORD -->
@@ -29,7 +29,7 @@
           <input
             [type]="showPassword ? 'text':'password'"
             class="input pr-12 w-full"
-            formControlName="password"
+            formControlName="password" autocomplete="off"
           />
 
           <button
