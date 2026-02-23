@@ -12,7 +12,7 @@ export interface Work {
 
 @Injectable({ providedIn: 'root' })
 export class WorkService {
-  private apiUrl = 'https://api.mycopyrightally.com/api/';
+  private apiUrl = 'http://localhost:5000/api/';
   private loginUrl = 'users/login';
   private registerUrl = 'users';
   private uploadFileUrl = 'works/upload';
@@ -88,13 +88,7 @@ export class WorkService {
     });
   }
 
-  // Share work
-shareWork(workId: string, password: string): Observable<any> {
-  return this.http.post(`${this.apiUrl}shares/create`, 
-    { workId, password }, 
-    { headers: this.setHeaders() }
-  );
-}
+
 
 
   // Login
@@ -123,5 +117,57 @@ getWorkByIds(workId: string, password: string): Observable<any> {
   );
 }
 
+/* ================= SHARE ================= */
 
+/* create share with password */
+shareWork(workId: string, password: string) {
+  return this.http.post(
+    `${this.apiUrl}shares/create`,
+    { workId, password },
+    { headers: this.setHeaders() }
+  );
+}
+
+/* access shared work (viewer page) */
+
+accessByReference(reference:string,password:string){
+return this.http.post(
+this.apiUrl+'shares/access-by-reference',
+{reference,password}
+);
+}
+/* list shares of a work */
+listShares(workId: string) {
+  return this.http.get(
+    `${this.apiUrl}shares/list/${workId}`,
+    { headers: this.setHeaders() }
+  );
+}
+
+/* delete share */
+deleteShare(shareId: string) {
+  return this.http.delete(
+    `${this.apiUrl}shares/${shareId}`,
+    { headers: this.setHeaders() }
+  );
+}
+setPassword(workId:string,password:string){
+return this.http.post(`${this.apiUrl}shares/set-password`,
+{workId,password},
+{headers:this.setHeaders()}
+);
+}
+
+createLink(workId:string){
+return this.http.post(`${this.apiUrl}shares/create-link`,
+{workId},
+{headers:this.setHeaders()}
+);
+}
+accessShared(id:string,password:string){
+return this.http.post(
+`${this.apiUrl}shares/access/${id}`,
+{password}
+);
+}
 }

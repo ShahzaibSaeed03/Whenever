@@ -1,79 +1,77 @@
-<header class="bg-[#507897] text-white shadow-md">
-  <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-    <!-- Title -->
-    <a routerLink="/" (click)="closeMenu()" class="text-xl font-bold tracking-wide cursor-pointer">
-      Wheneverr
-    </a>
+<header class="bg-[#d5e8ef] shadow-md">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
 
-    <!-- Mobile Toggle -->
-    <button class="lg:hidden" (click)="toggleMenu()" aria-label="Toggle menu">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-           viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </button>
+    <!-- LEFT -->
+    <div class="flex items-center gap-3">
 
-    <!-- Desktop Nav -->
-    <nav class="hidden lg:flex gap-6 text-sm">
-      <a (click)="handleProtectedNav('/upload')" class="cursor-pointer">Upload</a>
-      <a (click)="handleProtectedNav('/verify')" class="cursor-pointer">Verify</a>
-      <a (click)="handleProtectedNav('/my-original-works')" class="cursor-pointer">My Works</a>
-      <a routerLink="/upload-faq" routerLinkActive="font-semibold underline">FAQ</a>
-
-      <!-- Show Login/Logout -->
-      <a *ngIf="isLoggedIn; else loginBtn" (click)="logout()" class="cursor-pointer">Logout</a>
-      <ng-template #loginBtn>
-        <a routerLink="/login">Login</a>
-      </ng-template>
-    </nav>
-  </div>
-
-  <!-- Mobile Nav -->
-  <div *ngIf="menuOpen" class="lg:hidden bg-[#507897]">
-    <nav class="flex flex-col px-4 pb-4 pt-2 space-y-2 text-sm">
-      <a (click)="handleProtectedNav('/upload'); closeMenu()" 
-         class="block py-2 px-3 rounded hover:bg-gray-700 transition">
-        Upload
-      </a>
-      <a (click)="handleProtectedNav('/verify'); closeMenu()" 
-         class="block py-2 px-3 rounded hover:bg-gray-700 transition">
-        Verify
-      </a>
-      <a (click)="handleProtectedNav('/my-original-works'); closeMenu()" 
-         class="block py-2 px-3 rounded hover:bg-gray-700 transition">
-        My Works
-      </a>
-      <a routerLink="/upload-faq" (click)="closeMenu()" 
-         class="block py-2 px-3 rounded hover:bg-gray-700 transition">
-        FAQ
+      <a routerLink="/" class="text-[#3F5F78] font-semibold leading-tight">
+        <div class="text-lg sm:text-xl lg:text-2xl">
+          MY COPYRIGHT ALLY
+        </div>
       </a>
 
-      <!-- Show Login/Logout -->
-      <a *ngIf="isLoggedIn; else loginBtnMobile" (click)="logout(); closeMenu()" 
-         class="block py-2 px-3 rounded hover:bg-gray-700 transition cursor-pointer">
-        Logout
+    </div>
+
+    <!-- RIGHT (desktop) -->
+
+    <!-- NOT LOGGED -->
+    <div class="hidden sm:flex items-center gap-3" *ngIf="!(auth.isLoggedIn$ | async)">
+
+      <a routerLink="/signup"
+        class="px-4 py-2 rounded-full bg-[#6F93AD] text-white text-sm font-medium hover:bg-[#5d819c] transition">
+        Sign up
       </a>
-      <ng-template #loginBtnMobile>
-        <a routerLink="/login" (click)="closeMenu()" 
-           class="block py-2 px-3 rounded hover:bg-gray-700 transition">
-          Login
-        </a>
-      </ng-template>
-    </nav>
+
+      <a routerLink="/login"
+        class="px-4 py-2 rounded-full bg-[#3F5F78] text-white text-sm font-medium flex items-center gap-2 hover:bg-[#324e64] transition">
+
+        <svg xmlns="http://www.w3.org/2000/svg"
+             class="w-4 h-4"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke="currentColor"
+             stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 11c1.657 0 3-1.343 3-3V7a3 3 0 10-6 0v1c0 1.657 1.343 3 3 3z" />
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M5 11h14v10H5z" />
+        </svg>
+
+        Log in
+      </a>
+
+    </div>
+
+    <!-- LOGGED -->
+    <div class="hidden sm:flex items-center gap-4" *ngIf="auth.isLoggedIn$ | async">
+
+      <!-- USER NAME -->
+      <div class="text-[#3F5F78] font-semibold">
+        {{ user?.firstName }} {{ user?.lastName }}
+      </div>
+
+    
+
+    </div>
+
+    <!-- MOBILE -->
+
+    <div class="sm:hidden">
+
+      <!-- NOT LOGGED -->
+      <a *ngIf="!(auth.isLoggedIn$ | async)"
+         routerLink="/login"
+         class="text-[#3F5F78] text-sm font-semibold">
+        Login
+      </a>
+
+      <!-- LOGGED -->
+      <div *ngIf="auth.isLoggedIn$ | async"
+           class="text-[#3F5F78] text-sm font-semibold">
+        {{ user?.firstName }}
+      </div>
+
+    </div>
+
   </div>
 </header>
-
-<!-- Login Popup Modal -->
-<div *ngIf="showLoginPopup" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-  <div class="bg-white rounded-xl shadow-lg w-80 p-6 relative">
-    <button (click)="closeLoginPopup()" class="absolute top-2 right-3 text-gray-600 text-xl">&times;</button>
-    <h2 class="text-lg font-semibold mb-4 text-center">Please Login</h2>
-    <p class="text-gray-600 text-sm mb-6 text-center">
-      You need to login first to access this feature.
-    </p>
-    <button (click)="goToLogin()" 
-            class="w-full bg-[#507897] text-white py-2 px-4 rounded-lg hover:bg-[#40607a] transition">
-      Go to Login
-    </button>
-  </div>
-</div>

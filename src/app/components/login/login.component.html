@@ -1,80 +1,72 @@
-<div class="min-h-screen flex flex-col md:flex-row bg-gray-100">
+<div class="bg-[#cfe6ef] min-h-screen">
 
-  <!-- Image Section -->
-  <div class="w-full md:w-1/2 h-64 md:h-auto">
-    <img src="login.jpg" alt="Login" class="w-full h-full object-cover rounded-b-md md:rounded-none" />
+  <div class="bg-[#183462] text-white px-6 py-3 text-lg font-semibold">
+    Log In
   </div>
 
-  <!-- Form Section -->
-  <div class="w-full md:w-1/2 flex items-center justify-center bg-white px-6 py-12 md:px-16 shadow-lg">
-    <div class="w-full max-w-md space-y-8">
+  <div class="flex justify-center mt-24">
 
-      <!-- Heading -->
-      <div class="text-center">
-        <h1 class="text-3xl font-bold text-gray-800">Welcome Back</h1>
-        <p class="text-sm text-gray-500 mt-1">Login to continue</p>
+    <form [formGroup]="loginForm" (ngSubmit)="submit()"
+          class="w-[540px] bg-[#cfe6ef] border border-[#223e6b] rounded-xl shadow-lg p-8">
+
+      <!-- EMAIL -->
+      <div class="fieldRow mb-5">
+        <label class="label">
+          Email <span class="star">*</span>
+        </label>
+        <input class="input w-full" formControlName="email" />
       </div>
 
-      <!-- Login Form -->
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- PASSWORD -->
+      <div class="fieldRow mb-8">
 
-        <!-- Email -->
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
-          <input
-            type="email"
-            id="email"
-            formControlName="email"
-            class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm"
-          />
-          <div *ngIf="f['email'].touched && f['email'].invalid" class="text-red-600 text-sm mt-1">
-            Valid email is required
-          </div>
-        </div>
+        <label class="label">
+          Password <span class="star">*</span>
+        </label>
 
-        <!-- Password -->
-        <!--
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+        <div class="relative flex-1">
+
           <input
-            type="password"
-            id="password"
+            [type]="showPassword ? 'text':'password'"
+            class="input pr-12 w-full"
             formControlName="password"
-            class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm"
           />
-          <div *ngIf="f['password'].touched && f['password'].invalid" class="text-red-600 text-sm mt-1">
-            Password is required
-          </div>
+
+          <button
+            type="button"
+            class="absolute right-3 top-2"
+            (click)="togglePassword()">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="w-5 h-5 text-gray-600"
+                 fill="none"
+                 viewBox="0 0 24 24"
+                 stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5
+                       c4.477 0 8.268 2.943 9.542 7
+                       -1.274 4.057-5.065 7-9.542 7
+                       -4.477 0-8.268-2.943-9.542-7z"/>
+            </svg>
+
+          </button>
+
         </div>
-        -->
+      </div>
 
-        <!-- Submit Button -->
-      <button
-  type="submit"
-  [disabled]="loginForm.invalid || loading"
-  class="w-full flex items-center justify-center bg-[#3776a6]  hover:bg-[#3776a6]  text-white font-semibold py-2 px-4 rounded transition duration-200"
->
-  <ng-container *ngIf="!loading; else spinner">
-    Login
-  </ng-container>
-  <ng-template #spinner>
-        <span  class="ml-2 animate-spin fas fa-spinner"></span>
+      <!-- BUTTON -->
+      <div class="flex justify-end">
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="bg-[#4a7bd8] hover:bg-[#3c6bcc] text-white px-12 py-3 rounded-lg font-semibold">
+          {{ loading ? 'Logging...' : 'Login' }}
+        </button>
+      </div>
 
-  </ng-template>
-</button>
+    </form>
 
-
-        <!-- Register Link -->
-        <p class="text-center text-sm text-gray-600">
-          Don’t have an account?
-          <a routerLink="/register" class="text-[#3776a6]  hover:text-[#3776a6]  font-medium">Register</a>
-        </p>
-
-        <!-- Error -->
-        <div *ngIf="errorMsg" class="text-center text-red-600 text-sm">
-          {{ errorMsg }}
-        </div>
-      </form>
-    </div>
   </div>
 </div>

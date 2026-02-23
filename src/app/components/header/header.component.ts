@@ -2,64 +2,41 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { AuthService } from '../../service/auth-service.service';
+import { AuthApiService } from '../../service/auth-api.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule,RouterLink],
+  imports: [CommonModule, RouterModule, RouterLink],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  menuOpen = false;
-  isLoggedIn = false;
-  showLoginPopup = false;
+  user: any = null;
 
-  constructor(private router: Router,private cdr: ChangeDetectorRef,private auth: AuthService) {}
+  constructor(
+    public auth: AuthService,
+    private api: AuthApiService,
+    private router: Router
 
-ngOnInit() {
-  this.auth.isLoggedIn$.subscribe(status => {
-    this.isLoggedIn = status;
-    this.cdr.detectChanges(); // ensure view updates
-  });
-}
+  ) { }
 
-  checkLogin() {
-    this.isLoggedIn = !!localStorage.getItem('token');
+  ngOnInit() {
+
+    if (localStorage.getItem('token')) {
+      this.loadProfile();
+    }
   }
 
-  toggleMenu() {
-    this.menuOpen = !this.menuOpen;
+  loadProfile() {
+    this.api.getProfile().subscribe({
+      next: (res: any) => {
+        this.user = res;   // {firstName,lastName}
+      }
+    });
   }
-
-  closeMenu() {
-    this.menuOpen = false;
-  }
-
-logout() {
-  this.auth.logout(); // this updates the observable and localStorage inside the service
-  this.router.navigateByUrl('/login'); // redirect
-}
-
-
-handleProtectedNav(route: string) {
-  this.checkLogin(); // <-- remove this
-  if (this.isLoggedIn) {
-    this.router.navigateByUrl(route);
-  } else {
-    this.showLoginPopup = true;
-    this.cdr.detectChanges();
-  }
-}
-
-
-
-  closeLoginPopup() {
-    this.showLoginPopup = false;
-  }
-
-  goToLogin() {
-    this.showLoginPopup = false;
-    this.router.navigateByUrl('/login');
+  logout() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }

@@ -1,63 +1,70 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
-import { WorkService } from '../../service/work-service.service';
+import { Router } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { AuthApiService } from '../../service/auth-api.service';
+import { AuthService } from '../../service/auth-service.service';
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ToastrModule, RouterLink],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  imports: [CommonModule, ReactiveFormsModule, ToastrModule],
+  templateUrl: './login.component.html'
 })
-export class LoginComponent {
-  loginForm: FormGroup;
-  errorMsg = '';
-  loading = false;  // ✅ loading state
+export class LoginComponent implements OnInit {
+
+  loginForm!: FormGroup;
+  showPassword = false;
+  loading = false;
 
   constructor(
     private fb: FormBuilder,
-    private authService: WorkService,
-    private _toastrS: ToastrService,
+    private api: AuthApiService,
+    private auth: AuthService,
+    private toast: ToastrService,
     private router: Router
-  ) {
+  ) { }
+
+  ngOnInit() {
+
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
     });
   }
 
-  get f() {
-    return this.loginForm.controls;
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 
-  onSubmit() {
+  submit() {
+
     if (this.loginForm.invalid) return;
 
-    this.loading = true; // ✅ start spinner
+    this.loading = true;
 
-    this.authService.login(this.loginForm.value).subscribe(
-      (res: any) => {
-        this.loading = false; // ✅ stop spinner
+    this.api.login(this.loginForm.value).subscribe({
 
+      next: (res) => {
+        localStorage.setItem('userId', res.id);
 
-        const token = res.token;
-        const userId = res.id;
+        /* SAVE TOKEN */
+        this.auth.login(res.token);
 
-        if (token && userId) {
-          localStorage.setItem('token', token);
-          localStorage.setItem('userId', userId);
-          this._toastrS.success('User Login');
-          this.router.navigateByUrl('/upload');
-        } else {
-          this._toastrS.error('Login failed: token or ID missing');
-        }
+        this.toast.success('Login success');
+
+        /* REDIRECT DASHBOARD */
+        this.router.navigate(['/dashboard']);
+
+        this.loading = false;
       },
-      (error) => {
-        this.loading = false; // ✅ stop spinner
-        this._toastrS.error('Login failed. Please try again.');
+
+      error: e => {
+        this.toast.error(e.error?.message || 'Login failed');
+        this.loading = false;
       }
-    );
+    });
   }
 }

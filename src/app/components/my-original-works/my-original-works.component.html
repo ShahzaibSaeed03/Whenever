@@ -1,108 +1,160 @@
-<!-- Loader (always at root level, not inside ngFor) -->
-<!-- <div *ngIf="loading" class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-  <div class="loader-wrapper">
-    <img class="loader-spinner" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/loader-spinner.png" />
-  </div>
-</div> -->
+<div class="min-h-screen bg-[#d5e8ef]">
 
+<!-- TITLE -->
+<div class="bg-[#223e6b] text-white px-6 py-3 flex justify-between">
+<h2 class="text-red-500 font-semibold text-lg">My Original Works</h2>
+<div class="text-sm font-semibold">
+{{tokens}} Remaining Tokens - Next subscription billing on {{billingDate}}
+</div>
+</div>
 
-<!-- Works Container -->
-<div class="max-w-6xl mx-auto" *ngIf="!loading">
-  
-  <!-- If user not logged in -->
-  <div *ngIf="!isLoggedIn" class="text-center py-10">
-    <p class="text-lg font-semibold text-red-600">
-      ⚠ Please login first to see your work.
-    </p>
-    <button routerLink="/login"
-      class="mt-4 px-6 py-2 bg-[#507897] text-white rounded-lg shadow hover:bg-[#366990]">
-      Go to Login
-    </button>
-  </div>
+<!-- CONTENT -->
+<div class="max-w-6xl mx-auto px-6 py-8 space-y-6">
 
-  <!-- Grid of Works -->
-  <div *ngIf="isLoggedIn" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <ng-container *ngFor="let item of data">
-      <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover-effect">
-        <div class="p-6">
+<p class="text-[#223e6b] font-semibold">
+This is the list of your Works:
+</p>
 
-          <!-- Title and Status -->
-          <div class="flex justify-between items-start mb-4">
-            <h2 class="text-xl font-semibold text-gray-800">{{ item?.title }}</h2>
-            <span class="status-badge status-active">{{ item?.status }}</span>
-          </div>
+<!-- FILTER -->
+<div class="border border-[#223e6b]/40 rounded-lg p-6">
+<div class="grid md:grid-cols-5 gap-4">
 
-          <!-- Work Details -->
-          <div class="mb-4 space-y-1">
-            <div class="flex items-center space-x-2">
-              <span class="text-sm text-gray-500">Document ID: {{ item?.displayed_ID }}</span>
-            </div>
-            <div class="flex items-center space-x-2">
-              <span class="text-sm text-gray-500">Registered: {{ item?.registration_date | date }}</span>
-            </div>
-            <div class="flex items-center space-x-2">
-              <span class="text-sm text-gray-500">File: {{ item?.file_name }}</span>
-            </div>
-          </div>
+<input [(ngModel)]="filters.id" placeholder="ID" class="bg-gray-50 p-2 rounded"/>
+<input [(ngModel)]="filters.title" placeholder="Title" class="bg-gray-50 p-2 rounded"/>
+<input [(ngModel)]="filters.from" type="date" class="bg-gray-50 p-2 rounded"/>
+<input [(ngModel)]="filters.to" type="date" class="bg-gray-50 p-2 rounded"/>
 
-          <!-- Detailed Info -->
-          <div class="expandable-content mt-4 border-t border-gray-100 pt-4">
-            <div class="space-y-3">
-              <div>
-                <h3 class="text-sm font-medium text-gray-500">Copyright Owner</h3>
-                <p class="mt-1 text-sm text-gray-900">{{ item?.copyright_owner }}</p>
-              </div>
-           
-              <button *ngIf="item?._id" (click)="shareWork(item?._id)"
-                class="w-full mt-4 py-2 px-4 bg-[#507897] text-white text-sm font-medium rounded-md hover:bg-[#2c6794] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200">
-                <i class="fas fa-share-alt mr-2"></i> Share Work
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </ng-container>
-  </div>
+<button (click)="search()" class="bg-[#4a7bd8] text-white py-2 rounded">
+SEARCH
+</button>
 
 </div>
-<!-- Password Modal -->
-<div *ngIf="showPasswordModal" class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-  <div class="bg-white rounded-xl shadow-lg p-6 w-96 relative">
+</div>
 
-    <!-- Close Button -->
-    <button (click)="closeModal()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
-      <i class="fas fa-times"></i>
-    </button>
+<!-- TABLE HEADER -->
+<div class="grid grid-cols-6 px-4 py-4 font-semibold text-[#223e6b] border-b">
+<div>ID</div>
+<div class="col-span-2">Title</div>
+<div>Date</div>
+<div>Actions</div>
+<div></div>
+</div>
 
-    <!-- Title -->
-    <h2 class="text-lg font-semibold text-gray-800 flex items-center mb-4">
-      <i class="fas fa-lock mr-2 text-[#507897]"></i>
-      Protect Your Work
-    </h2>
+<!-- ROWS -->
+<div *ngFor="let item of data"
+class="grid grid-cols-6 items-center px-4 py-5 border-b text-sm text-[#3f5f78]">
 
-    <p class="text-sm text-gray-600 mb-3">
-      Enter a password to protect your work. Others must enter this password to view it.
-    </p>
+<div class="text-xs text-gray-500">
+{{item.displayed_ID}}
+</div>
 
-    <!-- Password Input -->
-    <div class="relative">
-      <input [(ngModel)]="sharePassword" type="{{ showPassword ? 'text' : 'password' }}"
-        maxlength="6" placeholder="Enter 6-char password"
-        class="w-full border rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#507897]" />
+<div class="col-span-2">
+<div class="font-semibold">{{item.title}}</div>
+<div class="text-xs text-gray-500 truncate">{{item.file_name}}</div>
+</div>
 
-      <!-- Toggle visibility -->
-      <button type="button" (click)="togglePassword()" 
-        class="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700">
-        <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
-      </button>
-    </div>
+<div>
+{{item.registration_date | date:'dd/MM/yyyy'}}
+</div>
 
-    <!-- Generate Link -->
-    <button (click)="generateShareLink()" 
-      [disabled]="sharePassword.length !== 6"
-      class="w-full mt-5 py-2 px-4 bg-[#507897] text-white text-sm font-medium rounded-md hover:bg-[#2c6794] disabled:opacity-50">
-      <i class="fas fa-link mr-2"></i> Generate Link
-    </button>
-  </div>
+<div class="space-y-1 text-[#2c6794]">
+
+<div class="cursor-pointer hover:underline" (click)="viewCertificate(item)">
+View Certificate
+</div>
+
+<div class="cursor-pointer hover:underline" (click)="download(item)">
+Download
+</div>
+
+<div class="space-y-1 text-[#2c6794]">
+
+<div class="cursor-pointer hover:underline"
+(click)="openSetPassword(item)">
+Set password
+</div>
+
+<div class="cursor-pointer hover:underline"
+(click)="copyLink(item)">
+Share
+</div>
+
+</div>
+
+</div>
+
+<div class="flex justify-end">
+<button (click)="delete(item._id)"
+class="bg-red-500 text-white px-4 py-1 rounded-full text-xs hover:bg-red-600">
+Delete
+</button>
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<div *ngIf="showPasswordModal"
+class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+
+<div class="bg-white rounded-xl shadow-lg p-6 w-96">
+
+<h3 class="font-semibold mb-3">Set password</h3>
+
+<input
+[(ngModel)]="sharePassword"
+placeholder="Enter password"
+class="border w-full p-2 rounded mb-4"/>
+
+<div class="flex gap-2">
+
+<button
+(click)="savePassword()"
+class="flex-1 bg-[#507897] text-white py-2 rounded">
+Save
+</button>
+
+<button
+(click)="closeModal()"
+class="flex-1 border py-2 rounded">
+Cancel
+</button>
+
+</div>
+
+</div>
+</div>
+<!-- DELETE MODAL -->
+<div *ngIf="showDeleteModal"
+class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+
+<div class="bg-white rounded-xl shadow-lg p-6 w-96">
+
+<h3 class="font-semibold mb-4 text-lg">
+Delete work?
+</h3>
+
+<p class="text-sm text-gray-500 mb-4">
+This action cannot be undone.
+</p>
+
+<div class="flex gap-2">
+
+<button
+(click)="confirmDelete()"
+class="flex-1 bg-red-500 text-white py-2 rounded">
+Delete
+</button>
+
+<button
+(click)="closeDelete()"
+class="flex-1 border py-2 rounded">
+Cancel
+</button>
+
+</div>
+
+</div>
 </div>

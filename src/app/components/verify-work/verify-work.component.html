@@ -1,99 +1,106 @@
-<div class="min-h-screen bg-gray-50 flex items-center justify-center px-4 ">
-  <div
-    class="w-full max-w-lg sm:max-w-4xl bg-[#cfe6ef] border text-[#3f85ae]  border-gray-200 shadow-md rounded-xl p-4 sm:p-8">
+<div class="bg-[#cfe6ef] min-h-screen flex flex-col">
 
-    <!-- Heading -->
-    <div class="mb-5 sm:mb-6">
+  <!-- TITLE BAR -->
+  <div class="bg-[#466d94] text-white px-6 py-3 flex justify-between">
+    <span class="font-semibold">Verify a registration</span>
+    <span class="text-sm">
+      5 Remaining Tokens - Next subscription billing on DATE TIME
+    </span>
+  </div>
 
-      <p class="text-md font-bold  mt-1">
-        Please upload your original file, its certificate and the corresponding .ots file, and we will verify its
-        registration.
-      </p>
+  <!-- CENTER CONTENT -->
+  <div class="flex-1 flex  px-4 py-24">
+
+    <div class="w-full max-w-7xl bg-[#cfe6ef]  text-[#3f85ae] border-gray-200  rounded-xl p-4 sm:p-8">
+
+      <!-- Heading -->
+      <div class="mb-5 sm:mb-6">
+        <p class="text-md font-bold">
+          Please upload your original file, its certificate and the corresponding .ots file, and we will verify its registration.
+        </p>
+      </div>
+
+      <!-- Upload Fields -->
+      <div class="space-y-6 text-md">
+
+        <!-- File -->
+        <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+          <label class="w-full sm:w-[20%] text-right font-bold">File to verify:</label>
+
+          <button
+            type="button"
+            class="bg-[#507897] text-white uppercase w-full sm:w-32 px-2 py-1 rounded-md"
+            (click)="fileInput.click()">
+            Choose File
+          </button>
+
+          <input
+            type="text"
+            [value]="fileName"
+            readonly
+            class="w-full sm:w-[40%] border border-gray-300 rounded-md px-3 py-1 bg-white text-sm"
+          />
+
+          <input type="file" #fileInput (change)="onFileChange($event, 'file')" hidden />
+        </div>
+
+        <!-- Certificate -->
+        <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+          <label class="w-full sm:w-[20%] text-right font-bold">Certificate:</label>
+
+          <button
+            type="button"
+            class="bg-[#507897] text-white uppercase w-full sm:w-32 px-2 py-1 rounded-md"
+            (click)="certInput.click()">
+            Choose File
+          </button>
+
+          <input
+            type="text"
+            [value]="certificateName"
+            readonly
+            class="w-full sm:w-[40%] border border-gray-300 rounded-md px-3 py-1 bg-white text-sm"
+          />
+
+          <input type="file" #certInput accept=".pdf" (change)="onFileChange($event,'certificate')" hidden />
+        </div>
+
+        <!-- OTS -->
+        <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+          <label class="w-full sm:w-[20%] text-right font-bold">.ots File:</label>
+
+          <button
+            type="button"
+            class="bg-[#507897] text-white uppercase w-full sm:w-32 px-2 py-1 rounded-md"
+            (click)="otsInput.click()">
+            Choose File
+          </button>
+
+          <input
+            type="text"
+            [value]="otsFileName"
+            readonly
+            class="w-full sm:w-[40%] border border-gray-300 rounded-md px-3 py-1 bg-white text-sm"
+          />
+
+          <input type="file" #otsInput accept=".ots" (change)="onFileChange($event,'otsFile')" hidden />
+        </div>
+
+        <!-- VERIFY BUTTON CENTER -->
+        <div class="flex justify-center pt-2">
+          <button
+            (click)="verify()"
+            [disabled]="isVerifying"
+            class="bg-[#00ff0e] hover:bg-green-500 text-white px-12 py-2 rounded-md font-medium">
+            VERIFY
+          </button>
+        </div>
+
+      </div>
+
     </div>
-
-    <!-- Upload Fields -->
-    <div class="space-y-5 sm:space-y-6 text-md ">
-
-      <!-- Original File -->
-      <div class="flex flex-col sm:flex-row sm:items-center gap-5">
-        <label class="  w-full sm:w-[20%] text-right font-bold ">File to verify:</label>
-        <button type="button"
-          class="bg-[#507897] text-white uppercase font-medium w-full sm:w-32 px-2 py-1 rounded-md cursor-pointer"
-          (click)="fileInput.click()">Choose File</button>
-        <input type="text" [value]="fileName" readonly
-          class="block w-full sm:w-[40%] border border-gray-300 rounded-md px-3 py-1 bg-white text-sm" />
-        <input type="file" #fileInput (change)="onFileChange($event, 'file')" hidden />
-      </div>
-
-      <!-- Certificate -->
-      <div class="flex flex-col sm:flex-row sm:items-center gap-5">
-        <label class="font-bold  w-full sm:w-[20%] text-right ">Certificate:</label>
-        <button type="button"
-          class="bg-[#507897] text-white uppercase font-medium w-full sm:w-32 px-2 py-1 rounded-md cursor-pointer"
-          (click)="certInput.click()">Choose File</button>
-        <input type="text" [value]="certificateName" readonly
-          class="block w-full sm:w-[40%] border border-gray-300 rounded-md px-3 py-1 bg-white text-sm" />
-        <input type="file" #certInput accept=".pdf" (change)="onFileChange($event, 'certificate')" hidden />
-      </div>
-
-      <!-- .ots File -->
-      <div class="flex flex-col sm:flex-row sm:items-center gap-5">
-        <label class="font-bold  w-full sm:w-[20%] text-right ">.ots File:</label>
-        <button type="button"
-          class="bg-[#507897] text-white uppercase font-medium w-full sm:w-32 px-2 py-1 rounded-md cursor-pointer"
-          (click)="otsInput.click()">Choose File</button>
-        <input type="text" [value]="otsFileName" readonly
-          class="block w-full sm:w-[40%] border border-gray-300 rounded-md px-3 py-1 bg-white text-sm" />
-        <input type="file" #otsInput accept=".ots" (change)="onFileChange($event, 'otsFile')" hidden />
-      </div>
-
-
-
-
-
-      <!-- Verify Button -->
-      <div class="flex justify-center sm:justify-start sm:ml-[185px] ml-7">
-        <button (click)="verify()" [disabled]="isVerifying"
-          class="bg-[#00ff0e] hover:bg-green-500 text-white px-10.5 py-1 rounded-md text-sm sm:text-base font-medium flex items-center justify-center gap-2 w-full sm:w-auto">
-          VERIFY
-        </button>
-      </div>
-      <!-- Error Message -->
-      <div *ngIf="errorMessage"
-        class="bg-red-50 border border-red-300 text-[#507897] px-4 py-2 rounded flex items-center gap-2 text-sm">
-        <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
-      </div>
-
-      <!-- Success Message -->
-  <div *ngIf="successMessage"
-     class="bg-blue-50 border border-[#3f85ae] text-[#3f85ae] px-4 py-2 rounded-md flex flex-col gap-2 text-sm">
-
-  <p>
-    <i class="fas fa-check-circle"></i> {{ successMessage }}
-  </p>
-
-  <!-- Show block details ONLY if block number exists -->
-  <p *ngIf="blocks.length > 0 && blocks[0]?.block"
-     class="text-sm text-gray-600 mt-1">
-    Bitcoin block
-    <span class="text-blue-400">{{ blocks[0].block }}</span>
-    attests the existence of your file as of
-   <span class="font-medium">
-  {{ formatUtcToDate(backendResponse?.registeration_date || '') }} UTC.
-</span>
-
-
-  </p>
-</div>
-
-    </div>
-
   </div>
 </div>
-
-<!-- Success Result Overlay -->
-
-
 
 <!-- Error Overlay -->
 <div *ngIf="errorMessage" 
@@ -117,4 +124,22 @@
 
 <div *ngIf="isVerifying" class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
   <img class="loader-spinner" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/loader-spinner.png" />
+</div>
+<!-- Success Overlay -->
+<div *ngIf="successMessage"
+     class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4 overflow-auto">
+  <div class="relative bg-green-50 border border-green-300 p-6 rounded-sm shadow-lg max-w-full sm:max-w-xl w-full">
+
+    <button (click)="successMessage=null"
+      class="absolute -top-7 right-0 text-white bg-green-600 hover:bg-green-700 px-3 py-1 text-sm rounded">
+      CLOSE
+    </button>
+
+    <div class="flex items-center gap-2 mb-4">
+      <i class="fas fa-check-circle text-green-600 text-xl"></i>
+      <span class="font-semibold text-green-600 text-lg">Status</span>
+    </div>
+
+    <p class="text-[#507897]">{{ successMessage }}</p>
+  </div>
 </div>

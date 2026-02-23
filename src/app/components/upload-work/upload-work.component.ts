@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-upload-work',
   standalone: true,
-  imports: [CommonModule, NgIf, FormsModule, RouterLink],
+  imports: [CommonModule, NgIf, FormsModule, ],
   templateUrl: './upload-work.component.html',
   styleUrls: ['./upload-work.component.css']
 })

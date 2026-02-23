@@ -1,0 +1,113 @@
+<div class="bg-[#d5e8ef] min-h-screen">
+
+  <!-- HEADER -->
+  <div class="bg-[#243e69] text-white px-6 py-3 flex justify-between">
+    <h2 class="text-red-400 font-semibold">
+      Billing, Automatic Renewal and Credit Cards
+    </h2>
+
+    <div class="text-sm">
+      {{subscription?.tokens}} Tokens — Next billing
+      {{subscription?.subscriptionEnd | date}}
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto p-8 text-[#3f5f78] space-y-12">
+
+    <!-- SUBSCRIPTION -->
+<div class="space-y-4">
+
+  <p>{{ renewalMessage.title }}</p>
+
+  <p class="text-sm text-[#3f5f78]">
+    {{ renewalMessage.description }}
+  </p>
+
+  <button
+    *ngIf="subscription?.autoRenew"
+    (click)="cancel()"
+    class="bg-[#3f5f78] text-white px-6 py-2 rounded-lg">
+    CANCEL SUBSCRIPTION
+  </button>
+
+  <button
+    *ngIf="!subscription?.autoRenew"
+    (click)="resume()"
+    class="bg-green-600 text-white px-6 py-2 rounded-lg">
+    RESUME SUBSCRIPTION
+  </button>
+
+</div>
+
+    <!-- CARD -->
+    <div class="space-y-4">
+      <p *ngIf="card">
+        Current Card:
+        {{card.brand | uppercase}} ending {{card.last4}}
+      </p>
+
+      <button (click)="openCardModal()" class="bg-[#3f5f78] text-white px-6 py-2 rounded-lg">
+        UPDATE CARD DETAILS
+      </button>
+    </div>
+
+    <!-- INVOICES -->
+    <div class="space-y-6">
+
+      <h3 class="font-semibold">Invoice list</h3>
+
+      <div class="grid grid-cols-4 font-semibold">
+        <div>DATE</div>
+        <div>ID</div>
+        <div>AMOUNT</div>
+        <div></div>
+      </div>
+
+      <div *ngFor="let i of invoices" class="grid grid-cols-4 items-center">
+        <div>{{i.date*1000 | date}}</div>
+        <div>{{i.id}}</div>
+        <div>{{i.amount}} {{i.currency}}</div>
+
+        <button (click)="download(i.invoicePdf)" class="bg-[#3f5f78] text-white px-5 py-2 rounded-lg">
+          DOWNLOAD
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+<!-- MODAL -->
+<div *ngIf="cardModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+
+  <div class="bg-[#d5e8ef] rounded-xl shadow-xl w-[360px] p-6 relative">
+
+    <button (click)="closeCardModal()" class="absolute right-3 top-2 text-gray-400 hover:text-black">
+      ✕
+    </button>
+
+    <h3 class="text-center font-semibold text-lg mb-1">
+      Update Card Details
+    </h3>
+
+    <p class="text-center text-sm text-gray-500 mb-4">
+      {{subscription?.email}}
+    </p>
+
+    <!-- CARD NUMBER -->
+    <div id="card-number" class="border rounded w-full px-3 py-2 mb-3"></div>
+
+    <!-- EXP + CVC -->
+    <div class="grid grid-cols-2 gap-3 mb-4">
+      <div id="card-expiry" class="border rounded px-3 py-2"></div>
+      <div id="card-cvc" class="border rounded px-3 py-2"></div>
+    </div>
+
+    <button (click)="updateCard()" class="bg-[#3f5f78] text-white w-full py-2 rounded shadow">
+      Update Card Details
+    </button>
+
+  </div>
+</div>

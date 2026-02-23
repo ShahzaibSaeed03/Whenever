@@ -1,0 +1,206 @@
+<div class="bg-[#d5e8ef] min-h-screen p-2">
+
+<!-- TITLE -->
+<div class="max-w-6xl mx-auto bg-[#2f4e75] text-white px-6 py-3 flex justify-between rounded">
+  <span class="font-semibold">Account Info</span>
+  <span class="text-sm">
+    {{profile.tokens}} Remaining Tokens
+  </span>
+</div>
+
+<!-- INTRO -->
+<div class="max-w-6xl mx-auto mt-6 text-[#3f5f78] text-sm space-y-1">
+<p>Please enter your personal details and billing address.</p>
+<p>Once your payment is validated, you will be able to upload your work.</p>
+<p>If you are facing a problem while registering, please send an email.</p>
+</div>
+
+<!-- MAIN FORM -->
+<div class="max-w-6xl mx-auto mt-6 border border-[#3f5f78] rounded-xl p-6">
+
+<form class="grid lg:grid-cols-2 gap-8" (ngSubmit)="updateProfile()">
+
+<!-- LEFT -->
+<div>
+<h2 class="text-lg font-semibold mb-4">Personal Details:</h2>
+
+<div class="space-y-3">
+
+<div class="grid grid-cols-2 gap-4 items-center">
+<label>First Name *</label>
+<input class="border rounded px-3 py-1 w-full"
+[(ngModel)]="profile.firstName" name="firstName">
+</div>
+
+<div class="grid grid-cols-2 gap-4 items-center">
+<label>Last Name *</label>
+<input class="border rounded px-3 py-1 w-full"
+[(ngModel)]="profile.lastName" name="lastName">
+</div>
+
+<div class="grid grid-cols-2 gap-4 items-center">
+<label>Address Line 1 *</label>
+<input class="border rounded px-3 py-1 w-full"
+[(ngModel)]="profile.personalAddress.address1" name="a1">
+</div>
+
+<div class="grid grid-cols-2 gap-4 items-center">
+<label>Address Line 2</label>
+<input class="border rounded px-3 py-1 w-full"
+[(ngModel)]="profile.personalAddress.address2" name="a2">
+</div>
+
+<div class="grid grid-cols-2 gap-4 items-center">
+<label>Zip *</label>
+<input class="border rounded px-3 py-1 w-full"
+[(ngModel)]="profile.personalAddress.zip" name="zip">
+</div>
+
+<div class="grid grid-cols-2 gap-4 items-center">
+<label>City *</label>
+<input class="border rounded px-3 py-1 w-full"
+[(ngModel)]="profile.personalAddress.city" name="city">
+</div>
+
+<div class="grid grid-cols-2 gap-4 items-center">
+<label>State</label>
+<input class="border rounded px-3 py-1 w-full"
+[(ngModel)]="profile.personalAddress.state" name="state">
+</div>
+
+<div class="grid grid-cols-2 gap-4 items-center">
+<label>Country *</label>
+<input class="border rounded px-3 py-1 w-full"
+[(ngModel)]="profile.personalAddress.country" name="country">
+</div>
+
+<div class="grid grid-cols-2 gap-4 items-center">
+<label>Phone</label>
+<input class="border rounded px-3 py-1 w-full"
+[(ngModel)]="profile.personalAddress.phone" name="phone">
+</div>
+
+<div class="grid grid-cols-2 gap-4 items-center">
+<label>Profession</label>
+<input class="border rounded px-3 py-1 w-full"
+[(ngModel)]="profile.personalAddress.profession" name="prof">
+</div>
+
+</div>
+</div>
+
+<!-- RIGHT BILLING -->
+<div class="lg:border-l lg:border-[#3f5f78] lg:pl-8">
+
+<h2 class="text-lg font-semibold mb-4">Billing Address:</h2>
+
+<div class="space-y-3">
+
+<div class="grid grid-cols-2 gap-4 items-center">
+<label>Company</label>
+<input class="border rounded px-3 py-1 w-full"
+[(ngModel)]="profile.billing.company" name="bc">
+</div>
+
+<div class="grid grid-cols-2 gap-4 items-center">
+<label>Name</label>
+<input class="border rounded px-3 py-1 w-full"
+[(ngModel)]="profile.billing.name" name="bn">
+</div>
+
+<div class="grid grid-cols-2 gap-4 items-center">
+<label>VAT</label>
+<input class="border rounded px-3 py-1 w-full"
+[(ngModel)]="profile.billing.vatNumber" name="vat">
+</div>
+
+<div class="flex items-center gap-2 text-sm">
+<input type="checkbox"
+[(ngModel)]="profile.billing.sameAsPersonal"
+name="same">
+Cascade address from Personal Details
+</div>
+
+<div class="grid grid-cols-2 gap-4 items-center">
+<label>Address 1</label>
+<input class="border rounded px-3 py-1 w-full"
+[(ngModel)]="profile.billing.address1" name="ba1">
+</div>
+
+<div class="grid grid-cols-2 gap-4 items-center">
+<label>City</label>
+<input class="border rounded px-3 py-1 w-full"
+[(ngModel)]="profile.billing.city" name="bcity">
+</div>
+
+<div class="grid grid-cols-2 gap-4 items-center">
+<label>Country</label>
+<input class="border rounded px-3 py-1 w-full"
+[(ngModel)]="profile.billing.country" name="bcountry">
+</div>
+
+</div>
+</div>
+
+<div class="col-span-2 flex justify-center mt-6">
+<button class="bg-[#3f5f78] text-white px-10 py-2 rounded-lg">
+UPDATE
+</button>
+</div>
+
+</form>
+</div>
+
+<!-- CHANGE PASSWORD -->
+<div class="max-w-6xl mx-auto mt-8 border border-[#3f5f78] rounded-xl p-6">
+
+<h3 class="font-semibold mb-4">CHANGE PASSWORD</h3>
+
+<div class="space-y-3 max-w-lg">
+
+<input type="password" placeholder="Current"
+[(ngModel)]="currentPassword" name="cp"
+class="border px-3 py-2 w-full">
+
+<input type="password" placeholder="New"
+[(ngModel)]="newPassword" name="np"
+class="border px-3 py-2 w-full">
+
+<input type="password" placeholder="Confirm"
+[(ngModel)]="confirmPassword" name="cnp"
+class="border px-3 py-2 w-full">
+
+<button (click)="changePassword()"
+class="bg-[#3f5f78] text-white px-6 py-2 rounded">
+UPDATE
+</button>
+
+</div>
+</div>
+
+<!-- CHANGE EMAIL -->
+<div class="max-w-6xl mx-auto mt-8 mb-10 border border-[#3f5f78] rounded-xl p-6 space-y-4">
+
+<h3 class="font-semibold">CHANGE EMAIL</h3>
+
+<input placeholder="New email"
+[(ngModel)]="newEmail" name="ne"
+class="border px-3 py-2 w-full max-w-md">
+
+<button (click)="requestEmail()"
+class="bg-[#3f5f78] text-white px-6 py-2 rounded">
+SEND CODE
+</button>
+
+<input placeholder="Verification code"
+[(ngModel)]="emailCode" name="code"
+class="border px-3 py-2 w-full max-w-md">
+
+<button (click)="confirmEmail()"
+class="bg-green-600 text-white px-6 py-2 rounded">
+CONFIRM
+</button>
+
+</div>
+
+</div>

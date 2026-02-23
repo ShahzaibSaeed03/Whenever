@@ -33,26 +33,27 @@ export class VerifyWorkComponent {
   isVerifying = false;
 
   constructor(private workService: WorkService, private toastr: ToastrService) { }
+
   formatUtcToDate(utcString: string): string {
-  if (!utcString) return '';
+    if (!utcString) return '';
 
-  // Normalize whitespace/newlines and trim
-  const s = utcString.replace(/\s+/g, ' ').trim();
+    // Normalize whitespace/newlines and trim
+    const s = utcString.replace(/\s+/g, ' ').trim();
 
-  // If text like "26 August 2025 at 06:13 UTC" → take everything before " at "
-  const idx = s.toLowerCase().indexOf(' at ');
-  if (idx !== -1) return s.slice(0, idx).trim();
+    // If text like "26 August 2025 at 06:13 UTC" → take everything before " at "
+    const idx = s.toLowerCase().indexOf(' at ');
+    if (idx !== -1) return s.slice(0, idx).trim();
 
-  // Fallback: try to parse and format (UTC)
-  const cleaned = s.replace(/\s*UTC$/i, '');
-  const d = new Date(cleaned.endsWith('Z') ? cleaned : cleaned + 'Z');
-  if (!isNaN(d.getTime())) {
-    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric', timeZone: 'UTC' });
+    // Fallback: try to parse and format (UTC)
+    const cleaned = s.replace(/\s*UTC$/i, '');
+    const d = new Date(cleaned.endsWith('Z') ? cleaned : cleaned + 'Z');
+    if (!isNaN(d.getTime())) {
+      return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric', timeZone: 'UTC' });
+    }
+
+    // Last resort: original (normalized) string
+    return s;
   }
-
-  // Last resort: original (normalized) string
-  return s;
-}
 
   formatUtcToAmPm(utcString: string): string {
     if (!utcString) return '';
@@ -120,56 +121,62 @@ export class VerifyWorkComponent {
       formData.append('ots', this.otsFile);
 
 
-    this.workService.verifyWork(formData).subscribe(
-  (res: any) => {
-    console.log('✅ Backend Response:', res); // <-- log success response
-    this.handleSuccess(res);
-  },
-  (error) => {
-    console.error('❌ Backend Error:', error); // <-- log error response
-    this.handleError(error);
-  }
-);
+      this.workService.verifyWork(formData).subscribe(
+        (res: any) => {
+          console.log('✅ Backend Response:', res); // <-- log success response
+          this.handleSuccess(res);
+        },
+        (error) => {
+          console.error('❌ Backend Error:', error); // <-- log error response
+          this.handleError(error);
+        }
+      );
 
-      
+
     } catch (err) {
       this.setError('Error reading files. Please try again.');
       this.isVerifying = false;
     }
   }
   // 🔧 NEW: normalize backend error strings
-private prettifyBackendError(msg: string): string {
-  const text = (msg || '').replace(/\s+/g, ' ').trim();
-  const lower = text.toLowerCase();
+  private prettifyBackendError(msg: string): string {
+    const text = (msg || '').replace(/\s+/g, ' ').trim();
+    const lower = text.toLowerCase();
+    if (lower.includes('invalid or corrupted .ots')) {
+      return 'The .ots proof file is invalid or corrupted. Please upload the correct timestamp file.';
+    }
 
-  // Case 1: Failed fingerprint
-  if (lower.includes('failed to calculate fingerprint of the file')) {
-    console.error('Backend error:', text);
-    return "File doesn't match the certificate.";
+    if (lower.includes('pending')) {
+      return 'Timestamp exists but is not yet confirmed on Bitcoin. Please check again later.';
+    }
+    // Case 1: Failed fingerprint
+    if (lower.includes('failed to calculate fingerprint of the file')) {
+      console.error('Backend error:', text);
+      return "File doesn't match the certificate.";
+    }
+
+    // Case 2: Verification output mismatch (handles "Verification" or "verification")
+    if (lower.includes('verification output did not match expected patterns')) {
+      console.error('Backend error:', text);
+      return "File doesn't match the certificate.";
+    }
+
+    // Case 3: Fingerprint not found
+    if (lower.includes("fingerprint not found in certificate")) {
+      console.error('Backend error:', text);
+      return "File doesn't match the certificate.";
+    }
+
+    // Case 4: Already starts with clean message
+    if (lower.startsWith("file doesn't match the certificate.")) {
+      console.error('Backend error:', text);
+      return "File doesn't match the certificate.";
+    }
+
+    // Default → just log and return original
+    console.error('Backend error (unmatched):', text);
+    return text;
   }
-
-  // Case 2: Verification output mismatch (handles "Verification" or "verification")
-  if (lower.includes('verification output did not match expected patterns')) {
-    console.error('Backend error:', text);
-    return "File doesn't match the certificate.";
-  }
-
-  // Case 3: Fingerprint not found
-  if (lower.includes("fingerprint not found in certificate")) {
-    console.error('Backend error:', text);
-    return "File doesn't match the certificate.";
-  }
-
-  // Case 4: Already starts with clean message
-  if (lower.startsWith("file doesn't match the certificate.")) {
-    console.error('Backend error:', text);
-    return "File doesn't match the certificate.";
-  }
-
-  // Default → just log and return original
-  console.error('Backend error (unmatched):', text);
-  return text;
-}
 
 
 
@@ -177,48 +184,59 @@ private prettifyBackendError(msg: string): string {
     this.isVerifying = false;
     this.backendResponse = res;
 
-    console.log('Backend response:', this.backendResponse);
-    if (res?.otsStatus) {
-      this.blocks = res.otsStatus.anchors || [];
-
-      if (res.otsStatus.status === 'pending') {
-        this.successMessage = "The Bitcoin transaction is unconfirmed. The attestation is still pending. It may take 2 to 24 hours.Please try again later on.";
-      } else if (res.otsStatus.status === 'verified') {
-        this.successMessage = res.message || 'Verification successful.';
-      } else if (res.otsStatus.status === 'error') {
-        this.setError(res.otsStatus.error || res.message || "Verification failed.");
-      } else {
-        this.setError(res.message || 'Verification completed with unknown status.');
-      }
-
-      this.tsaResult = {
-        status: res.otsStatus.status,
-        message: res.otsStatus.message,
-        details: res.otsStatus.details,
-        error: res.otsStatus.error,
-      };
-    } else {
-      this.setError('Unexpected response format.');
+    if (!res?.otsStatus) {
+      this.setError('Unexpected response from server.');
+      return;
     }
 
+    const status = res.otsStatus.status;
+
+    if (status === 'pending') {
+      this.successMessage =
+        'The Bitcoin transaction is unconfirmed. Attestation is pending. It may take 2–24 hours. Please try again later.';
+    }
+    else if (status === 'verified') {
+      this.successMessage =
+        res.message || 'Timestamp verified on Bitcoin blockchain.';
+    }
+    else if (status === 'error') {
+      const msg =
+        res.otsStatus.message ||
+        res.otsStatus.error ||
+        res.message ||
+        'Verification failed.';
+
+      this.setError(this.prettifyBackendError(msg));
+      return;
+    }
+    else {
+      this.setError('Verification completed with unknown status.');
+      return;
+    }
+
+    this.blocks = res.otsStatus.anchors || [];
+
+    this.tsaResult = {
+      status,
+      message: res.otsStatus.message,
+      details: res.otsStatus.details,
+      error: res.otsStatus.error,
+    };
   }
 
 
 
-  private handleError(error: any) {
-    this.isVerifying = false;
+ private handleError(error: any) {
+  this.isVerifying = false;
 
-    let msg =
-      error?.error?.message ||
-      error?.error?.error ||
-      error?.message ||
-      (typeof error?.error === 'string' ? error.error : JSON.stringify(error?.error || error));
-      console.error('Backend error:', msg);
+  const msg =
+    error?.error?.message ||
+    error?.error?.error ||
+    error?.message ||
+    'Verification failed. Please try again.';
 
-    // 🔧 apply normalization here
-    msg = this.prettifyBackendError(msg);
-    this.setError(msg);
-  }
+  this.setError(this.prettifyBackendError(msg));
+}
 
   private setError(msg: string) {
 

@@ -1,0 +1,159 @@
+<div class="w-full bg-[#d0e1fd]">
+
+    <div class="bg-[#466d94] text-white px-4 py-2  shadow">
+        <span class="text-red-400 font-semibold">Buy Tokens</span>
+    </div>
+    <div class="p-12">
+
+        <!-- TITLE BAR -->
+
+        <h3 class="text-xl font-semibold">Deterrent effect</h3>
+
+        <div class="bg-white shadow rounded-xl p-5">
+            In your communications, warn that your work has been protected, displaying our website url.
+            <img src="myca.png" class="h-32 mt-2" />
+            <img src="c.png" class="mt-2" />
+        </div>
+
+        <h3 class="text-xl font-semibold mt-2 mb-2">Takedown Guide</h3>
+
+        <div class="bg-white shadow rounded-xl p-5">
+            Contact the infringer and ask him to remove his infringing work.
+            <ul class="list-disc pl-6 mt-3 space-y-2">
+                <li><b>First method:</b> Send certificate pdf <img src="c.png" class="h-6 mt-2" /></li>
+                <li><b>Second method:</b> Send reference id + password</li>
+            </ul>
+        </div>
+
+        <!-- ACCORDION -->
+        <div class="bg-white shadow rounded-x mt-5">
+
+            <button (click)="toggleMain()" class="w-full text-left p-5 font-semibold flex justify-between">
+                Where to sue them?
+                <span>{{openMain ? '-' : '+'}}</span>
+            </button>
+
+            <div *ngIf="openMain" class="p-5 border-t space-y-4">
+
+                <!-- UNITED STATES -->
+                <div class="border rounded-lg">
+                    <button (click)="toggleUS()" class="w-full text-left p-4 font-medium flex justify-between">
+                        United States
+                        <span>{{openUS ? '-' : '+'}}</span>
+                    </button>
+
+                    <div *ngIf="openUS" class="p-4 border-t space-y-3">
+
+                        <ol class="list-decimal pl-6 space-y-4">
+
+                            <li>
+                                <b>Copyright Claims Board (CCB)</b>
+                                <ul class="list-disc pl-6">
+                                    <li><b>What it is:</b> Tribunal under U.S. Copyright Office for small claims.</li>
+                                    <li><b>Jurisdiction:</b> Up to $30,000.</li>
+                                    <li><b>When to use:</b> Small disputes without federal court.</li>
+                                    <li><b>How to file:</b> File online through CCB portal.</li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <b>Federal Court</b>
+                                <ul class="list-disc pl-6">
+                                    <li>Main venue for copyright cases.</li>
+                                    <li>Exclusive jurisdiction.</li>
+                                    <li>Used for significant cases.</li>
+                                </ul>
+                            </li>
+
+                        </ol>
+
+                    </div>
+                </div>
+
+                <!-- EUROPEAN UNION -->
+                <div class="border rounded-lg">
+                    <button (click)="toggleEU()" class="w-full text-left p-4 font-medium flex justify-between">
+                        European Union
+                        <span>{{openEU ? '-' : '+'}}</span>
+                    </button>
+
+                    <div *ngIf="openEU" class="p-4 border-t space-y-3">
+
+                        <ol class="list-decimal pl-6 space-y-4">
+
+                            <li>
+                                <b>National Courts</b>
+                                <ul class="list-disc pl-6">
+                                    <li>Each member state handles copyright cases.</li>
+                                    <li>Filed where infringement occurred.</li>
+                                    <li>Example: Germany specialized chambers.</li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <b>Court of Justice of the European Union (CJEU)</b>
+                                <ul class="list-disc pl-6">
+                                    <li>Interprets EU copyright law.</li>
+                                    <li>Accessible via national courts.</li>
+                                </ul>
+                            </li>
+
+                        </ol>
+
+                    </div>
+                </div>
+
+                <!-- UNITED KINGDOM -->
+                <div class="border rounded-lg">
+                    <button (click)="toggleUK()" class="w-full text-left p-4 font-medium flex justify-between">
+                        United Kingdom
+                        <span>{{openUK ? '-' : '+'}}</span>
+                    </button>
+
+                    <div *ngIf="openUK" class="p-4 border-t space-y-3">
+
+                        <ol class="list-decimal pl-6 space-y-4">
+
+                            <li>
+                                <b>Intellectual Property Enterprise Court (IPEC)</b>
+                                <ul class="list-disc pl-6">
+                                    <li>Specialized IP court.</li>
+                                    <li>Claims up to £500,000.</li>
+                                    <li>Streamlined procedures.</li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <b>High Court (Chancery Division)</b>
+                                <ul class="list-disc pl-6">
+                                    <li>Handles complex/high-value cases.</li>
+                                    <li>No monetary cap.</li>
+                                </ul>
+                            </li>
+
+                        </ol>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="bg-white shadow rounded-xl p-5 mt-5">
+            Gather proofs and sue them if needed.
+        </div>
+
+        <h3 class="text-xl font-semibold mt-2 mb-3">About screenshots</h3>
+
+        <div class="bg-white shadow rounded-xl p-5">
+            <ol class="list-decimal pl-6 space-y-2">
+                <li>Take screenshots</li>
+                <li>Zip files</li>
+                <li>Upload to timestamp</li>
+            </ol>
+        </div>
+
+    </div>
+
+    <div class="col-span-1"></div>
+</div>

@@ -1,0 +1,214 @@
+<div class="min-h-screen bg-[#cfe6ef]">
+
+  <!-- TITLE BAR -->
+  <div class="bg-[#223e6b] text-white px-6 py-3 text-lg font-semibold">
+    Frequently Asked Questions (FAQ)
+  </div>
+
+  <!-- INTRO -->
+  <div class="max-w-5xl mx-auto px-6 py-8 space-y-6">
+
+    <p class="text-[#223e6b] text-sm leading-relaxed">
+      Welcome to the FAQ page for My Copyright Ally. Here you’ll find answers
+      to common questions about our services, pricing and copyright protection.
+      If you need help,
+      <a routerLink="/contact" class="text-blue-700 underline">Contact Us</a>.
+    </p>
+
+    <!-- ================= GENERAL ================= -->
+    <h2 class="font-bold text-[#223e6b]">General Questions</h2>
+
+    <div class="space-y-3">
+
+      <!-- Q1 -->
+      <div class="bg-white rounded-lg shadow">
+        <button (click)="toggle(1)" class="w-full text-left px-5 py-4 font-semibold flex justify-between">
+          What is My Copyright Ally?
+          <span>{{open===1?'-':'+'}}</span>
+        </button>
+
+        <div *ngIf="open===1" class="px-5 pb-5 text-sm text-gray-600">
+          My Copyright Ally helps creators establish proof of copyright
+          ownership by timestamping and securely storing their works.
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="bg-white rounded-lg shadow">
+        <button (click)="toggle(2)" class="w-full text-left px-5 py-4 font-semibold flex justify-between">
+          What types of works can I protect?
+          <span>{{open===2?'-':'+'}}</span>
+        </button>
+
+        <div *ngIf="open===2" class="px-5 pb-5 text-sm text-gray-600">
+          Written content, music, visual art, AI works, POD designs,
+          videos, animations and more.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= PRICING ================= -->
+    <h2 class="font-bold text-[#223e6b] mt-8">Pricing and Tokens</h2>
+
+    <div class="space-y-3">
+
+      <div class="bg-white rounded-lg shadow">
+        <button (click)="toggle(3)" class="w-full text-left px-5 py-4 font-semibold flex justify-between">
+          How much does it cost?
+          <span>{{open===3?'-':'+'}}</span>
+        </button>
+
+        <div *ngIf="open===3" class="px-5 pb-5 text-sm text-gray-600">
+          Annual subscription is $45 and includes 5 tokens. Extra tokens cost $1.
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow">
+        <button (click)="toggle(4)" class="w-full text-left px-5 py-4 font-semibold flex justify-between">
+          What are tokens?
+          <span>{{open===4?'-':'+'}}</span>
+        </button>
+
+        <div *ngIf="open===4" class="px-5 pb-5 text-sm text-gray-600">
+          Tokens are used to submit works for copyright proof. One token per file.
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow">
+        <button (click)="toggle(5)" class="w-full text-left px-5 py-4 font-semibold flex justify-between">
+          Do unused tokens carry over?
+          <span>{{open===5?'-':'+'}}</span>
+        </button>
+
+        <div *ngIf="open===5" class="px-5 pb-5 text-sm text-gray-600">
+          Yes. Tokens remain valid while your subscription is active.
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow">
+        <button (click)="toggle(6)" class="w-full text-left px-5 py-4 font-semibold flex justify-between">
+          Can I cancel subscription?
+          <span>{{open===6?'-':'+'}}</span>
+        </button>
+
+        <div *ngIf="open===6" class="px-5 pb-5 text-sm text-gray-600">
+          Yes you can cancel anytime. Refunds are not provided for unused periods.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= USING ================= -->
+    <h2 class="font-bold text-[#223e6b] mt-8">Using the Service</h2>
+
+    <div class="space-y-3">
+
+      <div class="bg-white rounded-lg shadow">
+        <button (click)="toggle(7)" class="w-full text-left px-5 py-4 font-semibold flex justify-between">
+          How do I submit a work?
+          <span>{{open===7?'-':'+'}}</span>
+        </button>
+
+        <div *ngIf="open===7" class="px-5 pb-5 text-sm text-gray-600">
+          Upload your file after login. Each submission uses one token.
+          Your work is timestamped and stored securely.
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow">
+        <button (click)="toggle(8)" class="w-full text-left px-5 py-4 font-semibold flex justify-between">
+          Supported file formats?
+          <span>{{open===8?'-':'+'}}</span>
+        </button>
+
+        <div *ngIf="open===8" class="px-5 pb-5 text-sm text-gray-600">
+          Text, images, audio and video formats such as pdf, jpg, mp3, mp4 etc.
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow">
+        <button (click)="toggle(9)" class="w-full text-left px-5 py-4 font-semibold flex justify-between">
+          How do I know my work is protected?
+          <span>{{open===9?'-':'+'}}</span>
+        </button>
+
+        <div *ngIf="open===9" class="px-5 pb-5 text-sm text-gray-600">
+          You receive a certificate with timestamp and unique ID as proof.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= LEGAL ================= -->
+    <h2 class="font-bold text-[#223e6b] mt-8">Legal and Security</h2>
+
+    <div class="space-y-3">
+
+      <div class="bg-white rounded-lg shadow">
+        <button (click)="toggle(10)" class="w-full text-left px-5 py-4 font-semibold flex justify-between">
+          Is this official copyright registration?
+          <span>{{open===10?'-':'+'}}</span>
+        </button>
+
+        <div *ngIf="open===10" class="px-5 pb-5 text-sm text-gray-600">
+          No. We provide proof of ownership. Official registration is done via government offices.
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow">
+        <button (click)="toggle(11)" class="w-full text-left px-5 py-4 font-semibold flex justify-between">
+          How secure is my data?
+          <span>{{open===11?'-':'+'}}</span>
+        </button>
+
+        <div *ngIf="open===11" class="px-5 pb-5 text-sm text-gray-600">
+          Files are encrypted and stored securely. We never share without consent.
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow">
+        <button (click)="toggle(12)" class="w-full text-left px-5 py-4 font-semibold flex justify-between">
+          Can I delete my files?
+          <span>{{open===12?'-':'+'}}</span>
+        </button>
+
+        <div *ngIf="open===12" class="px-5 pb-5 text-sm text-gray-600">
+          Yes. Files can be removed anytime from your dashboard.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= SUPPORT ================= -->
+    <h2 class="font-bold text-[#223e6b] mt-8">Technical Support</h2>
+
+    <div class="space-y-3">
+
+      <div class="bg-white rounded-lg shadow">
+        <button (click)="toggle(13)" class="w-full text-left px-5 py-4 font-semibold flex justify-between">
+          Trouble uploading?
+          <span>{{open===13?'-':'+'}}</span>
+        </button>
+
+        <div *ngIf="open===13" class="px-5 pb-5 text-sm text-gray-600">
+          Check file format and size. If issue continues contact support.
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow">
+        <button (click)="toggle(14)" class="w-full text-left px-5 py-4 font-semibold flex justify-between">
+          Can I update submitted file?
+          <span>{{open===14?'-':'+'}}</span>
+        </button>
+
+        <div *ngIf="open===14" class="px-5 pb-5 text-sm text-gray-600">
+          No. You must upload a new version using another token.
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

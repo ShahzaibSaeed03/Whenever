@@ -1,80 +1,121 @@
-<div class="mt-10 max-w-3xl mx-auto">
+<div class="bg-[#d5e8ef] min-h-screen">
 
-  <!-- Success Message -->
-  <div *ngIf="successMessage" class="bg-green-50 border-l-4 border-green-400 text-green-800 p-4 rounded-md shadow-sm mb-6">
-    <p class="font-medium">{{ successMessage }}</p>
+  <!-- TITLE -->
+  <div class="bg-[#466d94] text-white px-6 py-3">
+    <span class="font-semibold">Access a registered work</span>
   </div>
 
-  <!-- Error Message -->
-  <div *ngIf="errorMessage" class="bg-red-50 border-l-4 border-red-400 text-red-800 p-4 rounded-md shadow-sm mb-6">
-    <p class="font-medium">{{ errorMessage }}</p>
-  </div>
+  <div class="max-w-7xl mx-auto px-6 py-12 text-[#3f5f78]">
+ <div class="space-y-4 text-sm leading-relaxed">
+      <p>
+        Please type the work reference number and its password,
+        given by the Copyright Owner, in order to access this work.
+      </p>
 
-  <!-- Work Data Card -->
-  <div *ngIf="workData" class="bg-white border border-gray-200 p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-    
-    <!-- Title -->
-    <h2 class="text-2xl font-bold text-gray-900 mb-3">Work Title: {{ workData.title }}</h2>
+      <p>
+        You will see the Certificate, and will be able to download the corresponding work.
+      </p>
+    </div>
+    <!-- FORM -->
+    <div class="space-y-6 mt-7 w-2xl">
 
-    <!-- File Info -->
-    <p class="text-sm text-gray-600 mb-4">
-      <span class="font-semibold">File:</span> {{ workData.file_name }}
-    </p>
+      <!-- Reference -->
+      <div class="flex gap-6 items-center">
+        <label class="w-48 text-right font-semibold">
+          Work reference number:
+        </label>
 
-    <!-- Download Button -->
-    <div class="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0 mt-4">
-      <a [href]="workData.otsUrl" 
-         class="inline-block px-6 py-2 bg-[#3776a6]  text-white rounded-lg font-medium hover:bg-[#3776a6]  transition duration-200 shadow-md">
-        Download ots File
-      </a>
-      <a [href]="workData.certificateUrl" 
-         class="inline-block px-6 py-2 bg-gray-100 text-gray-800 rounded-lg font-medium hover:bg-gray-200 transition duration-200 shadow-md">
-        Download Certificate
-      </a>
+        <input
+          [(ngModel)]="reference"
+          class="flex-1 bg-white border px-3 py-2 rounded"
+          placeholder="Enter reference ID"
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="flex gap-6 items-center">
+        <label class="w-48 text-right font-semibold">
+          Password:
+        </label>
+
+        <input
+          [(ngModel)]="password"
+          type="password"
+          class="flex-1 bg-white border px-3 py-2 rounded"
+          placeholder="Enter password"
+        />
+      </div>
+
+      <div class="flex justify-center">
+        <button
+          (click)="access()"
+          class="bg-green-500 hover:bg-green-600 text-white px-10 py-2 rounded-lg">
+          ACCESS
+        </button>
+      </div>
+
     </div>
 
+    <!-- SUCCESS -->
+    <div *ngIf="successMessage"
+         class="mt-6 bg-green-50 border-l-4 border-green-400 text-green-800 p-4 rounded">
+      {{ successMessage }}
+    </div>
 
-
-  </div>
-</div>
-<!-- Password Modal -->
-<div *ngIf="showPasswordModal" class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-  <div class="bg-white rounded-xl shadow-lg p-6 w-96 relative">
-    <h2 class="text-lg font-semibold text-gray-800 flex items-center mb-4">
-      <i class="fas fa-lock mr-2 text-[#507897]"></i>
-      Enter Password
-    </h2>
-
-    <p class="text-sm text-gray-600 mb-3">
-      This work is protected. Please enter the password to access it.
-    </p>
-
-    <!-- Error -->
-    <div *ngIf="errorMessage" class="bg-red-50 border-l-4 border-red-400 text-red-800 p-2 rounded-md mb-3">
+    <!-- ERROR -->
+    <div *ngIf="errorMessage"
+         class="mt-6 bg-red-50 border-l-4 border-red-400 text-red-800 p-4 rounded">
       {{ errorMessage }}
     </div>
 
-    <!-- Password Input -->
-    <div class="relative">
-      <input [(ngModel)]="enteredPassword"
-             type="{{ showPassword ? 'text' : 'password' }}"
-             placeholder="Enter 6-char password"
-             maxlength="6"
-             class="w-full border rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#507897]" />
+ 
 
-      <!-- Toggle visibility -->
-      <button type="button" (click)="togglePassword()" 
-        class="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700">
-        <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+  </div>
+</div>
+
+<!-- POPUP MODAL -->
+<div *ngIf="workData"
+     class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+
+  <div class="bg-[#d5e8ef] p-8 rounded-xl shadow w-full max-w-xl text-center">
+
+    <h2 class="text-2xl font-bold mb-2">
+      {{workData.title}}
+    </h2>
+
+    <p class="text-sm text-gray-600">
+      File: {{workData.file_name}}
+    </p>
+
+    <div class="flex justify-center gap-4 mt-6">
+
+      <button
+        (click)="viewCertificate()"
+        class="bg-[#466d94] text-white px-6 py-2 rounded">
+        View Certificate
       </button>
+
+      <button
+        (click)="download()"
+        class="bg-gray-200 px-6 py-2 rounded">
+        Download Work
+      </button>
+
+      <a
+        [href]="workData.otsUrl"
+        target="_blank"
+        class="bg-gray-100 px-6 py-2 rounded">
+        OTS File
+      </a>
+
     </div>
 
-    <!-- Access Button -->
-    <button (click)="submitPassword()" 
-            [disabled]="enteredPassword.length !== 6 || loading"
-            class="w-full mt-5 py-2 px-4 bg-[#507897] text-white text-sm font-medium rounded-md hover:bg-[#2c6794] disabled:opacity-50">
-      <i class="fas fa-unlock mr-2"></i> 
-      {{ loading ? 'Accessing...' : 'Access' }}
+    <!-- CLOSE -->
+    <button
+      (click)="workData=null"
+      class="mt-6 text-sm text-gray-500 underline">
+      Close
     </button>
+
   </div>
 </div>

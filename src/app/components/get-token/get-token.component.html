@@ -1,0 +1,69 @@
+<div class="bg-[#cfe6ef] min-h-screen">
+
+  <!-- TITLE BAR -->
+  <div class="bg-[#466d94] text-white px-6 py-3 font-semibold">
+    Buy Tokens
+  </div>
+
+  <!-- CONTENT -->
+  <div class="max-w-5xl mx-auto py-10 px-4">
+
+    <!-- SELECT -->
+    <label class="block text-[#3f5f78] font-semibold mb-2">
+      Number of Tokens that you want to buy (5–100)
+    </label>
+
+    <select
+      [(ngModel)]="quantity"
+      (change)="changeQty()"
+      class="border px-3 py-2 bg-white rounded w-40">
+
+      <option *ngFor="let q of quantities" [value]="q">
+        {{q}}
+      </option>
+
+    </select>
+
+    <!-- STRIPE BOX -->
+    <div class="mt-10 border border-black rounded-xl p-6 bg-white">
+
+      <div class="text-lg mb-6 text-center">
+        Payment Summary & Checkout
+      </div>
+
+      <!-- SUMMARY -->
+      <div class="mb-6 space-y-2 text-sm">
+
+        <div class="flex justify-between">
+          <span>Tokens</span>
+          <span>{{quantity}}</span>
+        </div>
+
+        <div class="flex justify-between">
+          <span>Price per token</span>
+          <span>$1</span>
+        </div>
+
+        <div class="flex justify-between font-bold border-t pt-2">
+          <span>Total</span>
+          <span>${{quantity}}</span>
+        </div>
+
+      </div>
+
+      <!-- STRIPE MOUNT -->
+      <div id="checkout" class="min-h-[600px]"></div>
+
+    </div>
+
+    <!-- INFO -->
+    <div class="mt-10 text-sm text-[#3f5f78] space-y-2">
+
+      <p>Your subscription: one-year subscription and five tokens — $45</p>
+      <p>Backed by our 14-day money-back guarantee.</p>
+      <p>You will be billed every year unless you cancel.</p>
+
+    </div>
+
+  </div>
+</div>

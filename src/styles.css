@@ -6,7 +6,19 @@
   font-weight: normal;
   font-style: normal;
 }
+.fieldRow{
+  @apply flex items-center gap-3;
+}
+.star{
+  @apply text-red-500 font-bold ml-1;
+}
+.label{
+  @apply w-40 text-[#3f5f78] text-sm shrink-0;
+}
 
+.input{
+  @apply flex-1 px-3 py-2 rounded bg-white border border-gray-300 text-sm outline-none;
+}
 body {
   font-family: 'Calibri', sans-serif;
 }

@@ -5,68 +5,52 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-view-work-details',
-  imports: [CommonModule, FormsModule],
-  templateUrl: './view-work-details.component.html',
-  styleUrls: ['./view-work-details.component.css']
+selector:'app-view-work-details',
+standalone:true,
+imports:[CommonModule,FormsModule],
+templateUrl:'./view-work-details.component.html'
 })
-export class ViewWorkDetailsComponent implements OnInit {
-  workData: any = null;
-  errorMessage: string = '';
-  successMessage: string = '';
+export class ViewWorkDetailsComponent implements OnInit{
 
-  // Password modal
-  showPasswordModal: boolean = true;   // ✅ always open on page load
-  enteredPassword: string = '';
-  showPassword: boolean = false;
-  workId: string | null = null;
-  loading: boolean = false;
+shareId:string='';
+password='';
+workData:any=null;
 
-  constructor(
-    private workService: WorkService,
-    private route: ActivatedRoute
-  ) {}
+loading=false;
+errorMessage='';
+successMessage='';
 
-  ngOnInit(): void {
-    this.workId = this.route.snapshot.paramMap.get('workId');
-    if (!this.workId) {
-      this.errorMessage = 'Work ID not provided!';
-      // ❌ do NOT close modal here, user still needs to see error
-    }
-  }
+constructor(
+private route:ActivatedRoute,
+private workService:WorkService
+){}
 
-  togglePassword() {
-    this.showPassword = !this.showPassword;
-  }
+ngOnInit(){
 
-  submitPassword() {
-    if (!this.workId) return;
 
-    if (this.enteredPassword.length !== 6) {
-      this.errorMessage = 'Password must be 6 characters.';
-      return;
-    }
+}
 
-    this.loading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
+/* ACCESS WORK */
+access(){
+this.workService.accessByReference(this.reference,this.password)
+.subscribe((res:any)=>{
+this.workData=res.data;
+});
+}
+reference="";
 
-    this.workService.getWorkByIds(this.workId, this.enteredPassword).subscribe(
-      (response) => {
-        this.loading = false;
+/* OPEN CERTIFICATE */
+viewCertificate(){
+window.open(this.workData.certificateUrl,'_blank');
+}
 
-        if (response.success) {
-          this.workData = response.data;
-          this.successMessage = 'Access granted!';
-          this.showPasswordModal = false;   // ✅ close modal only after success
-        } else {
-          this.errorMessage = response.message || 'Invalid password!';
-        }
-      },
-      (error) => {
-        this.loading = false;
-        this.errorMessage = 'Invalid password or failed to fetch work.';
-      }
-    );
-  }
+/* DOWNLOAD FILE */
+download(){
+
+const a=document.createElement('a');
+a.href=this.workData.downloadUrl;
+a.download=this.workData.file_name;
+a.click();
+
+}
 }

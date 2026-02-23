@@ -1,13 +1,9 @@
-<!-- Header -->
-<app-header></app-header>
+<app-sidebar></app-sidebar>
 
-<!-- Main Content -->
-<main class="min-h-screen bg-gray-50  flex flex-col ">
-  <!-- router-outlet will take full available width -->
-  <div class="w-full flex-1 overflow-x-hidden">
+<div class="lg:ml-56">
+  <app-header></app-header>
+
+  <main class="p-0">
     <router-outlet></router-outlet>
-  </div>
-</main>
-
-<!-- Footer -->
-<app-footer class="mt-auto w-full"></app-footer>
+  </main>
+</div>

@@ -1,77 +1,247 @@
-<div class="min-h-screen flex flex-col md:flex-row bg-gray-100">
+<div class="bg-[#d5e8ef] min-h-screen p-1">
 
-    <!-- Image Section -->
-    <div class="w-full md:w-1/2 h-64 md:h-auto">
-      <img src="reg.jpg" alt="Login" class="w-full h-full object-cover rounded-b-md md:rounded-none" />
-    </div>
-  
-    <!-- Form Section -->
-    <div class="w-full md:w-1/2 flex items-center justify-center bg-white px-6 py-12 md:px-16 shadow-lg">
-      <div class="w-full max-w-md space-y-8">
-  
-        <!-- Heading -->
-        <div class="text-center">
-          <h1 class="text-3xl font-bold text-gray-800">Welcome</h1>
-          <p class="text-sm text-gray-500 mt-1"> Register </p>
-        </div>
-  
-        <!-- Login Form -->
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-6">
-  
-          <!-- Email -->
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
-            <input
-              type="email"
-              id="email"
-              formControlName="email"
-              class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm"
-            />
-            <div *ngIf="f['email'].touched && f['email'].invalid" class="text-red-600 text-sm mt-1">
-              Valid email is required
-            </div>
-          </div>
-  
-          <!-- Password -->
-          <!-- <div>
-            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input
-              type="password"
-              id="password"
-              formControlName="password"
-              class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm"
-            />
-            <div *ngIf="f['password'].touched && f['password'].invalid" class="text-red-600 text-sm mt-1">
-              Password is required
-            </div>
-          </div> -->
-  
-          <!-- Submit Button -->
-        <button
-  type="submit"
-  [disabled]="registerForm.invalid || loading"
-  class="w-full flex items-center justify-center bg-[#3776a6]  hover:bg-[#3776a6]  text-white font-semibold py-2 px-4 rounded transition duration-200"
->
-  <ng-container *ngIf="!loading; else spinner">
-    Register
-  </ng-container>
-  <ng-template #spinner>
-       <span  class="ml-2 animate-spin fas fa-spinner"></span>
-
-  </ng-template>
-</button>
-
-     <p class="text-center text-sm text-gray-600">
-          Already have an account?
-          <a routerLink="/login" class="text-[#3776a6]  hover:text-[#3776a6]  font-medium">Login</a>
-        </p>
-
-          <!-- Error -->
-          <div *ngIf="errorMsg" class="text-center text-red-600 text-sm">
-            {{ errorMsg }}
-          </div>
-        </form>
-      </div>
-    </div>
+  <div class="bg-[#183462] text-red-500 font-bold px-4 py-2 uppercase">
+    SIGN UP
   </div>
-  
+
+  <div class="max-w-6xl mx-auto mt-6 text-[#3f5f78] text-sm space-y-1">
+    <p>
+      Please enter your personal details and billing address.</p>
+    <p>  Once your payment is validated, you will be able to upload your work.</p>
+
+      <p>If you are facing a problem while registering, please send an email to.</p>
+  </div>
+
+  <div class="max-w-6xl mx-auto mt-6 border border-[#3f5f78] rounded-xl p-6">
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="grid lg:grid-cols-2 gap-8">
+
+      <!-- ================= LEFT PERSONAL ================= -->
+      <div>
+        <h2 class="sectionTitle">Personal Details:</h2>
+
+        <div class="space-y-3">
+
+          <div class="fieldRow">
+            <label class="label">First Name <span class="star">*</span></label>
+            <input class="input" formControlName="firstName" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Last Name <span class="star">*</span></label>
+            <input class="input" formControlName="lastName" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">
+              Company Name <span class="star">*</span> or Owner Name
+            </label>
+            <input class="input" formControlName="companyName" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Owner Name</label>
+            <input class="input" formControlName="ownerName" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Address Line 1 <span class="star">*</span></label>
+            <input class="input" formControlName="addressLine1" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Address Line 2</label>
+            <input class="input" formControlName="addressLine2" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Zip Code <span class="star">*</span></label>
+            <input class="input" formControlName="zip" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">City <span class="star">*</span></label>
+            <input class="input" formControlName="city" />
+          </div>
+
+          <div class="fieldRow">
+
+            <label class="label">
+              State / Region
+              <span class="star" *ngIf="form.value.country==='USA'">*</span>
+            </label>
+
+            <!-- dropdown -->
+            <select *ngIf="form.value.country==='USA'" class="input" formControlName="state">
+              <option value="">Select state</option>
+              <option *ngFor="let s of usStates" [value]="s">{{s}}</option>
+            </select>
+
+            <!-- text -->
+            <input *ngIf="form.value.country!=='USA'" class="input" formControlName="state" />
+
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Country <span class="star">*</span></label>
+            <input class="input" formControlName="country" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Phone number</label>
+            <input class="input" formControlName="phone" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Profession</label>
+            <input class="input" formControlName="profession" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">How did you hear about us?</label>
+            <input class="input" formControlName="refSource" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Email <span class="star">*</span></label>
+            <input class="input" formControlName="email" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Confirm Email <span class="star">*</span></label>
+            <input class="input" formControlName="confirmEmail" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Password <span class="star">*</span></label>
+            <div class="relative">
+              <input [type]="showPassword ? 'text':'password'" class="input pr-14" formControlName="password" />
+              <span class="showBtn" (click)="togglePassword()">SHOW</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ================= RIGHT BILLING ================= -->
+      <div class="lg:border-l lg:border-[#3f5f78] lg:pl-8">
+        <h2 class="sectionTitle">Billing Address:</h2>
+
+        <div class="space-y-3">
+
+          <div class="fieldRow">
+            <label class="label">Company</label>
+            <input class="input" formControlName="billingCompany" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Name</label>
+            <input class="input" formControlName="billingName" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">VAT number</label>
+            <input class="input" formControlName="vatNumber" />
+          </div>
+
+          <div class="flex items-center gap-2 text-sm">
+            <input type="checkbox" formControlName="billingSameAsPersonal" />
+            Same as personal
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Address Line 1 <span class="star">*</span></label>
+            <input class="input" formControlName="billingAddress1" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Address Line 2</label>
+            <input class="input" formControlName="billingAddress2" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Zip Code <span class="star">*</span></label>
+            <input class="input" formControlName="billingZip" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">City <span class="star">*</span></label>
+            <input class="input" formControlName="billingCity" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">State / Region</label>
+            <input class="input" formControlName="billingState" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Country <span class="star">*</span></label>
+            <input class="input" formControlName="billingCountry" />
+          </div>
+
+          <div class="fieldRow">
+            <label class="label">Phone number</label>
+            <input class="input" formControlName="billingPhone" />
+          </div>
+
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div class="col-span-2 flex justify-center mt-6">
+        <button type="submit" class="bg-[#3f5f78] text-white px-10 py-2 rounded-lg">
+          SAVE
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+  <div class="max-w-6xl mx-auto text-[#223e6b] text-sm space-y-4 mt-10 mb-6">
+
+  <p>
+    <span class="font-semibold uppercase">
+      Your subscription:
+    </span>
+    "one-year subscription and five tokens", 45usd
+  </p>
+
+  <p>
+    You are covered by our 14-day money-back guarantee.
+  </p>
+
+  <p>
+    You will be billed every year, unless you cancel.
+    You can cancel at any time.
+  </p>
+
+  <p>
+    If you want to buy additional tokens, at 1usd each,
+    please select a quantity (from 5 to 100):
+  </p>
+
+  <p>
+    If you want to buy additional tokens, at 1usd each,
+    please select a quantity (from 5 to 100):
+  </p>
+
+  <!-- INFO LINE -->
+  <div class="flex items-center gap-2 text-[#223e6b]">
+    <span class="text-lg">ℹ️</span>
+    <span>coupon benefits will appear here</span>
+  </div>
+
+  <!-- TERMS -->
+  <p>
+    By signing up, you agree to My Copyright Evidence's
+    <a href="#" target="_blank" class="text-green-600 underline">
+      Term of Service
+    </a>
+    and
+    <a href="#" target="_blank" class="text-green-600 underline">
+      Privacy Statement
+    </a>.
+  </p>
+
+</div>
+</div>
