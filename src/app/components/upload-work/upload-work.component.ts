@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-upload-work',
   standalone: true,
-  imports: [CommonModule, NgIf, FormsModule, ],
+  imports: [CommonModule, NgIf, FormsModule,],
   templateUrl: './upload-work.component.html',
   styleUrls: ['./upload-work.component.css']
 })
@@ -20,23 +20,32 @@ export class UploadWorkComponent {
   showError = false;
   isUploading = false;
   workupload = false;
-
-  // Response / Data
+  tokens = 0;
   uploadedData: any = null;
   certificateImg = 'Certif.png';
+  billingDate = '';
 
-  // Form fields
   workTitle = '';
   copyrightOwner = '';
   additionalOwners = '';
   owner = '';
 
-  // Download control (prevents duplicates/races)
   private isDownloading = false;
   private lastDownloadBatchId = 0;
   private batchDownloadedUrls = new Set<string>();
 
-  constructor(private workS: WorkService, private toast: ToastrService) {}
+  constructor(private workS: WorkService, private toast: ToastrService) { }
+
+
+  ngOnInit() {
+    this.workS.getTokenDetails()
+      .subscribe((res: any) => {
+
+        this.tokens = res.remainingTokens;
+        this.billingDate = res.nextBillingDate;
+
+      });
+  }
 
   onFileChange(event: Event) {
     const fileInput = event.target as HTMLInputElement;
@@ -46,7 +55,6 @@ export class UploadWorkComponent {
     const ext = file.name.split('.').pop()?.toLowerCase();
     const sizeMB = file.size / (1024 * 1024);
 
-    // size limit
     if (sizeMB > 120) {
       this.setError(
         `The size of your file is ${sizeMB.toFixed(2)} MB. This exceeds our limit of 120 MB. Please compress your file and try again.`
@@ -55,7 +63,6 @@ export class UploadWorkComponent {
       return;
     }
 
-    // type restriction
     if (ext === 'exe' || ext === 'js') {
       this.setError(`We don’t accept .exe or .js files.`);
       fileInput.value = '';
@@ -87,6 +94,14 @@ export class UploadWorkComponent {
           } else {
             this.setError(res?.error || 'Oops! Something went wrong while uploading your work.');
           }
+
+          this.workS.getTokenDetails()
+            .subscribe((res: any) => {
+
+              this.tokens = res.remainingTokens;
+              this.billingDate = res.nextBillingDate;
+
+            });
         },
         (error: any) => {
           this.isUploading = false;

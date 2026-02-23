@@ -4,6 +4,7 @@ import { StripeService } from '../../service/stripe.service';
 import { loadStripe } from '@stripe/stripe-js';
 import { environment } from '../../environment/environment';
 import { BillingService } from '../../service/billing.service';
+import { WorkService } from '../../service/work-service.service';
 
 @Component({
   selector: 'app-billing',
@@ -17,16 +18,21 @@ export class BillingComponent implements OnInit {
   subscription: any;
   invoices: any[] = [];
   card: any;
-cardNumber:any;
-cardExpiry:any;
-cardCvc:any;
+  cardNumber: any;
+  cardExpiry: any;
+  cardCvc: any;
   cardModal = false;
 
   stripe: any;
   elements: any;
   cardElement: any;
 
-  constructor(private BillingService: BillingService) { }
+  constructor(private BillingService: BillingService, private workService: WorkService) { }
+
+  tokens = 0;
+
+  billingDate = '';
+
 
   async ngOnInit() {
 
@@ -39,14 +45,22 @@ cardCvc:any;
 
     this.BillingService.getCard()
       .subscribe((res: any) => this.card = res);
+
+    this.workService.getTokenDetails()
+      .subscribe((res: any) => {
+
+        this.tokens = res.remainingTokens;
+        this.billingDate = res.nextBillingDate;
+
+      });
   }
 
   /* CANCEL SUB */
-cancel(){
-  this.BillingService.cancelSubscription().subscribe(()=>{
-    this.loadSubscription();
-  });
-}
+  cancel() {
+    this.BillingService.cancelSubscription().subscribe(() => {
+      this.loadSubscription();
+    });
+  }
 
   /* MODAL */
   openCardModal() {
@@ -60,42 +74,42 @@ cancel(){
 
   /* STRIPE CARD UPDATE */
 
-async mountCard(){
+  async mountCard() {
 
-  this.stripe = await loadStripe(environment.stripePublishableKey);
+    this.stripe = await loadStripe(environment.stripePublishableKey);
 
-  const elements = this.stripe.elements();
+    const elements = this.stripe.elements();
 
-  this.cardNumber = elements.create('cardNumber');
-  this.cardExpiry = elements.create('cardExpiry');
-  this.cardCvc = elements.create('cardCvc');
+    this.cardNumber = elements.create('cardNumber');
+    this.cardExpiry = elements.create('cardExpiry');
+    this.cardCvc = elements.create('cardCvc');
 
-  setTimeout(()=>{
-    this.cardNumber.mount('#card-number');
-    this.cardExpiry.mount('#card-expiry');
-    this.cardCvc.mount('#card-cvc');
-  });
-}
+    setTimeout(() => {
+      this.cardNumber.mount('#card-number');
+      this.cardExpiry.mount('#card-expiry');
+      this.cardCvc.mount('#card-cvc');
+    });
+  }
 
-  updateCard(){
+  updateCard() {
 
-  this.BillingService.createSetupIntent().subscribe(async (res:any)=>{
+    this.BillingService.createSetupIntent().subscribe(async (res: any) => {
 
-    const {error} = await this.stripe.confirmCardSetup(
-      res.clientSecret,
-      {
-        payment_method:{
-          card:this.cardNumber
+      const { error } = await this.stripe.confirmCardSetup(
+        res.clientSecret,
+        {
+          payment_method: {
+            card: this.cardNumber
+          }
         }
-      }
-    );
+      );
 
-    if(!error){
-      this.closeCardModal();
-      this.BillingService.getCard().subscribe(c=>this.card=c);
-    }
-  });
-}
+      if (!error) {
+        this.closeCardModal();
+        this.BillingService.getCard().subscribe(c => this.card = c);
+      }
+    });
+  }
 
   /* DOWNLOAD INVOICE */
   download(url: string) {
@@ -110,28 +124,28 @@ async mountCard(){
     this.BillingService.getSubscription()
       .subscribe((res: any) => this.subscription = res);
   }
-  get renewalMessage(): { title:string; description:string } {
+  get renewalMessage(): { title: string; description: string } {
 
-  if(!this.subscription){
+    if (!this.subscription) {
+      return {
+        title: '',
+        description: ''
+      };
+    }
+
+    const date = new Date(this.subscription.subscriptionEnd)
+      .toLocaleDateString();
+
+    if (this.subscription.autoRenew) {
+      return {
+        title: `Your annual subscription is paid until ${date}, and the automatic renewal is on.`,
+        description: `You can cancel the automatic renewal by clicking on the button below.`
+      };
+    }
+
     return {
-      title:'',
-      description:''
+      title: `Your annual subscription is paid until ${date}, and the automatic renewal is off.`,
+      description: `One month after the end of your subscription, we will remove all your files from our database. Before the end of your subscription, download all your works. Each zip contains your work, certificate and hash. Your works remain legally protected.`
     };
   }
-
-  const date = new Date(this.subscription.subscriptionEnd)
-    .toLocaleDateString();
-
-  if(this.subscription.autoRenew){
-    return {
-      title:`Your annual subscription is paid until ${date}, and the automatic renewal is on.`,
-      description:`You can cancel the automatic renewal by clicking on the button below.`
-    };
-  }
-
-  return {
-    title:`Your annual subscription is paid until ${date}, and the automatic renewal is off.`,
-    description:`One month after the end of your subscription, we will remove all your files from our database. Before the end of your subscription, download all your works. Each zip contains your work, certificate and hash. Your works remain legally protected.`
-  };
-}
 }

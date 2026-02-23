@@ -1,78 +1,85 @@
+  <div class="bg-[#223e6b] text-white px-6 py-3 flex justify-between">
+        <h2 class="text-red-500 font-semibold text-lg">Upload Works</h2>
+        <div class="text-lg font-semibold">
+            {{tokens}} Remaining Tokens - Next subscription billing on {{billingDate | date:'dd MMM yyyy'}}</div>
+    </div>
+
 <ng-container *ngIf="!workupload">
-  <div class="w-full flex justify-center items-center  px-3 sm:px-6  bg-[#cfe6ef] py-10 ">
 
-    <div class="max-w-full min-h-screen mx-auto  bg-[#cfe6ef] font-semibold text-[#3f85ae] border border-gray-300 ">
+<div class="w-full min-h-screen bg-[#cfe6ef] px-4 sm:px-10 py-10 text-[#3f85ae] font-semibold">
 
-      <!-- Instructions -->
-      <p class="text-[14px]  mb-4 leading-4">
-        In addition to your work, we advise you to upload your drafts (even handwritten - take photos) <br>
-        and the various intermediate versions.
-        <span class="text-green-700 font-bold cursor-pointer" routerLink="/upload-faq">
-          For more information, please read this FAQ.
-        </span>
-        <br>
-        Gather all your files in a zip file, and upload it.<br>
-        Please note that the size of the uploaded file is limited to 120 MB.<br>
-        Javascript and .exe files are not accepted.
-      </p>
+  <!-- Instructions -->
+  <p class="text-[14px] mb-6 leading-5 max-w-4xl">
+    In addition to your work, we advise you to upload your drafts (even handwritten - take photos)
+    and the various intermediate versions.
+    <span class="text-green-700 font-bold cursor-pointer" routerLink="/upload-faq">
+      For more information, please read this FAQ.
+    </span>
+    <br>
+    Gather all your files in a zip file, and upload it.<br>
+    Please note that the size of the uploaded file is limited to 120 MB.<br>
+    Javascript and .exe files are not accepted.
+  </p>
 
-      <!-- Title -->
-      <div class="mb-4 flex sm:items-center flex-col sm:flex-row">
-        <label class="block text-[13px] w-[100%] sm:w-[29%]  ">Title of your Work</label>
-        <input id="workTitle" [(ngModel)]="workTitle" type="text" placeholder="up to 200 characters"
-          class="w-full border border-gray-400 bg-white px-2  sm:py-0 py-1  text-sm rounded-none" />
-      </div>
+  <!-- FORM -->
+  <div class="w-full max-w-4xl space-y-4">
 
-      <!-- Copyright Owner -->
-      <div class="mb-4 flex sm:items-center flex-col sm:flex-row">
-        <label class="block text-[13px] w-[100%] sm:w-[29%]  ">Copyright Owner Name</label>
-        <input id="copyrightOwner" [(ngModel)]="copyrightOwner" type="text"
-          class="w-full border border-gray-400 bg-white px-2  sm:py-0 py-1  text-sm rounded-none" />
-      </div>
-      <!-- Additional Owners -->
-      <div class="mb-4 sm:items-center flex flex-col sm:flex-row">
-        <label class="block text-[13px] w-[100%] sm:w-[29%]  ">Additional Copyright Owners</label>
-        <input id="additionalOwners" [(ngModel)]="additionalOwners" type="text"
-          class="w-full border border-gray-400 bg-white px-2  sm:py-0 py-1  text-sm rounded-none" />
-      </div>
-      <!-- File Upload -->
-      <div class="flex  sm:items-center mb-4 w-full flex-col sm:flex-row gap-3 sm:w-[750px] ">
-        <button type="button" class="bg-[#507897] w-28 cursor-pointer ml-9 hover:bg-[#406480] rounded-md text-white  px-3 py-1 text-sm font-semibold"
-          (click)="fileInput.click()">
-          CHOOSE FILE
-        </button>
+    <!-- Title -->
+    <div class="flex flex-col sm:flex-row gap-2">
+      <label class="w-full sm:w-64 text-[13px]">Title of your Work</label>
+      <input [(ngModel)]="workTitle"
+        class="flex-1 border border-gray-400 bg-white px-2 py-1 text-sm"/>
+    </div>
 
-        <!-- Text input to show file name -->
-        <input type="text" [value]="fileName" placeholder="" readonly
-          class=" border border-gray-400 bg-white px-2  sm:py-0 py-1  text-sm rounded-none   w-full sm:w-64" />
+    <!-- Owner -->
+    <div class="flex flex-col sm:flex-row gap-2">
+      <label class="w-full sm:w-64 text-[13px]">Copyright Owner Name</label>
+      <input [(ngModel)]="copyrightOwner"
+        class="flex-1 border border-gray-400 bg-white px-2 py-1 text-sm"/>
+    </div>
 
-        <!-- Hidden actual file input -->
-        <input type="file" #fileInput (change)="onFileChange($event)" hidden />
-      </div>
+    <!-- Additional -->
+    <div class="flex flex-col sm:flex-row gap-2">
+      <label class="w-full sm:w-64 text-[13px]">Additional Copyright Owners</label>
+      <input [(ngModel)]="additionalOwners"
+        class="flex-1 border border-gray-400 bg-white px-2 py-1 text-sm"/>
+    </div>
 
-      <br>
+    <!-- File -->
+    <div class="flex flex-col sm:flex-row items-center gap-3">
 
-      <div class="sm:w-2xl px-0 w-fit mx-auto">
+      <button
+        class="bg-[#507897] hover:bg-[#406480] text-white px-4 py-1 text-sm rounded"
+        (click)="fileInput.click()">
+        CHOOSE FILE
+      </button>
 
-        <!-- Warning -->
-        <p class="text-[13px] sm:text-[14px] md:text-[15px] text-red-500 leading-4 mb-2 uppercase break-words  px-2">
-          PLEASE PAY ATTENTION: AFTER CLICKING ON THE “UPLOAD THIS WORK” BUTTON,<br>
-          YOU WON’T BE ABLE TO MODIFY THE UPLOADED FILE, NOR ANY INFORMATION IN <br> THE ABOVE FIELDS.
-        </p>
+      <input
+        [value]="fileName"
+        readonly
+        class="border border-gray-400 bg-white px-2 py-1 text-sm w-full sm:w-72"/>
 
-
-
-        <!-- Upload Button -->
-        <button (click)="upload()" [disabled]="isUploading"
-          class="bg-red-500 rounded-md cursor-pointer hover:bg-red-700 text-white px-2 mx-2 py-1 text-sm  uppercase w-full sm:w-auto">
-          UPLOAD THIS WORK
-        </button>
-      </div>
+      <input type="file" #fileInput (change)="onFileChange($event)" hidden/>
 
     </div>
-  </div>
-</ng-container>
 
+  </div>
+
+  <!-- WARNING -->
+  <p class="text-red-500 text-sm mt-8 uppercase max-w-3xl">
+    Please pay attention: after clicking upload you cannot modify the uploaded file or details.
+  </p>
+
+  <!-- BUTTON -->
+  <button
+    (click)="upload()"
+    [disabled]="isUploading"
+    class="mt-4 bg-red-500 hover:bg-red-700 text-white px-6 py-2 text-sm rounded">
+    Upload This Work
+  </button>
+
+</div>
+</ng-container>
 
 <!-- Certificate Display -->
 <ng-container *ngIf="workupload">

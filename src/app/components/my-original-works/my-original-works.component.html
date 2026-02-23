@@ -1,160 +1,164 @@
 <div class="min-h-screen bg-[#d5e8ef]">
 
-<!-- TITLE -->
-<div class="bg-[#223e6b] text-white px-6 py-3 flex justify-between">
-<h2 class="text-red-500 font-semibold text-lg">My Original Works</h2>
-<div class="text-sm font-semibold">
-{{tokens}} Remaining Tokens - Next subscription billing on {{billingDate}}
-</div>
-</div>
+    <!-- TITLE -->
+    <div class="bg-[#223e6b] text-white px-6 py-3 flex justify-between">
+        <h2 class="text-red-500 font-semibold text-lg">My Original Works</h2>
+        <div class="text-lg font-semibold">
+            {{tokens}} Remaining Tokens - Next subscription billing on {{billingDate | date:'dd MMM yyyy'}}</div>
+    </div>
 
-<!-- CONTENT -->
-<div class="max-w-6xl mx-auto px-6 py-8 space-y-6">
+    <!-- CONTENT -->
+    <div class="max-w-6xl mx-auto px-6 py-8 space-y-6">
 
-<p class="text-[#223e6b] font-semibold">
-This is the list of your Works:
-</p>
+        <p class="text-[#223e6b] font-semibold">
+            This is the list of your Works:
+        </p>
 
-<!-- FILTER -->
-<div class="border border-[#223e6b]/40 rounded-lg p-6">
-<div class="grid md:grid-cols-5 gap-4">
+        <!-- FILTER -->
+      <div class="border border-[#223e6b]/40 rounded-lg p-6">
+  <div class="grid md:grid-cols-5 gap-4">
 
-<input [(ngModel)]="filters.id" placeholder="ID" class="bg-gray-50 p-2 rounded"/>
-<input [(ngModel)]="filters.title" placeholder="Title" class="bg-gray-50 p-2 rounded"/>
-<input [(ngModel)]="filters.from" type="date" class="bg-gray-50 p-2 rounded"/>
-<input [(ngModel)]="filters.to" type="date" class="bg-gray-50 p-2 rounded"/>
+    <input
+      [(ngModel)]="filters.id"
+      (input)="search()"
+      placeholder="ID"
+      class="bg-gray-50 p-2 rounded"/>
 
-<button (click)="search()" class="bg-[#4a7bd8] text-white py-2 rounded">
-SEARCH
-</button>
+    <input
+      [(ngModel)]="filters.title"
+      (input)="search()"
+      placeholder="Title"
+      class="bg-gray-50 p-2 rounded"/>
 
-</div>
-</div>
+    <input
+      [(ngModel)]="filters.from"
+      (change)="search()"
+      type="date"
+      class="bg-gray-50 p-2 rounded"/>
 
-<!-- TABLE HEADER -->
-<div class="grid grid-cols-6 px-4 py-4 font-semibold text-[#223e6b] border-b">
-<div>ID</div>
-<div class="col-span-2">Title</div>
-<div>Date</div>
-<div>Actions</div>
-<div></div>
-</div>
+    <input
+      [(ngModel)]="filters.to"
+      (change)="search()"
+      type="date"
+      class="bg-gray-50 p-2 rounded"/>
 
-<!-- ROWS -->
-<div *ngFor="let item of data"
-class="grid grid-cols-6 items-center px-4 py-5 border-b text-sm text-[#3f5f78]">
+    <button
+      (click)="resetFilters()"
+      class="bg-gray-400 text-white py-2 rounded">
+      RESET
+    </button>
 
-<div class="text-xs text-gray-500">
-{{item.displayed_ID}}
-</div>
-
-<div class="col-span-2">
-<div class="font-semibold">{{item.title}}</div>
-<div class="text-xs text-gray-500 truncate">{{item.file_name}}</div>
+  </div>
 </div>
 
-<div>
-{{item.registration_date | date:'dd/MM/yyyy'}}
+        <!-- TABLE HEADER -->
+        <div class="grid grid-cols-6 px-4 py-4 font-semibold text-[#223e6b] border-b">
+            <div>ID</div>
+            <div class="col-span-2">Title</div>
+            <div>Date</div>
+            <div>Actions</div>
+            <div></div>
+        </div>
+
+        <!-- ROWS -->
+        <div *ngFor="let item of data" class="grid grid-cols-6 items-center px-4 py-5 border-b text-sm text-[#3f5f78]">
+
+            <div class="text-xs text-gray-500">
+                {{item.displayed_ID}}
+            </div>
+
+            <div class="col-span-2">
+                <div class="font-semibold">{{item.title}}</div>
+                <div class="text-xs text-gray-500 truncate">{{item.file_name}}</div>
+            </div>
+
+            <div>
+                {{item.registration_date | date:'dd/MM/yyyy'}}
+            </div>
+
+            <div class="space-y-1 text-[#2c6794]">
+
+                <div class="cursor-pointer hover:underline" (click)="viewCertificate(item)">
+                    View Certificate
+                </div>
+
+                <div class="cursor-pointer hover:underline" (click)="download(item)">
+                    Download
+                </div>
+
+                <div class="space-y-1 text-[#2c6794]">
+
+                    <div class="cursor-pointer hover:underline" (click)="openSetPassword(item)">
+                        Set password
+                    </div>
+
+                    <div class="cursor-pointer hover:underline" (click)="copyLink(item)">
+                        Share
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="flex justify-end">
+                <button (click)="delete(item._id)"
+                    class="bg-red-500 text-white px-4 py-1 rounded-full text-xs hover:bg-red-600">
+                    Delete
+                </button>
+            </div>
+
+        </div>
+
+    </div>
 </div>
 
-<div class="space-y-1 text-[#2c6794]">
 
-<div class="cursor-pointer hover:underline" (click)="viewCertificate(item)">
-View Certificate
-</div>
+<div *ngIf="showPasswordModal" class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
 
-<div class="cursor-pointer hover:underline" (click)="download(item)">
-Download
-</div>
+    <div class="bg-white rounded-xl shadow-lg p-6 w-96">
 
-<div class="space-y-1 text-[#2c6794]">
+        <h3 class="font-semibold mb-3">Set password</h3>
 
-<div class="cursor-pointer hover:underline"
-(click)="openSetPassword(item)">
-Set password
-</div>
+        <input [(ngModel)]="sharePassword" placeholder="Enter password" class="border w-full p-2 rounded mb-4" />
 
-<div class="cursor-pointer hover:underline"
-(click)="copyLink(item)">
-Share
-</div>
+        <div class="flex gap-2">
 
-</div>
+            <button (click)="savePassword()" class="flex-1 bg-[#507897] text-white py-2 rounded">
+                Save
+            </button>
 
-</div>
+            <button (click)="closeModal()" class="flex-1 border py-2 rounded">
+                Cancel
+            </button>
 
-<div class="flex justify-end">
-<button (click)="delete(item._id)"
-class="bg-red-500 text-white px-4 py-1 rounded-full text-xs hover:bg-red-600">
-Delete
-</button>
-</div>
+        </div>
 
-</div>
-
-</div>
-</div>
-
-
-<div *ngIf="showPasswordModal"
-class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-
-<div class="bg-white rounded-xl shadow-lg p-6 w-96">
-
-<h3 class="font-semibold mb-3">Set password</h3>
-
-<input
-[(ngModel)]="sharePassword"
-placeholder="Enter password"
-class="border w-full p-2 rounded mb-4"/>
-
-<div class="flex gap-2">
-
-<button
-(click)="savePassword()"
-class="flex-1 bg-[#507897] text-white py-2 rounded">
-Save
-</button>
-
-<button
-(click)="closeModal()"
-class="flex-1 border py-2 rounded">
-Cancel
-</button>
-
-</div>
-
-</div>
+    </div>
 </div>
 <!-- DELETE MODAL -->
-<div *ngIf="showDeleteModal"
-class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+<div *ngIf="showDeleteModal" class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
 
-<div class="bg-white rounded-xl shadow-lg p-6 w-96">
+    <div class="bg-white rounded-xl shadow-lg p-6 w-96">
 
-<h3 class="font-semibold mb-4 text-lg">
-Delete work?
-</h3>
+        <h3 class="font-semibold mb-4 text-lg">
+            Delete work?
+        </h3>
 
-<p class="text-sm text-gray-500 mb-4">
-This action cannot be undone.
-</p>
+        <p class="text-sm text-gray-500 mb-4">
+            This action cannot be undone.
+        </p>
 
-<div class="flex gap-2">
+        <div class="flex gap-2">
 
-<button
-(click)="confirmDelete()"
-class="flex-1 bg-red-500 text-white py-2 rounded">
-Delete
-</button>
+            <button (click)="confirmDelete()" class="flex-1 bg-red-500 text-white py-2 rounded">
+                Delete
+            </button>
 
-<button
-(click)="closeDelete()"
-class="flex-1 border py-2 rounded">
-Cancel
-</button>
+            <button (click)="closeDelete()" class="flex-1 border py-2 rounded">
+                Cancel
+            </button>
 
-</div>
+        </div>
 
-</div>
+    </div>
 </div>

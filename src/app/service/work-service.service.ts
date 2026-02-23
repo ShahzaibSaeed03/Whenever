@@ -170,4 +170,13 @@ return this.http.post(
 {password}
 );
 }
+
+
+/* ================= TOKENS / SUBSCRIPTION ================= */
+
+getTokenDetails(): Observable<any> {
+  return this.http.get(`${this.apiUrl}subscription/status`, {
+    headers: this.setHeaders()
+  });
+}
 }

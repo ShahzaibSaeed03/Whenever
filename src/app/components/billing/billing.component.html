@@ -1,16 +1,12 @@
 <div class="bg-[#d5e8ef] min-h-screen">
 
   <!-- HEADER -->
-  <div class="bg-[#243e69] text-white px-6 py-3 flex justify-between">
-    <h2 class="text-red-400 font-semibold">
-      Billing, Automatic Renewal and Credit Cards
-    </h2>
-
-    <div class="text-sm">
-      {{subscription?.tokens}} Tokens — Next billing
-      {{subscription?.subscriptionEnd | date}}
-    </div>
-  </div>
+  <div class="bg-[#223e6b] text-white px-6 py-3 flex justify-between">
+  <h2 class="text-red-500 font-semibold text-lg"> Billing, Automatic Renewal and Credit Cards
+</h2>
+  <div class="text-lg font-semibold">
+    {{tokens}} Remaining Tokens - Next subscription billing on {{billingDate | date:'dd MMM yyyy'}}</div>
+</div>
 
   <div class="max-w-7xl mx-auto p-8 text-[#3f5f78] space-y-12">
 

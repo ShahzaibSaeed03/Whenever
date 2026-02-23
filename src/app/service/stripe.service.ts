@@ -5,19 +5,23 @@ import { environment } from '../environment/environment';
 @Injectable({ providedIn: 'root' })
 export class StripeService {
 
-  baseUrl=`${environment.apiUrl}/stripe`;
+  baseUrl = `${environment.apiUrl}`;
 
   constructor(private http:HttpClient){}
 
-  getClientSecret(qty:number){
-    return this.http.post(`${this.baseUrl}/create-checkout-session/${qty}`,{});
-  }
-    getCard(){
-    return this.http.get(`${this.baseUrl}/card`);
+  /* ===== SUBSCRIPTION ===== */
+
+  createSubscription(){
+    return this.http.post(`${this.baseUrl}/billing/subscription-checkout`,{});
   }
 
-  /* SETUP INTENT */
-  createSetupIntent(){
-    return this.http.post(`${this.baseUrl}/card/setup-intent`,{});
+  getSubscriptionStatus(){
+    return this.http.get(`${this.baseUrl}/subscription/status`);
+  }
+
+  /* ===== TOKENS ===== */
+
+  getClientSecret(qty:number){
+    return this.http.post(`${this.baseUrl}/stripe/create-checkout-session/${qty}`,{});
   }
 }

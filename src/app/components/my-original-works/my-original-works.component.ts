@@ -5,163 +5,216 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
-selector:'app-my-original-works',
-standalone:true,
-imports:[CommonModule,FormsModule],
-templateUrl:'./my-original-works.component.html'
+    selector: 'app-my-original-works',
+    standalone: true,
+    imports: [CommonModule, FormsModule],
+    templateUrl: './my-original-works.component.html'
 })
-export class MyOriginalWorksComponent implements OnInit{
+export class MyOriginalWorksComponent implements OnInit {
+    originalData: any[] = [];
+    data: any[] = [];
+    tokens = 0;
+    billingDate = '';
+    showDeleteModal = false;
+    deleteWorkId: any = null;
+    /* modal */
+    showPasswordModal = false;
+    selectedWork: any = null;
+    sharePassword = '';
 
-data:any[]=[];
-tokens=0;
-billingDate='';
-showDeleteModal=false;
-deleteWorkId:any=null;
-/* modal */
-showPasswordModal=false;
-selectedWork:any=null;
-sharePassword='';
+    /* filters */
+    filters: any = {
+        id: '',
+        title: '',
+        from: '',
+        to: ''
+    };
 
-/* filters */
-filters:any={
+    constructor(
+        private workService: WorkService,
+        private toast: ToastrService
+    ) { }
+
+    ngOnInit() {
+        this.load();
+        this.workService.getTokenDetails()
+            .subscribe((res: any) => {
+
+                this.tokens = res.remainingTokens;
+                this.billingDate = res.nextBillingDate;
+
+            });
+
+    }
+
+
+
+    /* LOAD WORKS */
+    load() {
+        const userId = localStorage.getItem('userId');
+
+        this.workService.getWorkById(userId).subscribe((res: any) => {
+            this.data = res.data || [];
+            this.originalData = [...this.data];   // ⭐ keep copy
+        });
+    }
+
+search(){
+
+let filtered=[...this.originalData];
+
+if(this.filters.id){
+filtered = filtered.filter(w =>
+String(w.displayed_ID)
+.toLowerCase()
+.includes(this.filters.id.toLowerCase())
+);
+}
+
+if(this.filters.title){
+filtered = filtered.filter(w =>
+w.title?.toLowerCase()
+.includes(this.filters.title.toLowerCase())
+);
+}
+
+if(this.filters.from){
+const from=new Date(this.filters.from);
+filtered = filtered.filter(w =>
+new Date(w.registration_date) >= from
+);
+}
+
+if(this.filters.to){
+const to=new Date(this.filters.to);
+filtered = filtered.filter(w =>
+new Date(w.registration_date) <= to
+);
+}
+
+this.data=filtered;
+}
+resetFilters(){
+
+this.filters={
 id:'',
 title:'',
 from:'',
 to:''
 };
 
-constructor(
-private workService:WorkService,
-private toast:ToastrService
-){}
-
-ngOnInit(){
-this.load();
+this.data=[...this.originalData];
 }
+    /* =========================
+    VIEW CERTIFICATE
+    ========================= */
+    viewCertificate(item: any) {
 
-/* LOAD WORKS */
-load(){
-const userId=localStorage.getItem('userId');
+        if (!item.certificateUrl) {
+            this.toast.error('Certificate not available');
+            return;
+        }
 
-this.workService.getWorkById(userId).subscribe((res:any)=>{
-this.data=res.data || [];
-});
-}
+        window.open(item.certificateUrl, '_blank');
+    }
 
-search(){
-this.load();
-}
+    /* =========================
+    DOWNLOAD ORIGINAL FILE
+    ========================= */
+    download(item: any) {
 
-/* =========================
-VIEW CERTIFICATE
-========================= */
-viewCertificate(item:any){
+        if (!item.downloadUrl) {
+            this.toast.error('File not available');
+            return;
+        }
 
-if(!item.certificateUrl){
-this.toast.error('Certificate not available');
-return;
-}
+        const a = document.createElement('a');
+        a.href = item.downloadUrl;
+        a.target = '_blank';
+        a.download = item.file_name || 'file';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
 
-window.open(item.certificateUrl,'_blank');
-}
+        this.toast.success('Download started');
+    }
 
-/* =========================
-DOWNLOAD ORIGINAL FILE
-========================= */
-download(item:any){
+    /* =========================
+    DELETE WORK
+    ========================= */
+    delete(id: any) {
+        this.deleteWorkId = id;
+        this.showDeleteModal = true;
+    }
+    confirmDelete() {
 
-if(!item.downloadUrl){
-this.toast.error('File not available');
-return;
-}
+        this.workService.deleteWork(this.deleteWorkId).subscribe(() => {
+            this.toast.success('Deleted');
+            this.load();
+            this.closeDelete();
+        });
 
-const a=document.createElement('a');
-a.href=item.downloadUrl;
-a.target='_blank';
-a.download=item.file_name || 'file';
-document.body.appendChild(a);
-a.click();
-a.remove();
+    }
 
-this.toast.success('Download started');
-}
+    closeDelete() {
+        this.showDeleteModal = false;
+        this.deleteWorkId = null;
+    }
+    /* =========================
+    OPEN PASSWORD MODAL
+    ========================= */
+    openSetPassword(item: any) {
+        this.selectedWork = item;
+        this.showPasswordModal = true;
+    }
 
-/* =========================
-DELETE WORK
-========================= */
-delete(id:any){
-this.deleteWorkId=id;
-this.showDeleteModal=true;
-}
-confirmDelete(){
+    /* CLOSE MODAL */
+    closeModal() {
+        this.showPasswordModal = false;
+        this.sharePassword = '';
+        this.selectedWork = null;
+    }
 
-this.workService.deleteWork(this.deleteWorkId).subscribe(()=>{
-this.toast.success('Deleted');
-this.load();
-this.closeDelete();
-});
+    /* =========================
+    SET PASSWORD → CREATE LINK
+    ========================= */
+    savePassword() {
 
-}
+        if (!this.selectedWork) return;
 
-closeDelete(){
-this.showDeleteModal=false;
-this.deleteWorkId=null;
-}
-/* =========================
-OPEN PASSWORD MODAL
-========================= */
-openSetPassword(item:any){
-this.selectedWork=item;
-this.showPasswordModal=true;
-}
+        if (this.sharePassword.length < 6) {
+            this.toast.error('Password min 6');
+            return;
+        }
 
-/* CLOSE MODAL */
-closeModal(){
-this.showPasswordModal=false;
-this.sharePassword='';
-this.selectedWork=null;
-}
+        this.workService
+            .setPassword(this.selectedWork._id, this.sharePassword)
+            .subscribe((res: any) => {
 
-/* =========================
-SET PASSWORD → CREATE LINK
-========================= */
-savePassword(){
+                /* mark share enabled */
+                this.selectedWork.shareUrl = res.shareUrl; // flag only
 
-if(!this.selectedWork) return;
+                this.toast.success('Password set');
+                this.closeModal();
 
-if(this.sharePassword.length<6){
-this.toast.error('Password min 6');
-return;
-}
+            });
+    }
 
-this.workService
-.setPassword(this.selectedWork._id,this.sharePassword)
-.subscribe((res:any)=>{
+    /* =========================
+    COPY SHARE LINK
+    ========================= */
+    copyLink(item: any) {
 
-/* mark share enabled */
-this.selectedWork.shareUrl = res.shareUrl; // flag only
+        /* must have password set */
+        if (!item.shareUrl) {
+            this.toast.warning('Set password first');
+            return;
+        }
 
-this.toast.success('Password set');
-this.closeModal();
+        /* copy displayed ID instead of URL */
+        navigator.clipboard.writeText(item.displayed_ID);
 
-});
-}
-
-/* =========================
-COPY SHARE LINK
-========================= */
-copyLink(item:any){
-
-/* must have password set */
-if(!item.shareUrl){
-this.toast.warning('Set password first');
-return;
-}
-
-/* copy displayed ID instead of URL */
-navigator.clipboard.writeText(item.displayed_ID);
-
-this.toast.success('Reference ID copied');
-}
+        this.toast.success('Reference ID copied');
+    }
 
 }

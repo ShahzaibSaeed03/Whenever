@@ -1,69 +1,95 @@
 <div class="bg-[#cfe6ef] min-h-screen">
 
-  <!-- TITLE BAR -->
-  <div class="bg-[#466d94] text-white px-6 py-3 font-semibold">
-    Buy Tokens
-  </div>
+  <!-- TITLE -->
+  <div class="bg-[#223e6b] text-white px-6 py-3 flex justify-between">
+        <h2 class="text-red-500 font-semibold text-lg">Buy Token</h2>
+        <div class="text-lg font-semibold">
+            {{tokens}} Remaining Tokens - Next subscription billing on {{billingDate | date:'dd MMM yyyy'}}</div>
+    </div>
 
-  <!-- CONTENT -->
-  <div class="max-w-5xl mx-auto py-10 px-4">
+  <!-- WRAPPER -->
+  <div class="max-w-5xl mx-auto px-4 py-10">
 
-    <!-- SELECT -->
-    <label class="block text-[#3f5f78] font-semibold mb-2">
-      Number of Tokens that you want to buy (5–100)
-    </label>
+    <!-- ACTIVE -->
+    <div *ngIf="subscriptionActive; else noSub">
 
-    <select
-      [(ngModel)]="quantity"
-      (change)="changeQty()"
-      class="border px-3 py-2 bg-white rounded w-40">
+      <!-- SELECT -->
+      <div class="mb-8">
+        <label class="block text-[#3f5f78] font-semibold mb-2">
+          Number of Tokens that you want to buy (5–100)
+        </label>
 
-      <option *ngFor="let q of quantities" [value]="q">
-        {{q}}
-      </option>
-
-    </select>
-
-    <!-- STRIPE BOX -->
-    <div class="mt-10 border border-black rounded-xl p-6 bg-white">
-
-      <div class="text-lg mb-6 text-center">
-        Payment Summary & Checkout
+        <select
+          [(ngModel)]="quantity"
+          (change)="changeQty()"
+          class="border px-3 py-2 bg-white rounded w-44 shadow-sm">
+          <option *ngFor="let q of quantities" [value]="q">
+            {{q}}
+          </option>
+        </select>
       </div>
 
-      <!-- SUMMARY -->
-      <div class="mb-6 space-y-2 text-sm">
+      <!-- STRIPE CARD -->
+      <div class="border border-black rounded-xl p-8 bg-white shadow-lg">
 
-        <div class="flex justify-between">
-          <span>Tokens</span>
-          <span>{{quantity}}</span>
+        <div class="text-xl font-semibold mb-8 text-center">
+          Payment Summary & Checkout
         </div>
 
-        <div class="flex justify-between">
-          <span>Price per token</span>
-          <span>$1</span>
+        <!-- SUMMARY -->
+        <div class="max-w-md mx-auto mb-8 space-y-3 text-sm">
+
+          <div class="flex justify-between">
+            <span>Tokens</span>
+            <span>{{quantity}}</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span>Price per token</span>
+            <span>$1</span>
+          </div>
+
+          <div class="flex justify-between font-bold border-t pt-3 text-base">
+            <span>Total</span>
+            <span>${{quantity}}</span>
+          </div>
+
         </div>
 
-        <div class="flex justify-between font-bold border-t pt-2">
-          <span>Total</span>
-          <span>${{quantity}}</span>
-        </div>
+        <!-- STRIPE -->
+        <div id="checkout" class="min-h-[620px]"></div>
 
       </div>
 
-      <!-- STRIPE MOUNT -->
-      <div id="checkout" class="min-h-[600px]"></div>
+      <!-- INFO -->
+      <div class="mt-10 text-sm text-[#3f5f78] space-y-2 max-w-xl">
+        <p>Your subscription includes five complimentary tokens.</p>
+        <p>Backed by our 14-day money-back guarantee.</p>
+        <p>You will be billed every year unless you cancel.</p>
+      </div>
 
     </div>
 
-    <!-- INFO -->
-    <div class="mt-10 text-sm text-[#3f5f78] space-y-2">
+    <!-- NO SUB -->
+    <ng-template #noSub>
+      <div class="max-w-lg mx-auto bg-white p-10 rounded-xl shadow-lg text-center mt-10">
 
-      <p>Your subscription: one-year subscription and five tokens — $45</p>
-      <p>Backed by our 14-day money-back guarantee.</p>
-      <p>You will be billed every year unless you cancel.</p>
+        <p class="font-semibold text-lg mb-4">
+          Subscription Required
+        </p>
 
-    </div>
+        <p class="text-sm text-gray-600 mb-6">
+          Activate your subscription first to receive 5 complimentary tokens and unlock token purchases.
+        </p>
+
+        <a
+          routerLink="/pricing"
+          class="inline-block bg-[#183462] text-white px-6 py-2 rounded shadow cursor-pointer">
+          Subscribe Now
+        </a>
+
+      </div>
+    </ng-template>
 
   </div>
 </div>

@@ -22,3 +22,6 @@
 body {
   font-family: 'Calibri', sans-serif;
 }
+button{
+  cursor: pointer;
+}

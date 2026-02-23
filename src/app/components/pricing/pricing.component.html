@@ -45,7 +45,9 @@
         Take control of your creative rights and protect your hard work.
         Join our platform and ensure that your creations are safe, recognized, and respected.
       </p>
-
+      <button class="bg-[#183462] text-white px-6 py-2 rounded mb-3" (click)="subscribe()">
+        Start Subscription
+      </button>
       <p class="font-semibold">
         Your creativity deserves protection. Let us be your ally.
       </p>
@@ -56,7 +58,7 @@
     <div class="flex flex-col items-center gap-10">
 
       <!-- CARD IMAGE -->
-      <div class="rounded-xl shadow-lg p-4">
+      <div class="rounded-xl  p-4">
         <img src="/card.png" class="w-[420px] max-w-full" />
       </div>
 
@@ -69,4 +71,65 @@
 
   </div>
 
+</div>
+
+<!-- POPUP -->
+<!-- SUBSCRIPTION POPUP -->
+<div *ngIf="showCheckout" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center overflow-y-auto">
+
+  <div class="bg-white w-[900px] max-w-[95%] rounded-xl shadow-xl relative my-10 max-h-[90vh] flex flex-col">
+
+    <!-- CLOSE -->
+    <button class="absolute top-3 right-4 text-xl" (click)="close()">
+      ✕
+    </button>
+
+    <!-- TITLE -->
+    <div class="text-lg font-semibold p-6 border-b text-center">
+      Complete Subscription
+    </div>
+
+    <!-- LOADING -->
+    <div *ngIf="loading" class="p-10 text-center text-gray-500">
+      Loading checkout…
+    </div>
+
+    <!-- STRIPE SCROLL AREA -->
+    <div class="flex-1 overflow-y-auto p-6">
+      <div id="subscription-checkout" class="min-h-[650px]"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LOGIN REQUIRED POPUP -->
+<div *ngIf="showLoginGate" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+
+  <div class="bg-white w-[420px] max-w-[90%] rounded-xl shadow-xl p-8 text-center">
+
+    <div class="text-xl font-semibold mb-3">
+      Login Required
+    </div>
+
+    <p class="text-sm text-gray-600 mb-6">
+      Please login to start your subscription.
+    </p>
+
+    <div class="flex gap-3 justify-center">
+
+      <button class="bg-[#183462] text-white px-5 py-2 rounded" (click)="goLogin()">
+        Login
+      </button>
+
+      <button class="border px-5 py-2 rounded" (click)="goRegister()">
+        Register
+      </button>
+
+    </div>
+
+    <button class="mt-6 text-sm text-gray-500" (click)="showLoginGate=false">
+      Cancel
+    </button>
+
+  </div>
 </div>
