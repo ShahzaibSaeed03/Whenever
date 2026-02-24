@@ -1,6 +1,6 @@
 <div class="bg-[#d5e8ef] min-h-screen p-1">
 
-  <div class="bg-[#183462] text-red-500 font-bold px-4 py-2 uppercase">
+  <div class="bg-[#466e92] text-red-500 font-bold px-4 py-2 uppercase mx-1">
     SIGN UP
   </div>
 
@@ -24,44 +24,44 @@
 
           <div class="fieldRow">
             <label class="label">First Name <span class="star">*</span></label>
-            <input class="input" formControlName="firstName" />
+            <input class="input"  autocomplete="off" formControlName="firstName" />
           </div>
 
           <div class="fieldRow">
             <label class="label">Last Name <span class="star">*</span></label>
-            <input class="input" formControlName="lastName" />
+            <input class="input" autocomplete="off" formControlName="lastName" />
           </div>
 
           <div class="fieldRow">
             <label class="label">
               Company Name <span class="star">*</span> or Owner Name
             </label>
-            <input class="input" formControlName="companyName" />
+            <input class="input" autocomplete="off" formControlName="companyName" />
           </div>
 
           <div class="fieldRow">
             <label class="label">Owner Name</label>
-            <input class="input" formControlName="ownerName" />
+            <input class="input" autocomplete="off" formControlName="ownerName" />
           </div>
 
           <div class="fieldRow">
             <label class="label">Address Line 1 <span class="star">*</span></label>
-            <input class="input" formControlName="addressLine1" />
+            <input class="input" autocomplete="off" formControlName="addressLine1" />
           </div>
 
           <div class="fieldRow">
             <label class="label">Address Line 2</label>
-            <input class="input" formControlName="addressLine2" />
+            <input class="input" autocomplete="off" formControlName="addressLine2" />
           </div>
 
           <div class="fieldRow">
             <label class="label">Zip Code <span class="star">*</span></label>
-            <input class="input" formControlName="zip" />
+            <input class="input" autocomplete="off" formControlName="zip" />
           </div>
 
           <div class="fieldRow">
             <label class="label">City <span class="star">*</span></label>
-            <input class="input" formControlName="city" />
+            <input class="input" autocomplete="off" formControlName="city" />
           </div>
 
           <div class="fieldRow">
@@ -72,50 +72,50 @@
             </label>
 
             <!-- dropdown -->
-            <select *ngIf="form.value.country==='USA'" class="input" formControlName="state">
+            <select *ngIf="form.value.country==='USA'" class="input" autocomplete="off" formControlName="state">
               <option value="">Select state</option>
               <option *ngFor="let s of usStates" [value]="s">{{s}}</option>
             </select>
 
             <!-- text -->
-            <input *ngIf="form.value.country!=='USA'" class="input" formControlName="state" />
+            <input *ngIf="form.value.country!=='USA'" class="input" autocomplete="off" formControlName="state" />
 
           </div>
 
           <div class="fieldRow">
             <label class="label">Country <span class="star">*</span></label>
-            <input class="input" formControlName="country" />
+            <input class="input" autocomplete="off" formControlName="country" />
           </div>
 
           <div class="fieldRow">
             <label class="label">Phone number</label>
-            <input class="input" formControlName="phone" />
+            <input class="input" autocomplete="off" formControlName="phone" />
           </div>
 
           <div class="fieldRow">
             <label class="label">Profession</label>
-            <input class="input" formControlName="profession" />
+            <input class="input" autocomplete="off" formControlName="profession" />
           </div>
 
           <div class="fieldRow">
             <label class="label">How did you hear about us?</label>
-            <input class="input" formControlName="refSource" />
+            <input class="input" autocomplete="off" formControlName="refSource" />
           </div>
 
           <div class="fieldRow">
             <label class="label">Email <span class="star">*</span></label>
-            <input class="input" formControlName="email" />
+            <input class="input" autocomplete="off" formControlName="email" />
           </div>
 
           <div class="fieldRow">
             <label class="label">Confirm Email <span class="star">*</span></label>
-            <input class="input" formControlName="confirmEmail" />
+            <input class="input" autocomplete="off" formControlName="confirmEmail" />
           </div>
 
           <div class="fieldRow">
             <label class="label">Password <span class="star">*</span></label>
             <div class="relative">
-              <input [type]="showPassword ? 'text':'password'" class="input pr-14" formControlName="password" />
+              <input [type]="showPassword ? 'text':'password'" class="input pr-14" autocomplete="off" formControlName="password" />
               <span class="showBtn" (click)="togglePassword()">SHOW</span>
             </div>
           </div>
@@ -131,57 +131,57 @@
 
           <div class="fieldRow">
             <label class="label">Company</label>
-            <input class="input" formControlName="billingCompany" />
+            <input class="input" autocomplete="off" formControlName="billingCompany" />
           </div>
 
           <div class="fieldRow">
             <label class="label">Name</label>
-            <input class="input" formControlName="billingName" />
+            <input class="input" autocomplete="off" formControlName="billingName" />
           </div>
 
           <div class="fieldRow">
             <label class="label">VAT number</label>
-            <input class="input" formControlName="vatNumber" />
+            <input class="input" autocomplete="off" formControlName="vatNumber" />
           </div>
 
           <div class="flex items-center gap-2 text-sm">
-            <input type="checkbox" formControlName="billingSameAsPersonal" />
+            <input type="checkbox" autocomplete="off" formControlName="billingSameAsPersonal" />
             Same as personal
           </div>
 
           <div class="fieldRow">
             <label class="label">Address Line 1 <span class="star">*</span></label>
-            <input class="input" formControlName="billingAddress1" />
+            <input class="input" autocomplete="off" formControlName="billingAddress1" />
           </div>
 
           <div class="fieldRow">
             <label class="label">Address Line 2</label>
-            <input class="input" formControlName="billingAddress2" />
+            <input class="input" autocomplete="off" formControlName="billingAddress2" />
           </div>
 
           <div class="fieldRow">
             <label class="label">Zip Code <span class="star">*</span></label>
-            <input class="input" formControlName="billingZip" />
+            <input class="input" autocomplete="off" formControlName="billingZip" />
           </div>
 
           <div class="fieldRow">
             <label class="label">City <span class="star">*</span></label>
-            <input class="input" formControlName="billingCity" />
+            <input class="input" autocomplete="off" formControlName="billingCity" />
           </div>
 
           <div class="fieldRow">
             <label class="label">State / Region</label>
-            <input class="input" formControlName="billingState" />
+            <input class="input" autocomplete="off" formControlName="billingState" />
           </div>
 
           <div class="fieldRow">
             <label class="label">Country <span class="star">*</span></label>
-            <input class="input" formControlName="billingCountry" />
+            <input class="input" autocomplete="off" formControlName="billingCountry" />
           </div>
 
           <div class="fieldRow">
             <label class="label">Phone number</label>
-            <input class="input" formControlName="billingPhone" />
+            <input class="input" autocomplete="off" formControlName="billingPhone" />
           </div>
 
         </div>
@@ -197,7 +197,7 @@
     </form>
 
   </div>
-  <div class="max-w-6xl mx-auto text-[#223e6b] text-sm space-y-4 mt-10 mb-6">
+  <div class="max-w-6xl mx-auto text-[#466d94] text-sm space-y-4 mt-10 mb-6">
 
   <p>
     <span class="font-semibold uppercase">
@@ -226,7 +226,7 @@
   </p>
 
   <!-- INFO LINE -->
-  <div class="flex items-center gap-2 text-[#223e6b]">
+  <div class="flex items-center gap-2 text-[#466d94]">
     <span class="text-lg">ℹ️</span>
     <span>coupon benefits will appear here</span>
   </div>
