@@ -15,10 +15,10 @@ export interface Work {
 export class WorkService {
 
 private apiUrl = environment.apiUrl;
-  private loginUrl = 'users/login';
-  private registerUrl = 'users';
-  private uploadFileUrl = 'works/upload';
-  private workListUrl = 'works';
+  private loginUrl = '/users/login';
+  private registerUrl = '/users';
+  private uploadFileUrl = '/works/upload';
+  private workListUrl = '/works';
 
   constructor(private http: HttpClient) {}
 
@@ -29,7 +29,7 @@ private apiUrl = environment.apiUrl;
   }
 
   getWorkById(id:any): Observable<Work> {
-    return this.http.get<Work>(`${this.apiUrl}works/user/${id}`);
+    return this.http.get<Work>(`${this.apiUrl}/works/user/${id}`);
   }
 
   updatePassword(id:number,password:string):Observable<Work>{
@@ -57,7 +57,7 @@ private apiUrl = environment.apiUrl;
   }
 
   verifyWork(formData:FormData):Observable<any>{
-    return this.http.post(`${this.apiUrl}works/verify`,formData);
+    return this.http.post(`${this.apiUrl}/works/verify`,formData);
   }
 
   /* ================= AUTH ================= */
@@ -77,42 +77,42 @@ private apiUrl = environment.apiUrl;
   }
 
   getWorkByIds(workId:string,password:string):Observable<any>{
-    return this.http.post<any>(`${this.apiUrl}shares/access/${workId}`,{password});
+    return this.http.post<any>(`${this.apiUrl}/shares/access/${workId}`,{password});
   }
 
   /* ================= SHARE ================= */
 
   shareWork(workId:string,password:string){
-    return this.http.post(`${this.apiUrl}shares/create`,{workId,password});
+    return this.http.post(`${this.apiUrl}/shares/create`,{workId,password});
   }
 
   accessByReference(reference:string,password:string){
-    return this.http.post(`${this.apiUrl}shares/access-by-reference`,{reference,password});
+    return this.http.post(`${this.apiUrl}/shares/access-by-reference`,{reference,password});
   }
 
   listShares(workId:string){
-    return this.http.get(`${this.apiUrl}shares/list/${workId}`);
+    return this.http.get(`${this.apiUrl}/shares/list/${workId}`);
   }
 
   deleteShare(shareId:string){
-    return this.http.delete(`${this.apiUrl}shares/${shareId}`);
+    return this.http.delete(`${this.apiUrl}/shares/${shareId}`);
   }
 
   setPassword(workId:string,password:string){
-    return this.http.post(`${this.apiUrl}shares/set-password`,{workId,password});
+    return this.http.post(`${this.apiUrl}/shares/set-password`,{workId,password});
   }
 
   createLink(workId:string){
-    return this.http.post(`${this.apiUrl}shares/create-link`,{workId});
+    return this.http.post(`${this.apiUrl}/shares/create-link`,{workId});
   }
 
   accessShared(id:string,password:string){
-    return this.http.post(`${this.apiUrl}shares/access/${id}`,{password});
+    return this.http.post(`${this.apiUrl}/shares/access/${id}`,{password});
   }
 
   /* ================= TOKENS / SUBSCRIPTION ================= */
 
   getTokenDetails():Observable<any>{
-    return this.http.get(`${this.apiUrl}subscription/status`);
+    return this.http.get(`${this.apiUrl}/subscription/status`);
   }
 }
