@@ -12,7 +12,7 @@ export interface Work {
 
 @Injectable({ providedIn: 'root' })
 export class WorkService {
-  private apiUrl = 'https://mycopyrightlybackend-d4htk.ondigitalocean.app/api';
+  private apiUrl = 'https://mycopyrightlybackend-d4htk.ondigitalocean.app/api/';
   private loginUrl = 'users/login';
   private registerUrl = 'users';
   private uploadFileUrl = 'works/upload';
