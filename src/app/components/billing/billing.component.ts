@@ -80,9 +80,19 @@ export class BillingComponent implements OnInit {
 
     const elements = this.stripe.elements();
 
-    this.cardNumber = elements.create('cardNumber');
-    this.cardExpiry = elements.create('cardExpiry');
-    this.cardCvc = elements.create('cardCvc');
+const style = {
+  base: {
+    fontSize: '16px',
+    color: '#1f2937',
+    '::placeholder': {
+      color: '#9ca3af'
+    }
+  }
+};
+
+this.cardNumber = elements.create('cardNumber', { style });
+this.cardExpiry = elements.create('cardExpiry', { style });
+this.cardCvc = elements.create('cardCvc', { style });
 
     setTimeout(() => {
       this.cardNumber.mount('#card-number');
@@ -91,25 +101,31 @@ export class BillingComponent implements OnInit {
     });
   }
 
-  updateCard() {
+async updateCard(){
 
-    this.BillingService.createSetupIntent().subscribe(async (res: any) => {
+  this.BillingService.createSetupIntent()
+  .subscribe(async (res:any)=>{
 
-      const { error } = await this.stripe.confirmCardSetup(
-        res.clientSecret,
-        {
-          payment_method: {
-            card: this.cardNumber
-          }
-        }
-      );
+    const result=await this.stripe.confirmCardSetup(
+      res.clientSecret,
+      { payment_method:{ card:this.cardNumber } }
+    );
 
-      if (!error) {
-        this.closeCardModal();
-        this.BillingService.getCard().subscribe(c => this.card = c);
-      }
+    if(result.error){
+      console.error(result.error);
+      return;
+    }
+
+    const paymentMethodId=result.setupIntent.payment_method;
+
+    this.BillingService.setDefaultCard(paymentMethodId)
+    .subscribe(()=>{
+      this.closeCardModal();
+      this.BillingService.getCard().subscribe(c=>this.card=c);
     });
-  }
+
+  });
+}
 
   /* DOWNLOAD INVOICE */
   download(url: string) {

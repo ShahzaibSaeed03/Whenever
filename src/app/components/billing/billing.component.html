@@ -2,38 +2,32 @@
 
   <!-- HEADER -->
   <div class="bg-[#466d94] text-white px-6 py-3 flex justify-between mx-1">
-  <h2 class="text-red-500 font-semibold text-lg"> Billing, Automatic Renewal and Credit Cards
-</h2>
-  <div class="text-lg font-semibold">
-    {{tokens}} Remaining Tokens - Next subscription billing on {{billingDate | date:'dd MMM yyyy'}}</div>
-</div>
+    <h2 class="text-red-500 font-semibold text-lg"> Billing, Automatic Renewal and Credit Cards
+    </h2>
+    <div class="text-lg font-semibold">
+      {{tokens}} Remaining Tokens - Next subscription billing on {{billingDate | date:'dd MMM yyyy'}}</div>
+  </div>
 
   <div class="max-w-7xl mx-auto p-8 text-[#3f5f78] space-y-12">
 
     <!-- SUBSCRIPTION -->
-<div class="space-y-4">
+    <div class="space-y-4">
 
-  <p>{{ renewalMessage.title }}</p>
+      <p>{{ renewalMessage.title }}</p>
 
-  <p class="text-sm text-[#3f5f78]">
-    {{ renewalMessage.description }}
-  </p>
+      <p class="text-sm text-[#3f5f78]">
+        {{ renewalMessage.description }}
+      </p>
 
-  <button
-    *ngIf="subscription?.autoRenew"
-    (click)="cancel()"
-    class="bg-[#3f5f78] text-white px-6 py-2 rounded-lg">
-    CANCEL SUBSCRIPTION
-  </button>
+      <button *ngIf="subscription?.autoRenew" (click)="cancel()" class="bg-[#3f5f78] text-white px-6 py-2 rounded-lg">
+        CANCEL SUBSCRIPTION
+      </button>
 
-  <button
-    *ngIf="!subscription?.autoRenew"
-    (click)="resume()"
-    class="bg-green-600 text-white px-6 py-2 rounded-lg">
-    RESUME SUBSCRIPTION
-  </button>
+      <button *ngIf="!subscription?.autoRenew" (click)="resume()" class="bg-green-600 text-white px-6 py-2 rounded-lg">
+        RESUME SUBSCRIPTION
+      </button>
 
-</div>
+    </div>
 
     <!-- CARD -->
     <div class="space-y-4">
@@ -93,12 +87,11 @@
     </p>
 
     <!-- CARD NUMBER -->
-    <div id="card-number" class="border rounded w-full px-3 py-2 mb-3"></div>
+    <div id="card-number" class="border rounded mb-3 bg-white"></div>
 
-    <!-- EXP + CVC -->
     <div class="grid grid-cols-2 gap-3 mb-4">
-      <div id="card-expiry" class="border rounded px-3 py-2"></div>
-      <div id="card-cvc" class="border rounded px-3 py-2"></div>
+      <div id="card-expiry" class="border rounded bg-white"></div>
+      <div id="card-cvc" class="border rounded bg-white"></div>
     </div>
 
     <button (click)="updateCard()" class="bg-[#3f5f78] text-white w-full py-2 rounded shadow">

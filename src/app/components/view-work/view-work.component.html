@@ -1,0 +1,89 @@
+<!-- GLOBAL HEADER -->
+<div class="bg-[#466d94] text-white h-12 px-6 py-3 flex justify-between">
+      <span class="font-semibold">View Work</span>
+
+</div>
+
+
+<!-- PASSWORD SCREEN -->
+<div *ngIf="!showViewer"
+     class="min-h-screen flex items-center justify-center bg-[#d5e8ef]">
+
+  <div class="bg-white p-6 rounded w-96 shadow">
+
+    <h2 class="font-semibold mb-4">Enter password</h2>
+
+    <input
+      [(ngModel)]="password"
+      type="password"
+      class="border w-full p-2 rounded mb-4"
+      placeholder="Password"/>
+
+    <button
+      (click)="submit()"
+      class="w-full bg-[#466d94] text-white py-2 rounded">
+      Access
+    </button>
+
+  </div>
+</div>
+
+
+<!-- VIEWER MODAL -->
+<div *ngIf="showViewer"
+     class="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+
+  <div class="bg-[#d5e8ef] w-[950px] max-h-[90vh] rounded-xl shadow-xl flex flex-col">
+
+    <!-- MODAL HEADER -->
+    <div class="bg-[#466d94] text-white px-6 py-3 flex justify-between rounded-t-xl">
+      <div>
+        <div class="font-semibold">{{work.title}}</div>
+        <div class="text-xs opacity-80">{{work.file_name}}</div>
+      </div>
+
+      <button (click)="closeViewer()" class="text-xl">✕</button>
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="flex-1 overflow-auto p-4 bg-gray-100">
+
+      <iframe
+        *ngIf="work.certificateUrl"
+        [src]="safe(work.certificateUrl)"
+        class="w-full h-[600px] rounded border bg-white">
+      </iframe>
+
+      <div *ngIf="!work.certificateUrl"
+           class="text-center text-gray-400 py-20">
+        Preview not available
+      </div>
+
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="px-6 py-4 border-t flex gap-3 justify-end bg-white rounded-b-xl">
+
+      <button
+        (click)="download(work.downloadUrl,work.file_name)"
+        class="px-4 py-2 rounded bg-[#6f8faf] text-white">
+        Download File
+      </button>
+
+      <button
+        (click)="download(work.certificateUrl,'certificate.pdf')"
+        class="px-4 py-2 rounded bg-[#567ba1] text-white">
+        Download Certificate
+      </button>
+
+      <button
+        *ngIf="work.otsUrl"
+        (click)="download(work.otsUrl,'timestamp.ots')"
+        class="px-4 py-2 rounded bg-[#466d94] text-white">
+        Download OTS
+      </button>
+
+    </div>
+
+  </div>
+</div>

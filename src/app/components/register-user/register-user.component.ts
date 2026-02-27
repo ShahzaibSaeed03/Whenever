@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { ToastrService, ToastrModule } from 'ngx-toastr';
 import { AuthApiService } from '../../service/auth-api.service';
 import { Router } from '@angular/router';
+import { StripeService } from '../../service/stripe.service';
+import { loadStripe } from '@stripe/stripe-js';
+import { environment } from '../../environment/environment';
 @Component({
   standalone: true,
   selector: 'app-register-user',
@@ -11,7 +14,11 @@ import { Router } from '@angular/router';
   templateUrl: './register-user.component.html'
 })
 export class RegisterUserComponent implements OnInit {
+  stripe: any;
+  checkoutInstance: any = null;
 
+  showCheckout = false;
+  loading = false;
   showPassword = false;
   form!: FormGroup;   // 👈 declare only
 
@@ -19,9 +26,11 @@ export class RegisterUserComponent implements OnInit {
     private fb: FormBuilder,
     private api: AuthApiService,
     private toast: ToastrService,
-      private router: Router
+    private router: Router,
+    private stripeService: StripeService
 
-  ) {}
+
+  ) { }
 
   ngOnInit() {
 
@@ -59,33 +68,33 @@ export class RegisterUserComponent implements OnInit {
       billingCountry: [''],
       billingPhone: ['']
     });
-/* PERSONAL COUNTRY */
-this.form.get('country')?.valueChanges.subscribe(country => {
+    /* PERSONAL COUNTRY */
+    this.form.get('country')?.valueChanges.subscribe(country => {
 
-  const state = this.form.get('state');
+      const state = this.form.get('state');
 
-  if(country === 'USA'){
-    state?.setValidators([Validators.required]);
-  }else{
-    state?.clearValidators();
-  }
+      if (country === 'USA') {
+        state?.setValidators([Validators.required]);
+      } else {
+        state?.clearValidators();
+      }
 
-  state?.updateValueAndValidity();
-});
+      state?.updateValueAndValidity();
+    });
 
-/* BILLING COUNTRY */
-this.form.get('billingCountry')?.valueChanges.subscribe(country => {
+    /* BILLING COUNTRY */
+    this.form.get('billingCountry')?.valueChanges.subscribe(country => {
 
-  const state = this.form.get('billingState');
+      const state = this.form.get('billingState');
 
-  if(country === 'USA'){
-    state?.setValidators([Validators.required]);
-  }else{
-    state?.clearValidators();
-  }
+      if (country === 'USA') {
+        state?.setValidators([Validators.required]);
+      } else {
+        state?.clearValidators();
+      }
 
-  state?.updateValueAndValidity();
-});
+      state?.updateValueAndValidity();
+    });
     /* COPY PERSONAL → BILLING */
     this.form.get('billingSameAsPersonal')?.valueChanges.subscribe(v => {
       if (!v) return;
@@ -105,50 +114,76 @@ this.form.get('billingCountry')?.valueChanges.subscribe(country => {
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
-usStates = [
-  'Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut',
-  'Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa',
-  'Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan',
-  'Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire',
-  'New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio',
-  'Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota',
-  'Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia',
-  'Wisconsin','Wyoming'
-];
- submit() {
+  usStates = [
+    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut',
+    'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
+    'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan',
+    'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+    'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio',
+    'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota',
+    'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia',
+    'Wisconsin', 'Wyoming'
+  ];
+  submit() {
 
-  if (this.form.invalid) return;
+    if (this.form.invalid) return;
 
-  if (!this.form.value.companyName && !this.form.value.ownerName) {
-    this.toast.error('Company or Owner required');
-    return;
+    if (!this.form.value.companyName && !this.form.value.ownerName) {
+      this.toast.error('Company or Owner required');
+      return;
+    }
+
+    if (this.form.value.email !== this.form.value.confirmEmail) {
+      this.toast.error('Emails do not match');
+      return;
+    }
+
+    const payload: any = { ...this.form.value };
+    delete payload.confirmEmail;
+
+    this.api.register(payload).subscribe({
+
+      next: (res: any) => {
+
+        /* ⭐ SAVE TOKEN */
+        localStorage.setItem('token', res.token);
+
+        this.toast.success('Registered');
+
+        this.form.reset();
+
+        /* ⭐ OPEN STRIPE */
+        this.openCheckout();
+      },
+
+      error: e => this.toast.error(e.error?.message || 'Error')
+    });
   }
+  async openCheckout() {
 
-  if (this.form.value.email !== this.form.value.confirmEmail) {
-    this.toast.error('Emails do not match');
-    return;
+    if (this.loading) return;
+    this.loading = true;
+    this.showCheckout = true;
+
+    this.stripe = await loadStripe(environment.stripePublishableKey);
+
+    this.stripeService.createSubscription().subscribe(async (res: any) => {
+
+      const checkout = await this.stripe.initEmbeddedCheckout({
+        clientSecret: res.clientSecret
+      });
+
+      this.checkoutInstance = checkout;
+      checkout.mount('#subscription-checkout');
+
+      this.loading = false;
+    });
   }
-
-  const payload: any = { ...this.form.value };
-  delete payload.confirmEmail;
-
-  this.api.register(payload).subscribe({
-
-    next: () => {
-
-      this.toast.success('Registered successfully');
-
-      /* CLEAR FORM */
-      this.form.reset();
-
-      /* OPTIONAL default checkbox false */
-      this.form.patchValue({ billingSameAsPersonal: false });
-
-      /* NAVIGATE LOGIN */
-      this.router.navigate(['/login']);
-    },
-
-    error: e => this.toast.error(e.error?.message || 'Error')
-  });
-}
+  closeCheckout() {
+    if (this.checkoutInstance) {
+      this.checkoutInstance.destroy();
+      this.checkoutInstance = null;
+    }
+    this.showCheckout = false;
+  }
 }

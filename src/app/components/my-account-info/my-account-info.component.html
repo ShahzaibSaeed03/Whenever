@@ -1,5 +1,5 @@
 <!-- TITLE -->
-<div class="bg-[#466d94] text-white px-6 py-3 flex justify-between mx-1">
+<div class="bg-[#466d94] text-white px-6 py-3 flex justify-between ">
   <h2 class="text-red-500 font-semibold text-lg">My Account Info</h2>
   <div class="text-lg font-semibold">
     {{tokens}} Remaining Tokens - Next subscription billing on {{billingDate | date:'dd MMM yyyy'}}</div>
@@ -38,42 +38,50 @@
 
           <div class="grid grid-cols-2 gap-4 items-center">
             <label>Address Line 1 *</label>
-            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.address1" name="a1">
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.address1"
+              name="a1">
           </div>
 
           <div class="grid grid-cols-2 gap-4 items-center">
             <label>Address Line 2</label>
-            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.address2" name="a2">
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.address2"
+              name="a2">
           </div>
 
           <div class="grid grid-cols-2 gap-4 items-center">
             <label>Zip *</label>
-            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.zip" name="zip">
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.zip"
+              name="zip">
           </div>
 
           <div class="grid grid-cols-2 gap-4 items-center">
             <label>City *</label>
-            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.city" name="city">
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.city"
+              name="city">
           </div>
 
           <div class="grid grid-cols-2 gap-4 items-center">
             <label>State</label>
-            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.state" name="state">
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.state"
+              name="state">
           </div>
 
           <div class="grid grid-cols-2 gap-4 items-center">
             <label>Country *</label>
-            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.country" name="country">
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.country"
+              name="country">
           </div>
 
           <div class="grid grid-cols-2 gap-4 items-center">
             <label>Phone</label>
-            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.phone" name="phone">
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.phone"
+              name="phone">
           </div>
 
           <div class="grid grid-cols-2 gap-4 items-center">
             <label>Profession</label>
-            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.profession" name="prof">
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.profession"
+              name="prof">
           </div>
 
         </div>
@@ -118,7 +126,8 @@
 
           <div class="grid grid-cols-2 gap-4 items-center">
             <label>Country</label>
-            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.billing.country" name="bcountry">
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.billing.country"
+              name="bcountry">
           </div>
 
         </div>
@@ -140,13 +149,35 @@
 
     <div class="space-y-3 max-w-lg">
 
-      <input type="password" placeholder="Current" [(ngModel)]="currentPassword" name="cp"
-        class="border px-3 py-2 w-full bg-white">
+      <!-- CURRENT -->
+      <div class="relative">
+        <input [type]="showCurrent ? 'text':'password'" placeholder="Current" [(ngModel)]="currentPassword" name="cp"
+          class="border px-3 py-2 w-full bg-white">
 
-      <input type="password" placeholder="New" [(ngModel)]="newPassword" name="np" class="border px-3 py-2 w-full bg-white">
+        <span (click)="toggle('c')" class="absolute right-3 top-2 cursor-pointer text-gray-500">
+          👁
+        </span>
+      </div>
 
-      <input type="password" placeholder="Confirm" [(ngModel)]="confirmPassword" name="cnp"
-        class="border px-3 py-2 w-full bg-white">
+      <!-- NEW -->
+      <div class="relative">
+        <input [type]="showNew ? 'text':'password'" placeholder="New" [(ngModel)]="newPassword" name="np"
+          class="border px-3 py-2 w-full bg-white">
+
+        <span (click)="toggle('n')" class="absolute right-3 top-2 cursor-pointer text-gray-500">
+          👁
+        </span>
+      </div>
+
+      <!-- CONFIRM -->
+      <div class="relative">
+        <input [type]="showConfirm ? 'text':'password'" placeholder="Confirm" [(ngModel)]="confirmPassword" name="cnp"
+          class="border px-3 py-2 w-full bg-white">
+
+        <span (click)="toggle('cn')" class="absolute right-3 top-2 cursor-pointer text-gray-500">
+          👁
+        </span>
+      </div>
 
       <button (click)="changePassword()" class="bg-[#3f5f78] text-white px-6 py-2 rounded">
         UPDATE
@@ -166,7 +197,8 @@
       SEND CODE
     </button>
 
-    <input placeholder="Verification code" [(ngModel)]="emailCode" name="code" class="border px-3 py-2 w-full max-w-md bg-white">
+    <input placeholder="Verification code" [(ngModel)]="emailCode" name="code"
+      class="border px-3 py-2 w-full max-w-md bg-white">
 
     <button (click)="confirmEmail()" class="bg-green-600 text-white px-6 py-2 rounded">
       CONFIRM
@@ -175,3 +207,4 @@
   </div>
 
 </div>
+

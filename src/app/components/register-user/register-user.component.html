@@ -7,9 +7,9 @@
   <div class="max-w-6xl mx-auto mt-6 text-[#3f5f78] text-sm space-y-1">
     <p>
       Please enter your personal details and billing address.</p>
-    <p>  Once your payment is validated, you will be able to upload your work.</p>
+    <p> Once your payment is validated, you will be able to upload your work.</p>
 
-      <p>If you are facing a problem while registering, please send an email to.</p>
+    <p>If you are facing a problem while registering, please send an email to.</p>
   </div>
 
   <div class="max-w-6xl mx-auto mt-6 border border-[#3f5f78] rounded-xl p-6">
@@ -24,7 +24,7 @@
 
           <div class="fieldRow">
             <label class="label">First Name <span class="star">*</span></label>
-            <input class="input"  autocomplete="off" formControlName="firstName" />
+            <input class="input" autocomplete="off" formControlName="firstName" />
           </div>
 
           <div class="fieldRow">
@@ -115,7 +115,8 @@
           <div class="fieldRow">
             <label class="label">Password <span class="star">*</span></label>
             <div class="relative">
-              <input [type]="showPassword ? 'text':'password'" class="input pr-14" autocomplete="off" formControlName="password" />
+              <input [type]="showPassword ? 'text':'password'" class="input pr-14" autocomplete="off"
+                formControlName="password" />
               <span class="showBtn cursor-pointer ml-3" (click)="togglePassword()">SHOW</span>
             </div>
           </div>
@@ -199,49 +200,64 @@
   </div>
   <div class="max-w-6xl mx-auto text-[#466d94] text-sm space-y-4 mt-10 mb-6">
 
-  <p>
-    <span class="font-semibold uppercase">
-      Your subscription:
-    </span>
-    "one-year subscription and five tokens", 45usd
-  </p>
+    <p>
+      <span class="font-semibold uppercase">
+        Your subscription:
+      </span>
+      "one-year subscription and five tokens", 45usd
+    </p>
 
-  <p>
-    You are covered by our 14-day money-back guarantee.
-  </p>
+    <p>
+      You are covered by our 14-day money-back guarantee.
+    </p>
 
-  <p>
-    You will be billed every year, unless you cancel.
-    You can cancel at any time.
-  </p>
+    <p>
+      You will be billed every year, unless you cancel.
+      You can cancel at any time.
+    </p>
 
-  <p>
-    If you want to buy additional tokens, at 1usd each,
-    please select a quantity (from 5 to 100):
-  </p>
+    <p>
+      If you want to buy additional tokens, at 1usd each,
+      please select a quantity (from 5 to 100):
+    </p>
 
-  <p>
-    If you want to buy additional tokens, at 1usd each,
-    please select a quantity (from 5 to 100):
-  </p>
+    <p>
+      If you want to buy additional tokens, at 1usd each,
+      please select a quantity (from 5 to 100):
+    </p>
 
-  <!-- INFO LINE -->
-  <div class="flex items-center gap-2 text-[#466d94]">
-    <span class="text-lg">ℹ️</span>
-    <span>coupon benefits will appear here</span>
+    <!-- INFO LINE -->
+    <div class="flex items-center gap-2 text-[#466d94]">
+      <span class="text-lg">ℹ️</span>
+      <span>coupon benefits will appear here</span>
+    </div>
+
+    <!-- TERMS -->
+    <p>
+      By signing up, you agree to My Copyright Evidence's
+      <a href="#" target="_blank" class="text-green-600 underline">
+        Term of Service
+      </a>
+      and
+      <a href="#" target="_blank" class="text-green-600 underline">
+        Privacy Statement
+      </a>.
+    </p>
+
   </div>
-
-  <!-- TERMS -->
-  <p>
-    By signing up, you agree to My Copyright Evidence's
-    <a href="#" target="_blank" class="text-green-600 underline">
-      Term of Service
-    </a>
-    and
-    <a href="#" target="_blank" class="text-green-600 underline">
-      Privacy Statement
-    </a>.
-  </p>
-
 </div>
+
+<div *ngIf="showCheckout" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+
+  <div class="bg-white w-[900px] max-w-[95%] rounded-xl shadow-xl relative">
+
+    <button class="absolute top-3 right-4" (click)="closeCheckout()">✕</button>
+
+    <div *ngIf="loading" class="p-10 text-center">
+      Loading checkout…
+    </div>
+
+    <div id="subscription-checkout" class="min-h-[650px] p-6"></div>
+
+  </div>
 </div>

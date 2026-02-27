@@ -7,7 +7,7 @@ import { LoginPromptComponent } from '../login-prompt/login-prompt.component';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, ],
+  imports: [CommonModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

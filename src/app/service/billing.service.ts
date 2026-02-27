@@ -5,10 +5,13 @@ import { environment } from '../environment/environment';
 @Injectable({ providedIn: 'root' })
 export class BillingService {
 
-  baseUrl=`${environment.apiUrl}/billing`;
+  baseUrl = `${environment.apiUrl}/billing`;
 
-  constructor(private http:HttpClient){}
-   getSubscription(){
+  constructor(private http: HttpClient){}
+
+  /* ===== SUBSCRIPTION ===== */
+
+  getSubscription(){
     return this.http.get(`${this.baseUrl}/subscription`);
   }
 
@@ -34,6 +37,13 @@ export class BillingService {
 
   createSetupIntent(){
     return this.http.post(`${this.baseUrl}/card/setup-intent`,{});
+  }
+
+  /* ⭐ IMPORTANT → save card as default */
+  setDefaultCard(paymentMethodId:string){
+    return this.http.post(`${this.baseUrl}/set-default-card`,{
+      paymentMethodId
+    });
   }
 
   /* ===== INVOICES ===== */

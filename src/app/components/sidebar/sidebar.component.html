@@ -1,24 +1,18 @@
 <!-- HAMBURGER -->
 <button class="lg:hidden p-2" (click)="sidebarOpen = true">
   <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
   </svg>
 </button>
 
 <!-- OVERLAY -->
-<div
-  *ngIf="sidebarOpen"
-  class="fixed inset-0 bg-black/40 z-40 lg:hidden"
-  (click)="onNavigate()">
+<div *ngIf="sidebarOpen" class="fixed inset-0 bg-black/40 z-40 lg:hidden" (click)="onNavigate()">
 </div>
 
 <!-- SIDEBAR -->
-<aside
-class="fixed top-0 left-0 w-56 h-screen bg-[#466e92] text-white z-50
+<aside class="fixed top-0 left-0 w-48 h-screen bg-[#466e92] text-white z-50
 transform transition-transform duration-300
-lg:translate-x-0"
-[class.translate-x-0]="sidebarOpen"
-[class.-translate-x-full]="!sidebarOpen">
+lg:translate-x-0" [class.translate-x-0]="sidebarOpen" [class.-translate-x-full]="!sidebarOpen">
 
   <!-- MOBILE CLOSE -->
   <div class="lg:hidden flex justify-end p-3">
@@ -26,8 +20,10 @@ lg:translate-x-0"
   </div>
 
   <!-- LOGO -->
-  <div class="flex justify-center py-6 cursor-pointer"> 
-  <a href=""> <img src="logo.png" 0 class="w-32"/></a> 
+  <div class="w-full">
+    <a href="#" class="block w-full">
+      <img src="logo.png" class="w-full" />
+    </a>
   </div>
 
   <!-- NAV -->
@@ -36,25 +32,27 @@ lg:translate-x-0"
     <!-- MY ACCOUNT -->
     <div *ngIf="auth.isLoggedIn$ | async" class="relative">
 
-      <button
-      class="block w-full text-left py-3 border-t border-white/40 hover:bg-white/10"
-      (click)="toggleAccount()">
+      <button class="block w-full text-left py-3 border-t border-white/40 hover:bg-white/10" (click)="toggleAccount()">
         My Account
       </button>
 
       <!-- SUBMENU -->
-      <div *ngIf="accountOpen"
-      class="lg:absolute lg:left-full lg:top-0 w-72 bg-[#466e92] shadow-lg">
+      <div *ngIf="accountOpen" class="lg:absolute lg:left-full lg:top-0 w-72 bg-[#466e92] shadow-lg">
 
-        <a routerLink="/my-original-works" (click)="onNavigate()" class="block px-4 py-3 border-b border-white/20 hover:bg-white/10">My Original Works</a>
+        <a routerLink="/my-original-works" (click)="onNavigate()"
+          class="block px-4 py-3 border-b border-white/20 hover:bg-white/10">My Original Works</a>
 
-        <a routerLink="/upload" (click)="onNavigate()" class="block px-4 py-3 border-b border-white/20 hover:bg-white/10">Upload a new Work</a>
+        <a routerLink="/upload" (click)="onNavigate()"
+          class="block px-4 py-3 border-b border-white/20 hover:bg-white/10">Upload a new Work</a>
 
-        <a routerLink="/get-token" (click)="onNavigate()" class="block px-4 py-3 border-b border-white/20 hover:bg-white/10">Buy Tokens</a>
+        <a routerLink="/get-token" (click)="onNavigate()"
+          class="block px-4 py-3 border-b border-white/20 hover:bg-white/10">Buy Tokens</a>
 
-        <a routerLink="/actions" (click)="onNavigate()" class="block px-4 py-3 border-b border-white/20 hover:bg-white/10">Actions against Plagiarists</a>
+        <a routerLink="/actions" (click)="onNavigate()"
+          class="block px-4 py-3 border-b border-white/20 hover:bg-white/10">Actions against Plagiarists</a>
 
-        <a routerLink="/account-info" (click)="onNavigate()" class="block px-4 py-3 border-b border-white/20 hover:bg-white/10">Account Info</a>
+        <a routerLink="/account-info" (click)="onNavigate()"
+          class="block px-4 py-3 border-b border-white/20 hover:bg-white/10">Account Info</a>
 
         <a routerLink="/billing" (click)="onNavigate()" class="block px-4 py-3 hover:bg-white/10">
           Billing, Automatic Renewal and Remaining Tokens
@@ -64,26 +62,29 @@ lg:translate-x-0"
     </div>
 
     <!-- OTHER ITEMS -->
-    <a routerLink="/highlight" (click)="onNavigate()" class="block py-3 border-t border-white/40 hover:bg-white/10">Highlights</a>
+    <a routerLink="/highlight" (click)="onNavigate()"
+      class="block py-3 border-t border-white/40 hover:bg-white/10">Highlights</a>
 
-    <a routerLink="/pricing" (click)="onNavigate()" class="block py-3 border-t border-white/40 hover:bg-white/10">Pricing</a>
+    <a routerLink="/pricing" (click)="onNavigate()"
+      class="block py-3 border-t border-white/40 hover:bg-white/10">Pricing</a>
 
-    <a routerLink="/view-register-work" (click)="onNavigate()" class="block py-3 border-t border-white/40 hover:bg-white/10">Access a registered work</a>
+    <a routerLink="/view-register-work" (click)="onNavigate()"
+      class="block py-3 border-t border-white/40 hover:bg-white/10">Access a registered work</a>
 
-    <a routerLink="/verify" (click)="onNavigate()" class="block py-3 border-t border-white/40 hover:bg-white/10">Verify a registration</a>
+    <a routerLink="/verify" (click)="onNavigate()" class="block py-3 border-t border-white/40 hover:bg-white/10">Verify
+      a registration</a>
 
     <a routerLink="/faq" (click)="onNavigate()" class="block py-3 border-t border-white/40 hover:bg-white/10">FAQ</a>
 
-    <a routerLink="/contact" (click)="onNavigate()" class="block py-3 border-t border-white/40 hover:bg-white/10">Contact Us</a>
-<!-- LOGOUT -->
-<div *ngIf="auth.isLoggedIn$ | async" class="block py-3 border-y border-white/40 hover:bg-white/10">
+    <a routerLink="/contact" (click)="onNavigate()"
+      class="block py-3 border-t border-white/40 hover:bg-white/10">Contact Us</a>
+    <!-- LOGOUT -->
+    <div *ngIf="auth.isLoggedIn$ | async" class="block py-3 border-y border-white/40 hover:bg-white/10">
 
-  <button
-    (click)="logout()"
-    class=" cursor-pointer">
-    Logout
-  </button>
+      <button (click)="logout()" class=" cursor-pointer">
+        Logout
+      </button>
 
-</div>
+    </div>
   </nav>
 </aside>

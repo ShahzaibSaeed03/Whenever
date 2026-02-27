@@ -21,7 +21,8 @@
       <ul class="list-disc pl-6 space-y-2">
         <li><a class="text-blue-600 underline">support@mycopyrightally.com</a> (General inquiries)</li>
         <li><a class="text-blue-600 underline">billing@mycopyrightally.com</a> (Subscription or payment issues)</li>
-        <li><a class="text-blue-600 underline">legal@mycopyrightally.com</a> (Legal inquiries or copyright concerns)</li>
+        <li><a class="text-blue-600 underline">legal@mycopyrightally.com</a> (Legal inquiries or copyright concerns)
+        </li>
       </ul>
 
       <p class="text-sm">We aim to respond to all emails within 24-48 hours.</p>
@@ -34,22 +35,21 @@
 
       <h3 class="text-xl font-semibold">Contact Form</h3>
 
-      <form class="space-y-5">
+      <form (ngSubmit)="submit()" class="space-y-5">
 
-        <input placeholder="Name *"
-          class="w-full bg-gray-200 rounded-md p-3 outline-none"/>
+        <input name="name" [(ngModel)]="form.name" required placeholder="Name *"
+          class="w-full bg-gray-200 rounded-md p-3 outline-none" />
 
-        <input placeholder="Email *"
-          class="w-full bg-gray-200 rounded-md p-3 outline-none"/>
+        <input name="email" [(ngModel)]="form.email" required placeholder="Email *"
+          class="w-full bg-gray-200 rounded-md p-3 outline-none" />
 
-        <input placeholder="Subject *"
-          class="w-full bg-gray-200 rounded-md p-3 outline-none"/>
+        <input name="subject" [(ngModel)]="form.subject" required placeholder="Subject *"
+          class="w-full bg-gray-200 rounded-md p-3 outline-none" />
 
-        <textarea placeholder="Message *"
-          rows="5"
+        <textarea name="message" [(ngModel)]="form.message" required rows="5" placeholder="Message *"
           class="w-full bg-gray-200 rounded-md p-3 outline-none"></textarea>
 
-        <button class="bg-[#3f6fd8] text-white px-6 py-2 rounded-md">
+        <button class="bg-[#466d94] text-white px-6 py-2 rounded-md">
           SUBMIT
         </button>
 
@@ -116,11 +116,6 @@
 
   </div>
 
-  <!-- FOOTER -->
-  <div class="bg-[#466d94] text-white text-center py-6 text-sm space-y-1">
-    <p>first free line of text here</p>
-    <p>second free line of text here</p>
-    <p>Copyright 2025 - My Copyright Ally. All rights reserved</p>
-  </div>
+
 
 </div>

@@ -16,6 +16,7 @@ import { ContactUsComponent } from './components/contact-us/contact-us.component
 import { MyAccountInfoComponent } from './components/my-account-info/my-account-info.component';
 import { BillingComponent } from './components/billing/billing.component';
 import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
+import { ViewWorkComponent } from './components/view-work/view-work.component';
 
 export const routes: Routes = [
   // Root → HomeComponent (PUBLIC)
@@ -38,6 +39,7 @@ export const routes: Routes = [
   { path: "account-info", component: MyAccountInfoComponent },
   { path: "billing", component: BillingComponent },
   { path: "billing/success", component: PaymentSuccessComponent },
+  { path: 'share/:shareId', component: ViewWorkComponent },
   // Authentication
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterUserComponent },

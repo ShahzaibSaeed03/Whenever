@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-buy-tokens',
   standalone: true,
-  imports: [CommonModule, FormsModule,RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './get-token.component.html'
 })
 export class GetTokenComponent implements OnInit {
@@ -22,9 +22,14 @@ export class GetTokenComponent implements OnInit {
   stripeKey = environment.stripePublishableKey;
 
   quantity = 5;
-  quantities = Array.from({ length: 96 }, (_, i) => i + 5);
+  min = 5;
+  max = 100;
+  step = 5;
 
-  subscriptionActive = false;
+  quantities = Array.from(
+    { length: (this.max - this.min) / this.step + 1 },
+    (_, i) => this.min + i * this.step
+  ); subscriptionActive = false;
 
   constructor(private stripeService: StripeService, private workService: WorkService) { }
 

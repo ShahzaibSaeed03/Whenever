@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -15,11 +15,12 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = 'assets/pdf.worker.min.mjs';
   templateUrl: './verify-work.component.html',
   styleUrls: ['./verify-work.component.css'],
 })
-export class VerifyWorkComponent {
+export class VerifyWorkComponent implements OnInit {
   file: File | null = null;
   certificate: File | null = null;
   otsFile: File | null = null;
-
+  tokens = 0;
+  billingDate = '';
   fileName = '';
   certificateName = '';
   otsFileName = '';
@@ -33,6 +34,15 @@ export class VerifyWorkComponent {
   isVerifying = false;
 
   constructor(private workService: WorkService, private toastr: ToastrService) { }
+  ngOnInit(): void {
+    this.workService.getTokenDetails()
+      .subscribe((res: any) => {
+
+        this.tokens = res.remainingTokens;
+        this.billingDate = res.nextBillingDate;
+
+      });
+  }
 
   formatUtcToDate(utcString: string): string {
     if (!utcString) return '';
@@ -226,17 +236,17 @@ export class VerifyWorkComponent {
 
 
 
- private handleError(error: any) {
-  this.isVerifying = false;
+  private handleError(error: any) {
+    this.isVerifying = false;
 
-  const msg =
-    error?.error?.message ||
-    error?.error?.error ||
-    error?.message ||
-    'Verification failed. Please try again.';
+    const msg =
+      error?.error?.message ||
+      error?.error?.error ||
+      error?.message ||
+      'Verification failed. Please try again.';
 
-  this.setError(this.prettifyBackendError(msg));
-}
+    this.setError(this.prettifyBackendError(msg));
+  }
 
   private setError(msg: string) {
 

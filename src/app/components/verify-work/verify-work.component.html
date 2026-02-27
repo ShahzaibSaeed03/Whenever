@@ -2,10 +2,9 @@
 
   <!-- TITLE BAR -->
   <div class="bg-[#466d94] text-white px-6 py-3 flex justify-between mx-1">
-    <span class="font-semibold">Verify a registration</span>
-    <span class="text-sm">
-      5 Remaining Tokens - Next subscription billing on DATE TIME
-    </span>
+    <span class="font-semibold text-lg">Verify a registration</span>
+<div class="text-lg font-semibold">
+            {{tokens}} Remaining Tokens - Next subscription billing on {{billingDate | date:'dd MMM yyyy'}}</div>   
   </div>
 
   <!-- CENTER CONTENT -->

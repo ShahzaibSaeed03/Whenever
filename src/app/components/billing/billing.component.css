@@ -1,0 +1,6 @@
+#card-number,
+#card-expiry,
+#card-cvc{
+  padding:10px;
+  min-height:42px;
+}
