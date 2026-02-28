@@ -231,7 +231,7 @@ export class UploadWorkComponent {
   closeError() {
     this.showError = false;
     this.resetError();
-    this.resetFormFields();
+    // this.resetFormFields();
   }
 
   closeDetailbox() {
