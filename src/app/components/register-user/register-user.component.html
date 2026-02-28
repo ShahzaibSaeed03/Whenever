@@ -246,18 +246,30 @@
 
   </div>
 </div>
+<!-- CHECKOUT MODAL -->
+<div *ngIf="showCheckout"
+class="fixed inset-0 bg-black/50 z-50 flex items-start justify-center overflow-y-auto">
 
-<div *ngIf="showCheckout" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
+  <div class="bg-white w-[900px] max-w-[95%] rounded-xl shadow-xl relative my-10 max-h-[90vh] flex flex-col">
 
-  <div class="bg-white w-[900px] max-w-[95%] rounded-xl shadow-xl relative">
+    <!-- CLOSE -->
+    <button class="absolute top-3 right-4 text-xl"
+      (click)="closeCheckout()">✕</button>
 
-    <button class="absolute top-3 right-4" (click)="closeCheckout()">✕</button>
+    <!-- TITLE -->
+    <div class="text-lg font-semibold p-6 border-b text-center">
+      Complete subscription — billed yearly
+    </div>
 
-    <div *ngIf="loading" class="p-10 text-center">
+    <!-- LOADING -->
+    <div *ngIf="loading" class="p-10 text-center text-gray-500">
       Loading checkout…
     </div>
 
-    <div id="subscription-checkout" class="min-h-[650px] p-6"></div>
+    <!-- STRIPE AREA -->
+    <div class="flex-1 overflow-y-auto p-6">
+      <div id="subscription-checkout" class="min-h-[650px]"></div>
+    </div>
 
   </div>
 </div>
