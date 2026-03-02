@@ -195,33 +195,22 @@ export class UploadWorkComponent {
    * Single, reliable programmatic download using <a download>.
    * Avoids extra iframe/path that can cause double hits.
    */
-  private triggerDownloadHard(url: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      try {
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = '';      // hint for download
-        a.rel = 'noopener';
-        a.target = '_self';
-        a.style.display = 'none';
+private async triggerDownloadHard(url: string): Promise<void> {
+  return new Promise((resolve) => {
 
-        const evt = new MouseEvent('click', {
-          bubbles: true,
-          cancelable: true,
-          view: window
-        });
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '';
+    a.rel = 'noopener';
+    a.target = '_self';
 
-        document.body.appendChild(a);
-        a.dispatchEvent(evt);
-        document.body.removeChild(a);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 
-        setTimeout(() => resolve(), 200);
-      } catch (e) {
-        reject(e);
-      }
-    });
-  }
-
+    setTimeout(() => resolve(), 500);
+  });
+}
   private delay(ms: number) {
     return new Promise<void>((res) => setTimeout(res, ms));
   }

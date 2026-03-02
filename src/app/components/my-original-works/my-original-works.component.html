@@ -24,12 +24,10 @@
                 <input [(ngModel)]="filters.to" type="date" class="bg-gray-50 p-2 rounded" />
 
                 <button (click)="search()" class="bg-[#466d94] text-white py-2 rounded">
-                    RESET
+                    SEARCH
                 </button>
 
-                <button (click)="resetFilters()" class="bg-gray-400 text-white py-2 rounded">
-                    Clear
-                </button>
+              
 
             </div>
         </div>
@@ -61,8 +59,8 @@
                     View Certificate
                 </div>
 
-                <div class="cursor-pointer hover:underline" (click)="download(item)">
-                    Download
+                <div class="cursor-pointer hover:underline" (click)="downloadAllFiles(item)">
+                    Download All Files
                 </div>
 
                 <div class="cursor-pointer hover:underline" (click)="openSetPassword(item)">

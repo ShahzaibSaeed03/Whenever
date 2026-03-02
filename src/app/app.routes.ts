@@ -17,34 +17,33 @@ import { MyAccountInfoComponent } from './components/my-account-info/my-account-
 import { BillingComponent } from './components/billing/billing.component';
 import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
 import { ViewWorkComponent } from './components/view-work/view-work.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  // Root → HomeComponent (PUBLIC)
-  // { path: '', component: HomeComponent },
+
   { path: '', component: HomeComponent },
 
-  // Auth-protected routes
-  { path: 'my-original-works', component: MyOriginalWorksComponent },
+  // 🔒 PROTECTED ROUTES
+  { path: 'my-original-works', component: MyOriginalWorksComponent, canActivate: [AuthGuard] },
+  { path: 'upload', component: UploadWorkComponent, canActivate: [AuthGuard] },
+  { path: 'get-token', component: GetTokenComponent, canActivate: [AuthGuard] },
+  { path: 'actions', component: ActionsAgainstPlagiaristsComponent, canActivate: [AuthGuard] },
+  { path: 'account-info', component: MyAccountInfoComponent, canActivate: [AuthGuard] },
+  { path: 'billing', component: BillingComponent, canActivate: [AuthGuard] },
 
   // Public routes
-  { path: 'upload', component: UploadWorkComponent },
   { path: 'faq', component: FaqComponent },
   { path: 'verify', component: VerifyWorkComponent },
   { path: 'view-register-work', component: ViewWorkDetailsComponent },
-  { path: "get-token", component: GetTokenComponent },
-  { path: "pricing", component: PricingComponent },
+  { path: 'pricing', component: PricingComponent },
   { path: 'highlight', component: HighlightComponent },
-  { path: 'actions', component: ActionsAgainstPlagiaristsComponent },
-  { path: "contact", component: ContactUsComponent },
-  { path: "account-info", component: MyAccountInfoComponent },
-  { path: "billing", component: BillingComponent },
-  { path: "billing/success", component: PaymentSuccessComponent },
+  { path: 'contact', component: ContactUsComponent },
+  { path: 'billing/success', component: PaymentSuccessComponent },
   { path: 'share/:shareId', component: ViewWorkComponent },
-  // Authentication
+
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterUserComponent },
 
-  // Fallback
   { path: '**', redirectTo: '' },
 ];
 

@@ -42,7 +42,7 @@ lg:translate-x-0" [class.translate-x-0]="sidebarOpen" [class.-translate-x-full]=
         <a routerLink="/my-original-works" (click)="onNavigate()"
           class="block px-4 py-3 border-b border-white/20 hover:bg-white/10">My Original Works</a>
 
-        <a routerLink="/upload" (click)="onNavigate()"
+        <a routerLink="/upload" *ngIf="auth.isLoggedIn$ | async"  (click)="onNavigate()"
           class="block px-4 py-3 border-b border-white/20 hover:bg-white/10">Upload a new Work</a>
 
         <a routerLink="/get-token" (click)="onNavigate()"

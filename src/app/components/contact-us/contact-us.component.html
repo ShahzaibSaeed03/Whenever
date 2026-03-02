@@ -19,13 +19,26 @@
       <h3 class="text-xl font-semibold">Email Us</h3>
 
       <ul class="list-disc pl-6 space-y-2">
-        <li><a class="text-blue-600 underline">support@mycopyrightally.com</a> (General inquiries)</li>
-        <li><a class="text-blue-600 underline">billing@mycopyrightally.com</a> (Subscription or payment issues)</li>
-        <li><a class="text-blue-600 underline">legal@mycopyrightally.com</a> (Legal inquiries or copyright concerns)
+        <li>
+          <a class="text-blue-600 underline">
+            support@mycopyrightally.com
+          </a> (General inquiries)
+        </li>
+        <li>
+          <a class="text-blue-600 underline">
+            billing@mycopyrightally.com
+          </a> (Subscription or payment issues)
+        </li>
+        <li>
+          <a class="text-blue-600 underline">
+            legal@mycopyrightally.com
+          </a> (Legal inquiries or copyright concerns)
         </li>
       </ul>
 
-      <p class="text-sm">We aim to respond to all emails within 24-48 hours.</p>
+      <p class="text-sm">
+        We aim to respond to all emails within 24-48 hours.
+      </p>
     </div>
 
     <hr class="border-[#466d94]/30">
@@ -35,22 +48,69 @@
 
       <h3 class="text-xl font-semibold">Contact Form</h3>
 
-      <form (ngSubmit)="submit()" class="space-y-5">
+      <form #contactForm="ngForm"
+            (ngSubmit)="submit(contactForm)"
+            class="space-y-5">
 
-        <input name="name" [(ngModel)]="form.name" required placeholder="Name *"
-          class="w-full bg-gray-200 rounded-md p-3 outline-none" />
+        <!-- NAME -->
+        <input
+          name="name"
+          [(ngModel)]="form.name"
+          required
+          placeholder="Name *"
+          class="w-full bg-gray-200 rounded-md p-3 outline-none"
+        />
 
-        <input name="email" [(ngModel)]="form.email" required placeholder="Email *"
-          class="w-full bg-gray-200 rounded-md p-3 outline-none" />
+        <!-- EMAIL -->
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="form.email"
+          required
+          email
+          placeholder="Email *"
+          class="w-full bg-gray-200 rounded-md p-3 outline-none"
+        />
 
-        <input name="subject" [(ngModel)]="form.subject" required placeholder="Subject *"
-          class="w-full bg-gray-200 rounded-md p-3 outline-none" />
+        <!-- SUBJECT -->
+        <input
+          name="subject"
+          [(ngModel)]="form.subject"
+          required
+          placeholder="Subject *"
+          class="w-full bg-gray-200 rounded-md p-3 outline-none"
+        />
 
-        <textarea name="message" [(ngModel)]="form.message" required rows="5" placeholder="Message *"
-          class="w-full bg-gray-200 rounded-md p-3 outline-none"></textarea>
+        <!-- MESSAGE -->
+        <textarea
+          name="message"
+          [(ngModel)]="form.message"
+          required
+          rows="5"
+          placeholder="Message *"
+          class="w-full bg-gray-200 rounded-md p-3 outline-none"
+        ></textarea>
 
-        <button class="bg-[#466d94] text-white px-6 py-2 rounded-md">
-          SUBMIT
+        <!-- SUCCESS MESSAGE -->
+        <div *ngIf="successMessage"
+             class="text-green-600 font-medium">
+          {{ successMessage }}
+        </div>
+
+        <!-- ERROR MESSAGE -->
+        <div *ngIf="errorMessage"
+             class="text-red-600 font-medium">
+          {{ errorMessage }}
+        </div>
+
+        <!-- SUBMIT BUTTON -->
+        <button
+          type="submit"
+          [disabled]="loading || contactForm.invalid"
+          class="bg-[#466d94] text-white px-6 py-2 rounded-md disabled:opacity-50">
+
+          {{ loading ? 'Sending...' : 'SUBMIT' }}
+
         </button>
 
       </form>
@@ -95,7 +155,9 @@
 
       <p>
         Before reaching out, check our
-        <span class="text-blue-600 underline cursor-pointer">FAQ page</span>
+        <span class="text-blue-600 underline cursor-pointer">
+          FAQ page
+        </span>
         for answers to common questions about our service, pricing, and copyright protection.
       </p>
     </div>
@@ -115,7 +177,5 @@
     </div>
 
   </div>
-
-
 
 </div>

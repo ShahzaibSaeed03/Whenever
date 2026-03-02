@@ -35,7 +35,7 @@ export class MyOriginalWorksComponent implements OnInit {
   constructor(
     private workService: WorkService,
     private toast: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.load();
@@ -95,91 +95,122 @@ export class MyOriginalWorksComponent implements OnInit {
 
   /* RESET */
   resetFilters() {
-    this.filters = { id:'', title:'', from:'', to:'' };
+    this.filters = { id: '', title: '', from: '', to: '' };
     this.data = [...this.originalData];
   }
 
-  viewCertificate(item:any){
-    if(!item.certificateViewUrl){
-      this.toast.error('Certificate not available');
-      return;
-    }
-    window.open(item.certificateViewUrl,'_blank');
+viewCertificate(item: any) {
+  if (!item.certificateViewUrl) {
+    this.toast.error('Certificate not available');
+    return;
   }
 
-  download(item:any){
-    if(!item.downloadUrl){
+  const a = document.createElement('a');
+  a.href = item.certificateViewUrl;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+  download(item: any) {
+    if (!item.downloadUrl) {
       this.toast.error('File not available');
       return;
     }
 
-    const a=document.createElement('a');
-    a.href=item.downloadUrl;
-    a.download=item.file_name || 'file';
-    a.target='_blank';
+    const a = document.createElement('a');
+    a.href = item.downloadUrl;
+    a.download = item.file_name || 'file';
+    a.target = '_blank';
     a.click();
 
     this.toast.success('Download started');
   }
 
-  delete(id:any){
-    this.deleteWorkId=id;
-    this.showDeleteModal=true;
+  delete(id: any) {
+    this.deleteWorkId = id;
+    this.showDeleteModal = true;
   }
 
-  confirmDelete(){
+  confirmDelete() {
     this.workService.deleteWork(this.deleteWorkId)
-      .subscribe(()=>{
+      .subscribe(() => {
         this.toast.success('Deleted');
         this.load();
         this.closeDelete();
       });
   }
 
-  closeDelete(){
-    this.showDeleteModal=false;
-    this.deleteWorkId=null;
+  closeDelete() {
+    this.showDeleteModal = false;
+    this.deleteWorkId = null;
   }
 
-  openSetPassword(item:any){
-    this.selectedWork=item;
-    this.showPasswordModal=true;
+  openSetPassword(item: any) {
+    this.selectedWork = item;
+    this.showPasswordModal = true;
   }
 
-  closeModal(){
-    this.showPasswordModal=false;
-    this.sharePassword='';
-    this.selectedWork=null;
+  closeModal() {
+    this.showPasswordModal = false;
+    this.sharePassword = '';
+    this.selectedWork = null;
   }
 
-  savePassword(){
+  savePassword() {
 
-    if(!this.selectedWork) return;
+    if (!this.selectedWork) return;
 
-    if(this.sharePassword.length<6){
+    if (this.sharePassword.length < 6) {
       this.toast.error('Password min 6');
       return;
     }
 
     this.workService
-      .setPassword(this.selectedWork._id,this.sharePassword)
-      .subscribe((res:any)=>{
-        this.selectedWork.shareId=res.shareId;
-        this.selectedWork.passwordProtected=true;
+      .setPassword(this.selectedWork._id, this.sharePassword)
+      .subscribe((res: any) => {
+        this.selectedWork.shareId = res.shareId;
+        this.selectedWork.passwordProtected = true;
 
         this.toast.success('Password set');
         this.closeModal();
       });
   }
+  downloadAllFiles(work: any) {
 
-  copyLink(item:any){
+    const urls = [
+      work.otsUrl,
+      work.certificateUrl,
+      work.downloadUrl
+    ].filter(Boolean);
 
-    if(!item.passwordProtected){
+    let delay = 0;
+
+    urls.forEach((url: string) => {
+      setTimeout(() => {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = '';
+        a.rel = 'noopener';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }, delay);
+
+      delay += 1000; // 1.5s gap between downloads
+    });
+
+  }
+  copyLink(item: any) {
+
+    if (!item.passwordProtected) {
       this.toast.warning('Set password first');
       return;
     }
 
-    const link=`${window.location.origin}/share/${item.shareId}`;
+    const link = `${window.location.origin}/share/${item.shareId}`;
     navigator.clipboard.writeText(link);
 
     this.toast.success('Share link copied');

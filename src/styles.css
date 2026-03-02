@@ -1,27 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+
 @font-face {
   font-family: 'Calibri';
   src: url('assets/font/calibri-font-family/calibri-regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
-.fieldRow{
+
+.fieldRow {
   @apply flex items-center gap-3;
 }
-.star{
+
+.star {
   @apply text-red-500 font-bold ml-1;
 }
-.label{
+
+.label {
   @apply w-40 text-[#3f5f78] text-sm shrink-0;
 }
 
-.input{
+.input {
   @apply flex-1 px-3 py-2 rounded bg-white border border-gray-300 text-sm outline-none;
 }
+
 body {
   font-family: 'Calibri', sans-serif;
+  margin: 0;
+  padding: 0;
 }
-button{
+
+button {
   cursor: pointer;
 }
