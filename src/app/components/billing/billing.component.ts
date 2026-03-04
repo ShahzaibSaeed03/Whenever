@@ -103,6 +103,7 @@ export class BillingComponent implements OnInit {
       base:{
         fontSize:'16px',
         color:'#1f2937',
+        padding: "10px",
         '::placeholder':{ color:'#9ca3af' }
       }
     };
