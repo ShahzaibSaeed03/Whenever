@@ -16,126 +16,147 @@ export class MyAccountInfoComponent implements OnInit {
 
   /* ================= PROFILE ================= */
 
-  profile:any={
-    personalAddress:{
-      address1:"",
-      address2:"",
-      zip:"",
-      city:"",
-      state:"",
-      country:"",
-      phone:"",
-      profession:"",
-      refSource:""
+  profile: any = {
+    personalAddress: {
+      address1: "",
+      address2: "",
+      zip: "",
+      city: "",
+      state: "",
+      country: "",
+      phone: "",
+      profession: "",
+      refSource: ""
     },
-    billing:{
-      company:"",
-      name:"",
-      vatNumber:"",
-      address1:"",
-      address2:"",
-      zip:"",
-      city:"",
-      state:"",
-      country:"",
-      phone:"",
-      sameAsPersonal:false
+    billing: {
+      company: "",
+      name: "",
+      vatNumber: "",
+      address1: "",
+      address2: "",
+      zip: "",
+      city: "",
+      state: "",
+      country: "",
+      phone: "",
+      sameAsPersonal: false
     }
   };
 
-  tokens=0;
-  billingDate='';
+  tokens = 0;
+  billingDate = '';
 
   /* ================= PASSWORD ================= */
 
-  currentPassword="";
-  newPassword="";
-  confirmPassword="";
+  currentPassword = "";
+  newPassword = "";
+  confirmPassword = "";
 
-  showCurrent=false;
-  showNew=false;
-  showConfirm=false;
+  showCurrent = false;
+  showNew = false;
+  showConfirm = false;
 
   /* ================= EMAIL ================= */
 
-  newEmail="";
-  emailCode="";
+  newEmail = "";
+  emailCode = "";
 
   constructor(
-    private api:AuthApiService,
-    private workService:WorkService,
-    private toast:ToastrService
-  ){}
+    private api: AuthApiService,
+    private workService: WorkService,
+    private toast: ToastrService
+  ) { }
 
-  ngOnInit(){
+  ngOnInit() {
 
     this.loadProfile();
 
     this.workService.getTokenDetails()
-    .subscribe((res:any)=>{
-      this.tokens=res.remainingTokens;
-      this.billingDate=res.nextBillingDate;
-    });
+      .subscribe((res: any) => {
+        this.tokens = res.remainingTokens;
+        this.billingDate = res.nextBillingDate;
+      });
   }
 
   /* ================= HELPERS ================= */
 
-  toggle(type:string){
-    if(type==='c') this.showCurrent=!this.showCurrent;
-    if(type==='n') this.showNew=!this.showNew;
-    if(type==='cn') this.showConfirm=!this.showConfirm;
+  toggle(type: string) {
+    if (type === 'c') this.showCurrent = !this.showCurrent;
+    if (type === 'n') this.showNew = !this.showNew;
+    if (type === 'cn') this.showConfirm = !this.showConfirm;
   }
 
   /* ================= PROFILE ================= */
 
-  loadProfile(){
+  loadProfile() {
     this.api.getProfile().subscribe({
-      next:(res:any)=>{
-        this.profile=res;
+      next: (res: any) => {
+
+        if (!res.personalAddress) res.personalAddress = {};
+        if (!res.billing) res.billing = {};
+
+        if (!res.personalAddress.country) {
+          res.personalAddress.country = res.country || '';
+        }
+
+        if (!res.personalAddress.state) {
+          res.personalAddress.state = res.state || '';
+        }
+
+        this.profile = res;
+
       },
-      error:()=>{
+      error: () => {
         this.toast.error("Failed to load profile");
       }
     });
   }
 
-  updateProfile(){
-    this.api.updateProfile(this.profile).subscribe({
-      next:()=>{
+  updateProfile() {
+
+    const payload = {
+      ...this.profile,
+      country: this.profile.personalAddress.country,
+      state: this.profile.personalAddress.state
+    };
+
+    this.api.updateProfile(payload).subscribe({
+      next: () => {
         this.toast.success("Profile updated");
       },
-      error:()=>{
+      error: () => {
         this.toast.error("Update failed");
       }
     });
+
   }
 
   /* ================= PASSWORD ================= */
 
-  changePassword(){
+  changePassword() {
 
-    if(!this.newPassword || this.newPassword.length<6){
+    if (!this.newPassword || this.newPassword.length < 6) {
       this.toast.warning("Password min 6 characters");
       return;
     }
 
-    if(this.newPassword!==this.confirmPassword){
+    if (this.newPassword !== this.confirmPassword) {
       this.toast.warning("Passwords do not match");
       return;
     }
 
     this.api.changePassword({
-      currentPassword:this.currentPassword,
-      newPassword:this.newPassword
+      currentPassword: this.currentPassword,
+      newPassword: this.newPassword
     }).subscribe({
-      next:()=>{
+      next: () => {
         this.toast.success("Password updated");
 
-        this.currentPassword="";
-        this.newPassword="";
-        this.confirmPassword="";
+        this.currentPassword = "";
+        this.newPassword = "";
+        this.confirmPassword = "";
       },
-      error:()=>{
+      error: () => {
         this.toast.error("Password change failed");
       }
     });
@@ -143,40 +164,41 @@ export class MyAccountInfoComponent implements OnInit {
 
   /* ================= EMAIL ================= */
 
-  requestEmail(){
+  requestEmail() {
 
-    if(!this.newEmail){
+    if (!this.newEmail) {
       this.toast.warning("Enter email");
       return;
     }
 
     this.api.requestEmailChange(this.newEmail)
-    .subscribe({
-      next:()=>{
-        this.toast.success("Verification code sent");
-      },
-      error:()=>{
-        this.toast.error("Failed to send code");
-      }
-    });
+      .subscribe({
+        next: () => {
+          this.toast.success("Verification code sent");
+        },
+        error: (err) => {
+          const msg = err?.error?.message || "Failed to send code";
+          this.toast.error(msg);
+        }
+      });
   }
 
-  confirmEmail(){
+  confirmEmail() {
 
-    if(!this.emailCode){
+    if (!this.emailCode) {
       this.toast.warning("Enter code");
       return;
     }
 
     this.api.confirmEmail(this.emailCode)
-    .subscribe({
-      next:()=>{
-        this.toast.success("Email updated");
-        this.loadProfile();
-      },
-      error:()=>{
-        this.toast.error("Invalid code");
-      }
-    });
+      .subscribe({
+        next: () => {
+          this.toast.success("Email updated");
+          this.loadProfile();
+        },
+        error: () => {
+          this.toast.error("Invalid code");
+        }
+      });
   }
 }

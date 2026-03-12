@@ -34,6 +34,7 @@
       <p *ngIf="card">
         Current Card:
         {{card.brand | uppercase}} ending {{card.last4}}
+        (Exp {{card.expMonth}}/{{card.expYear}})
       </p>
 
       <button (click)="openCardModal()" class="bg-[#3f5f78] text-white px-6 py-2 rounded-lg">

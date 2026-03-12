@@ -187,24 +187,55 @@
   </div>
 
   <!-- CHANGE EMAIL -->
-  <div class="max-w-6xl mx-auto mt-8 mb-10 border border-[#3f5f78] rounded-xl space-x-5 p-6 space-y-4">
+<div class="max-w-6xl mx-auto mt-8 mb-10 border border-[#3f5f78] rounded-xl p-6 space-y-4">
 
-    <h3 class="font-semibold">CHANGE EMAIL</h3>
+  <h3 class="font-semibold">CHANGE EMAIL</h3>
 
-    <input placeholder="New email" [(ngModel)]="newEmail" name="ne" class="border px-3 py-2 w-full max-w-md bg-white">
+  <div class="flex items-center gap-3 flex-wrap">
 
-    <button (click)="requestEmail()" class="bg-[#365369] text-white px-6 py-2 rounded">
+    <!-- CURRENT EMAIL -->
+    <input
+      class="border px-3 py-2 bg-gray-100 w-72"
+      [value]="profile.email"
+      disabled
+    />
+
+    <!-- NEW EMAIL -->
+    <input
+      placeholder="New email"
+      [(ngModel)]="newEmail"
+      name="ne"
+      class="border px-3 py-2 bg-white w-72"
+    />
+
+    <!-- SEND CODE -->
+    <button
+      (click)="requestEmail()"
+      class="bg-[#365369] text-white px-6 py-2 rounded">
       SEND CODE
     </button>
 
-    <input placeholder="Verification code" [(ngModel)]="emailCode" name="code"
-      class="border px-3 py-2 w-full max-w-md bg-white">
+  </div>
 
-    <button (click)="confirmEmail()" class="bg-green-600 text-white px-6 py-2 rounded">
+  <!-- CODE ROW -->
+  <div class="flex items-center gap-3">
+
+    <input
+      placeholder="Verification code"
+      [(ngModel)]="emailCode"
+      name="code"
+      class="border px-3 py-2 bg-white w-72"
+    />
+
+    <button
+      (click)="confirmEmail()"
+      class="bg-green-600 text-white px-6 py-2 rounded">
       CONFIRM
     </button>
 
   </div>
+
+</div>
 
 </div>
 

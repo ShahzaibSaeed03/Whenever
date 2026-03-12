@@ -63,7 +63,7 @@ export class BillingComponent implements OnInit {
     this.billingService.cancelSubscription()
       .subscribe({
         next:()=>{
-          this.toast.success('Subscription will cancel at period end');
+          this.toast.success('Auto renewal disabled. Subscription active until expiry.');
           this.loadSubscription();
         },
         error:()=>this.toast.error('Cancel failed')
@@ -89,35 +89,49 @@ export class BillingComponent implements OnInit {
   }
 
   closeCardModal(){
-    this.cardModal=false;
+
+  this.cardModal = false;
+
+  if(this.cardNumber){
+    this.cardNumber.destroy();
+    this.cardExpiry.destroy();
+    this.cardCvc.destroy();
   }
+
+}
 
   /* STRIPE MOUNT */
-  async mountCard(){
+async mountCard(){
 
-    this.stripe=await loadStripe(environment.stripePublishableKey);
+  this.stripe = await loadStripe(environment.stripePublishableKey);
 
-    const elements=this.stripe.elements();
+  const elements = this.stripe.elements();
 
-    const style={
-      base:{
-        fontSize:'16px',
-        color:'#1f2937',
-        padding: "10px",
-        '::placeholder':{ color:'#9ca3af' }
-      }
-    };
+  const style = {
+    base:{
+      fontSize:'16px',
+      color:'#1f2937',
+      '::placeholder':{ color:'#9ca3af' }
+    }
+  };
 
-    this.cardNumber=elements.create('cardNumber',{style});
-    this.cardExpiry=elements.create('cardExpiry',{style});
-    this.cardCvc=elements.create('cardCvc',{style});
-
-    setTimeout(()=>{
-      this.cardNumber.mount('#card-number');
-      this.cardExpiry.mount('#card-expiry');
-      this.cardCvc.mount('#card-cvc');
-    });
+  if(this.cardNumber){
+    this.cardNumber.destroy();
+    this.cardExpiry.destroy();
+    this.cardCvc.destroy();
   }
+
+  this.cardNumber = elements.create('cardNumber',{style});
+  this.cardExpiry = elements.create('cardExpiry',{style});
+  this.cardCvc = elements.create('cardCvc',{style});
+
+  setTimeout(()=>{
+    this.cardNumber.mount('#card-number');
+    this.cardExpiry.mount('#card-expiry');
+    this.cardCvc.mount('#card-cvc');
+  });
+
+}
 
   /* UPDATE CARD */
   async updateCard(){

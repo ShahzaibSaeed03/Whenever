@@ -38,6 +38,7 @@ export class RegisterUserComponent implements OnInit {
 
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
+
       email: ['', [Validators.required, Validators.email]],
       confirmEmail: ['', Validators.required],
       password: ['', Validators.required],
@@ -45,12 +46,14 @@ export class RegisterUserComponent implements OnInit {
       companyName: [''],
       ownerName: [''],
 
-      addressLine1: [''],
+      addressLine1: ['', Validators.required],
       addressLine2: [''],
-      zip: [''],
-      city: [''],
+
+      zip: ['', Validators.required],
+      city: ['', Validators.required],
       state: [''],
-      country: [''],
+      country: ['', Validators.required],
+
       phone: [''],
       profession: [''],
       refSource: [''],
@@ -60,14 +63,25 @@ export class RegisterUserComponent implements OnInit {
       billingCompany: [''],
       billingName: [''],
       vatNumber: [''],
-      billingAddress1: [''],
+
+      billingAddress1: ['', Validators.required],
       billingAddress2: [''],
-      billingZip: [''],
-      billingCity: [''],
+
+      billingZip: ['', Validators.required],
+      billingCity: ['', Validators.required],
       billingState: [''],
-      billingCountry: [''],
+      billingCountry: ['', Validators.required],
+
       billingPhone: ['']
     });
+
+    /* RESTORE FORM AFTER REFRESH */
+
+    const savedForm = localStorage.getItem('signup_form');
+
+    if (savedForm) {
+      this.form.patchValue(JSON.parse(savedForm));
+    }
     /* PERSONAL COUNTRY */
     this.form.get('country')?.valueChanges.subscribe(country => {
 
@@ -109,6 +123,20 @@ export class RegisterUserComponent implements OnInit {
         billingPhone: this.form.value.phone
       });
     });
+    const pending = localStorage.getItem('pending_payment');
+
+    if (pending === 'true') {
+      setTimeout(() => {
+        if (!this.checkoutInstance) {
+          this.openCheckout();
+        }
+      }, 200);
+    }
+    this.form.valueChanges.subscribe(data => {
+      if (!this.form.disabled) {
+        localStorage.setItem('signup_form', JSON.stringify(data));
+      }
+    });
   }
 
   togglePassword() {
@@ -126,33 +154,43 @@ export class RegisterUserComponent implements OnInit {
   ];
   submit() {
 
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.toast.error('Please fill all required fields');
+      return;
+    }
 
     if (!this.form.value.companyName && !this.form.value.ownerName) {
       this.toast.error('Company or Owner required');
       return;
     }
 
-    if (this.form.value.email !== this.form.value.confirmEmail) {
+    const email = this.form.value.email.toLowerCase().trim();
+    const confirmEmail = this.form.value.confirmEmail.toLowerCase().trim();
+
+    if (email !== confirmEmail) {
       this.toast.error('Emails do not match');
       return;
     }
 
-    const payload: any = { ...this.form.value };
+    const payload: any = {
+      ...this.form.value,
+      email: email
+    };
+
     delete payload.confirmEmail;
 
     this.api.register(payload).subscribe({
 
       next: (res: any) => {
 
-        /* ⭐ SAVE TOKEN */
         localStorage.setItem('token', res.token);
+        localStorage.setItem('pending_payment', 'true');
 
         this.toast.success('Registered');
 
-        this.form.reset();
+        this.form.disable();
 
-        /* ⭐ OPEN STRIPE */
         this.openCheckout();
       },
 
@@ -161,7 +199,8 @@ export class RegisterUserComponent implements OnInit {
   }
   async openCheckout() {
 
-    if (this.loading) return;
+    if (this.loading || this.checkoutInstance) return;
+
     this.loading = true;
     this.showCheckout = true;
 
@@ -169,11 +208,14 @@ export class RegisterUserComponent implements OnInit {
 
     this.stripeService.createSubscription().subscribe(async (res: any) => {
 
+      if (this.checkoutInstance) return; // extra safety
+
       const checkout = await this.stripe.initEmbeddedCheckout({
         clientSecret: res.clientSecret
       });
 
       this.checkoutInstance = checkout;
+
       checkout.mount('#subscription-checkout');
 
       this.loading = false;
@@ -185,5 +227,13 @@ export class RegisterUserComponent implements OnInit {
       this.checkoutInstance = null;
     }
     this.showCheckout = false;
+  }
+
+
+  ngOnDestroy() {
+    if (this.checkoutInstance) {
+      this.checkoutInstance.destroy();
+      this.checkoutInstance = null;
+    }
   }
 }

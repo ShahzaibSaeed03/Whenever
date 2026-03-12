@@ -40,7 +40,7 @@ requestEmailChange(email:string){
 }
 
 confirmEmail(code:string){
-  return this.http.put(`${this.base}/users/confirm-email`,{code});
+  return this.http.put(`${this.base}/users/verify-email`,{code});
 }
 }
 

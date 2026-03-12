@@ -5,201 +5,358 @@
   </div>
 
   <div class="max-w-6xl mx-auto mt-6 text-[#3f5f78] text-sm space-y-1">
-    <p>
-      Please enter your personal details and billing address.</p>
-    <p> Once your payment is validated, you will be able to upload your work.</p>
-
-    <p>If you are facing a problem while registering, please send an email to.</p>
+    <p>Please enter your personal details and billing address.</p>
+    <p>Once your payment is validated, you will be able to upload your work.</p>
+    <p>If you are facing a problem while registering, please send an email.</p>
   </div>
 
   <div class="max-w-6xl mx-auto mt-6 border border-[#3f5f78] rounded-xl p-6">
 
-    <form [formGroup]="form" (ngSubmit)="submit()" class="grid lg:grid-cols-2 gap-8">
+<form [formGroup]="form" (ngSubmit)="submit()" class="grid lg:grid-cols-2 gap-8">
 
-      <!-- ================= LEFT PERSONAL ================= -->
-      <div>
-        <h2 class="sectionTitle">Personal Details:</h2>
+<!-- ================= LEFT PERSONAL ================= -->
 
-        <div class="space-y-3">
+<div>
 
-          <div class="fieldRow">
-            <label class="label">First Name <span class="star">*</span></label>
-            <input class="input" autocomplete="off" formControlName="firstName" />
-          </div>
+<h2 class="sectionTitle">Personal Details:</h2>
 
-          <div class="fieldRow">
-            <label class="label">Last Name <span class="star">*</span></label>
-            <input class="input" autocomplete="off" formControlName="lastName" />
-          </div>
+<div class="space-y-3">
 
-          <div class="fieldRow">
-            <label class="label">
-              Company Name <span class="star">*</span> or Owner Name
-            </label>
-            <input class="input" autocomplete="off" formControlName="companyName" />
-          </div>
+<div class="fieldRow">
+<label class="label">First Name <span class="star">*</span></label>
+<input class="input" formControlName="firstName" />
 
-          <div class="fieldRow">
-            <label class="label">Owner Name</label>
-            <input class="input" autocomplete="off" formControlName="ownerName" />
-          </div>
+<div class="text-red-500 text-xs"
+*ngIf="form.get('firstName')?.touched && form.get('firstName')?.invalid">
+First name is required
+</div>
 
-          <div class="fieldRow">
-            <label class="label">Address Line 1 <span class="star">*</span></label>
-            <input class="input" autocomplete="off" formControlName="addressLine1" />
-          </div>
+</div>
 
-          <div class="fieldRow">
-            <label class="label">Address Line 2</label>
-            <input class="input" autocomplete="off" formControlName="addressLine2" />
-          </div>
+<div class="fieldRow">
 
-          <div class="fieldRow">
-            <label class="label">Zip Code <span class="star">*</span></label>
-            <input class="input" autocomplete="off" formControlName="zip" />
-          </div>
+<label class="label">Last Name <span class="star">*</span></label>
 
-          <div class="fieldRow">
-            <label class="label">City <span class="star">*</span></label>
-            <input class="input" autocomplete="off" formControlName="city" />
-          </div>
+<input class="input" formControlName="lastName" />
 
-          <div class="fieldRow">
+<div class="text-red-500 text-xs"
+*ngIf="form.get('lastName')?.touched && form.get('lastName')?.invalid">
+Last name is required
+</div>
 
-            <label class="label">
-              State / Region
-              <span class="star" *ngIf="form.value.country==='USA'">*</span>
-            </label>
+</div>
 
-            <!-- dropdown -->
-            <select *ngIf="form.value.country==='USA'" class="input" autocomplete="off" formControlName="state">
-              <option value="">Select state</option>
-              <option *ngFor="let s of usStates" [value]="s">{{s}}</option>
-            </select>
+<div class="fieldRow">
 
-            <!-- text -->
-            <input *ngIf="form.value.country!=='USA'" class="input" autocomplete="off" formControlName="state" />
+<label class="label">
+Company Name <span class="star">*</span>
+</label>
 
-          </div>
+<input class="input" formControlName="companyName" />
 
-          <div class="fieldRow">
-            <label class="label">Country <span class="star">*</span></label>
-            <input class="input" autocomplete="off" formControlName="country" />
-          </div>
+</div>
 
-          <div class="fieldRow">
-            <label class="label">Phone number</label>
-            <input class="input" autocomplete="off" formControlName="phone" />
-          </div>
+<div class="fieldRow">
 
-          <div class="fieldRow">
-            <label class="label">Profession</label>
-            <input class="input" autocomplete="off" formControlName="profession" />
-          </div>
+<label class="label">Owner Name</label>
 
-          <div class="fieldRow">
-            <label class="label">How did you hear about us?</label>
-            <input class="input" autocomplete="off" formControlName="refSource" />
-          </div>
+<input class="input" formControlName="ownerName" />
 
-          <div class="fieldRow">
-            <label class="label">Email <span class="star">*</span></label>
-            <input class="input" autocomplete="off" formControlName="email" />
-          </div>
+</div>
 
-          <div class="fieldRow">
-            <label class="label">Confirm Email <span class="star">*</span></label>
-            <input class="input" autocomplete="off" formControlName="confirmEmail" />
-          </div>
+<div class="fieldRow">
 
-          <div class="fieldRow">
-            <label class="label">Password <span class="star">*</span></label>
-            <div class="relative">
-              <input [type]="showPassword ? 'text':'password'" class="input pr-14" autocomplete="off"
-                formControlName="password" />
-              <span class="showBtn cursor-pointer ml-3" (click)="togglePassword()">
-                {{ showPassword ? 'HIDE' : 'SHOW' }}
-              </span>
-            </div>
-          </div>
+<label class="label">Address Line 1 <span class="star">*</span></label>
 
-        </div>
-      </div>
+<input class="input" formControlName="addressLine1" />
 
-      <!-- ================= RIGHT BILLING ================= -->
-      <div class="lg:border-l lg:border-[#3f5f78] lg:pl-8">
-        <h2 class="sectionTitle">Billing Address:</h2>
+<div class="text-red-500 text-xs"
+*ngIf="form.get('addressLine1')?.touched && form.get('addressLine1')?.invalid">
+Address line 1 is required
+</div>
 
-        <div class="space-y-3">
+</div>
 
-          <div class="fieldRow">
-            <label class="label">Company</label>
-            <input class="input" autocomplete="off" formControlName="billingCompany" />
-          </div>
+<div class="fieldRow">
 
-          <div class="fieldRow">
-            <label class="label">Name</label>
-            <input class="input" autocomplete="off" formControlName="billingName" />
-          </div>
+<label class="label">Address Line 2</label>
 
-          <div class="fieldRow">
-            <label class="label">VAT number</label>
-            <input class="input" autocomplete="off" formControlName="vatNumber" />
-          </div>
+<input class="input" formControlName="addressLine2" />
 
-          <div class="flex items-center gap-2 text-sm">
-            <input type="checkbox" autocomplete="off" formControlName="billingSameAsPersonal" />
-            Same as personal
-          </div>
+</div>
 
-          <div class="fieldRow">
-            <label class="label">Address Line 1 <span class="star">*</span></label>
-            <input class="input" autocomplete="off" formControlName="billingAddress1" />
-          </div>
+<div class="fieldRow">
 
-          <div class="fieldRow">
-            <label class="label">Address Line 2</label>
-            <input class="input" autocomplete="off" formControlName="billingAddress2" />
-          </div>
+<label class="label">Zip Code <span class="star">*</span></label>
 
-          <div class="fieldRow">
-            <label class="label">Zip Code <span class="star">*</span></label>
-            <input class="input" autocomplete="off" formControlName="billingZip" />
-          </div>
+<input class="input" formControlName="zip" />
 
-          <div class="fieldRow">
-            <label class="label">City <span class="star">*</span></label>
-            <input class="input" autocomplete="off" formControlName="billingCity" />
-          </div>
+<div class="text-red-500 text-xs"
+*ngIf="form.get('zip')?.touched && form.get('zip')?.invalid">
+Zip code is required
+</div>
 
-          <div class="fieldRow">
-            <label class="label">State / Region</label>
-            <input class="input" autocomplete="off" formControlName="billingState" />
-          </div>
+</div>
 
-          <div class="fieldRow">
-            <label class="label">Country <span class="star">*</span></label>
-            <input class="input" autocomplete="off" formControlName="billingCountry" />
-          </div>
+<div class="fieldRow">
 
-          <div class="fieldRow">
-            <label class="label">Phone number</label>
-            <input class="input" autocomplete="off" formControlName="billingPhone" />
-          </div>
+<label class="label">City <span class="star">*</span></label>
 
-        </div>
-      </div>
+<input class="input" formControlName="city" />
 
-      <!-- SUBMIT -->
-      <div class="col-span-2 flex justify-center mt-6">
-        <button type="submit" class="bg-[#3f5f78] text-white px-10 py-2 rounded-lg">
-          SAVE
-        </button>
-      </div>
+<div class="text-red-500 text-xs"
+*ngIf="form.get('city')?.touched && form.get('city')?.invalid">
+City is required
+</div>
 
-    </form>
+</div>
 
-  </div>
+<div class="fieldRow">
+
+<label class="label">
+State / Region
+<span class="star" *ngIf="form.value.country==='USA'">*</span>
+</label>
+
+<select *ngIf="form.value.country==='USA'" class="input" formControlName="state">
+
+<option value="">Select state</option>
+
+<option *ngFor="let s of usStates" [value]="s">{{s}}</option>
+
+</select>
+
+<input *ngIf="form.value.country!=='USA'" class="input" formControlName="state" />
+
+</div>
+
+<div class="fieldRow">
+
+<label class="label">Country <span class="star">*</span></label>
+
+<input class="input" formControlName="country" />
+
+<div class="text-red-500 text-xs"
+*ngIf="form.get('country')?.touched && form.get('country')?.invalid">
+Country is required
+</div>
+
+</div>
+
+<div class="fieldRow">
+
+<label class="label">Phone number</label>
+
+<input class="input" formControlName="phone" />
+
+</div>
+
+<div class="fieldRow">
+
+<label class="label">Profession</label>
+
+<input class="input" formControlName="profession" />
+
+</div>
+
+<div class="fieldRow">
+
+<label class="label">How did you hear about us?</label>
+
+<input class="input" formControlName="refSource" />
+
+</div>
+
+<div class="fieldRow">
+
+<label class="label">Email <span class="star">*</span></label>
+
+<input class="input" formControlName="email" />
+
+<div class="text-red-500 text-xs"
+*ngIf="form.get('email')?.touched && form.get('email')?.errors?.['required']">
+Email is required
+</div>
+
+<div class="text-red-500 text-xs"
+*ngIf="form.get('email')?.touched && form.get('email')?.errors?.['email']">
+Invalid email
+</div>
+
+</div>
+
+<div class="fieldRow">
+
+<label class="label">Confirm Email <span class="star">*</span></label>
+
+<input class="input" formControlName="confirmEmail" />
+
+<div class="text-red-500 text-xs"
+*ngIf="form.get('confirmEmail')?.touched && form.get('confirmEmail')?.invalid">
+Confirm email is required
+</div>
+
+</div>
+
+<div class="fieldRow">
+
+<label class="label">Password <span class="star">*</span></label>
+
+<div class="relative">
+
+<input [type]="showPassword ? 'text':'password'" class="input pr-14"
+formControlName="password" />
+
+<span class="showBtn cursor-pointer ml-3" (click)="togglePassword()">
+
+{{ showPassword ? 'HIDE' : 'SHOW' }}
+
+</span>
+
+</div>
+
+<div class="text-red-500 text-xs"
+*ngIf="form.get('password')?.touched && form.get('password')?.invalid">
+Password is required
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ================= RIGHT BILLING ================= -->
+
+<div class="lg:border-l lg:border-[#3f5f78] lg:pl-8">
+
+<h2 class="sectionTitle">Billing Address:</h2>
+
+<div class="space-y-3">
+
+<div class="fieldRow">
+
+<label class="label">Company</label>
+
+<input class="input" formControlName="billingCompany" />
+
+</div>
+
+<div class="fieldRow">
+
+<label class="label">Name</label>
+
+<input class="input" formControlName="billingName" />
+
+</div>
+
+<div class="fieldRow">
+
+<label class="label">VAT number</label>
+
+<input class="input" formControlName="vatNumber" />
+
+</div>
+
+<div class="flex items-center gap-2 text-sm">
+
+<input type="checkbox" formControlName="billingSameAsPersonal" />
+
+Same as personal
+
+</div>
+
+<div class="fieldRow">
+
+<label class="label">Address Line 1 <span class="star">*</span></label>
+
+<input class="input" formControlName="billingAddress1" />
+
+<div class="text-red-500 text-xs"
+*ngIf="form.get('billingAddress1')?.touched && form.get('billingAddress1')?.invalid">
+Billing address is required
+</div>
+
+</div>
+
+<div class="fieldRow">
+
+<label class="label">Address Line 2</label>
+
+<input class="input" formControlName="billingAddress2" />
+
+</div>
+
+<div class="fieldRow">
+
+<label class="label">Zip Code <span class="star">*</span></label>
+
+<input class="input" formControlName="billingZip" />
+
+<div class="text-red-500 text-xs"
+*ngIf="form.get('billingZip')?.touched && form.get('billingZip')?.invalid">
+Billing zip is required
+</div>
+
+</div>
+
+<div class="fieldRow">
+
+<label class="label">City <span class="star">*</span></label>
+
+<input class="input" formControlName="billingCity" />
+
+<div class="text-red-500 text-xs"
+*ngIf="form.get('billingCity')?.touched && form.get('billingCity')?.invalid">
+Billing city is required
+</div>
+
+</div>
+
+<div class="fieldRow">
+
+<label class="label">State / Region</label>
+
+<input class="input" formControlName="billingState" />
+
+</div>
+
+<div class="fieldRow">
+
+<label class="label">Country <span class="star">*</span></label>
+
+<input class="input" formControlName="billingCountry" />
+
+<div class="text-red-500 text-xs"
+*ngIf="form.get('billingCountry')?.touched && form.get('billingCountry')?.invalid">
+Billing country is required
+</div>
+
+</div>
+
+<div class="fieldRow">
+
+<label class="label">Phone number</label>
+
+<input class="input" formControlName="billingPhone" />
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-span-2 flex justify-center mt-6">
+
+<button type="submit" class="bg-[#3f5f78] text-white px-10 py-2 rounded-lg">
+
+SAVE
+
+</button>
+
+</div>
+
+</form>
   <div class="max-w-6xl mx-auto text-[#466d94] text-sm space-y-4 mt-10 mb-6">
 
     <p>
@@ -262,5 +419,6 @@
     <div id="subscription-checkout" class="min-h-[650px]"></div>
 
   </div>
+</div>
 </div>
 <!-- CHECKOUT MODAL -->

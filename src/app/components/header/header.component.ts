@@ -21,13 +21,17 @@ export class HeaderComponent {
 
   ) { }
 
-  ngOnInit() {
+ ngOnInit() {
 
-    if (localStorage.getItem('token')) {
-      this.loadProfile();
-    }
+  const pending = localStorage.getItem('pending_payment');
+
+  if (localStorage.getItem('token') && pending !== 'true') {
+    this.loadProfile();
   }
-
+}
+isPendingPayment(): boolean {
+  return localStorage.getItem('pending_payment') === 'true';
+}
   loadProfile() {
     this.api.getProfile().subscribe({
       next: (res: any) => {

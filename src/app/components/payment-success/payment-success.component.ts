@@ -15,18 +15,17 @@ export class PaymentSuccessComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.sessionId = this.route.snapshot.queryParamMap.get('session_id');
-
-    console.log('Stripe session id:', this.sessionId);
+    localStorage.removeItem('signup_form');
+    localStorage.removeItem('pending_payment');
 
     // optional → call backend to confirm payment
     // this.verifySession();
   }
 
-  goDashboard(){
+  goDashboard() {
     this.router.navigate(['/dashboard']);
   }
 }
