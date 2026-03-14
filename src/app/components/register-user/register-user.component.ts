@@ -234,7 +234,7 @@ export class RegisterUserComponent implements OnInit {
 
       error: () => {
         this.loading = false;
-        this.toast.error('Unable to start checkout');
+        // this.toast.error('Unable to start checkout');
       }
     });
   }
