@@ -18,6 +18,8 @@ import { BillingComponent } from './components/billing/billing.component';
 import { PaymentSuccessComponent } from './components/payment-success/payment-success.component';
 import { ViewWorkComponent } from './components/view-work/view-work.component';
 import { AuthGuard } from './guards/auth.guard';
+import { TermsComponent } from './components/terms/terms.component';
+import { PrivacyComponent } from './components/privacy/privacy.component';
 
 export const routes: Routes = [
 
@@ -40,7 +42,8 @@ export const routes: Routes = [
   { path: 'contact', component: ContactUsComponent },
   { path: 'billing/success', component: PaymentSuccessComponent },
   { path: 'share/:shareId', component: ViewWorkComponent },
-
+  { path: 'terms', component: TermsComponent },
+  { path: 'privacy', component: PrivacyComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterUserComponent },
 

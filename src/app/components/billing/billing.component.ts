@@ -14,188 +14,207 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class BillingComponent implements OnInit {
 
-  subscription:any;
-  invoices:any[]=[];
-  card:any;
+  subscription: any;
+  invoices: any[] = [];
+  card: any;
 
-  cardNumber:any;
-  cardExpiry:any;
-  cardCvc:any;
+  cardNumber: any;
+  cardExpiry: any;
+  cardCvc: any;
 
-  cardModal=false;
+  cardModal = false;
 
-  stripe:any;
+  stripe: any;
 
-  tokens=0;
-  billingDate='';
+  tokens = 0;
+  billingDate = '';
 
   constructor(
-    private billingService:BillingService,
-    private workService:WorkService,
-    private toast:ToastrService
-  ){}
+    private billingService: BillingService,
+    private workService: WorkService,
+    private toast: ToastrService
+  ) { }
 
-  async ngOnInit(){
+  async ngOnInit() {
 
     this.loadSubscription();
 
     this.billingService.getInvoices()
       .subscribe({
-        next:(res:any)=>this.invoices=res,
-        error:()=>this.toast.error('Failed to load invoices')
+        next: (res: any) => this.invoices = res,
+        error: () => this.toast.error('Failed to load invoices')
       });
 
     this.billingService.getCard()
       .subscribe({
-        next:(res:any)=>this.card=res,
-        error:()=>this.toast.error('Failed to load card')
+        next: (res: any) => this.card = res,
+        error: () => this.toast.error('Failed to load card')
       });
 
     this.workService.getTokenDetails()
-      .subscribe((res:any)=>{
-        this.tokens=res.remainingTokens;
-        this.billingDate=res.nextBillingDate;
+      .subscribe((res: any) => {
+        this.tokens = res.remainingTokens;
+        this.billingDate = res.nextBillingDate;
       });
   }
 
   /* CANCEL */
-  cancel(){
+  cancel() {
     this.billingService.cancelSubscription()
       .subscribe({
-        next:()=>{
+        next: () => {
           this.toast.success('Auto renewal disabled. Subscription active until expiry.');
           this.loadSubscription();
         },
-        error:()=>this.toast.error('Cancel failed')
+        error: () => this.toast.error('Cancel failed')
       });
   }
 
   /* RESUME */
-  resume(){
+  resume() {
     this.billingService.resumeSubscription()
       .subscribe({
-        next:()=>{
+        next: () => {
           this.toast.success('Subscription resumed');
           this.loadSubscription();
         },
-        error:()=>this.toast.error('Resume failed')
+        error: () => this.toast.error('Resume failed')
       });
   }
 
   /* MODAL */
-  openCardModal(){
-    this.cardModal=true;
+  openCardModal() {
+    this.cardModal = true;
     this.mountCard();
   }
 
-  closeCardModal(){
+  closeCardModal() {
 
-  this.cardModal = false;
+    this.cardModal = false;
 
-  if(this.cardNumber){
-    this.cardNumber.destroy();
-    this.cardExpiry.destroy();
-    this.cardCvc.destroy();
+    if (this.cardNumber) {
+      this.cardNumber.destroy();
+      this.cardExpiry.destroy();
+      this.cardCvc.destroy();
+    }
+
   }
-
-}
 
   /* STRIPE MOUNT */
-async mountCard(){
+  async mountCard() {
 
-  this.stripe = await loadStripe(environment.stripePublishableKey);
+    this.stripe = await loadStripe(environment.stripePublishableKey);
 
-  const elements = this.stripe.elements();
+    const elements = this.stripe.elements();
 
-  const style = {
-    base:{
-      fontSize:'16px',
-      color:'#1f2937',
-      '::placeholder':{ color:'#9ca3af' }
+    const style = {
+      base: {
+        fontSize: '16px',
+        color: '#1f2937',
+        '::placeholder': { color: '#9ca3af' }
+      }
+    };
+
+    if (this.cardNumber) {
+      this.cardNumber.destroy();
+      this.cardExpiry.destroy();
+      this.cardCvc.destroy();
     }
-  };
 
-  if(this.cardNumber){
-    this.cardNumber.destroy();
-    this.cardExpiry.destroy();
-    this.cardCvc.destroy();
+    this.cardNumber = elements.create('cardNumber', { style });
+    this.cardExpiry = elements.create('cardExpiry', { style });
+    this.cardCvc = elements.create('cardCvc', { style });
+
+    setTimeout(() => {
+      this.cardNumber.mount('#card-number');
+      this.cardExpiry.mount('#card-expiry');
+      this.cardCvc.mount('#card-cvc');
+    });
+
   }
-
-  this.cardNumber = elements.create('cardNumber',{style});
-  this.cardExpiry = elements.create('cardExpiry',{style});
-  this.cardCvc = elements.create('cardCvc',{style});
-
-  setTimeout(()=>{
-    this.cardNumber.mount('#card-number');
-    this.cardExpiry.mount('#card-expiry');
-    this.cardCvc.mount('#card-cvc');
-  });
-
-}
 
   /* UPDATE CARD */
-  async updateCard(){
+updatingCard = false;
 
-    this.billingService.createSetupIntent()
-      .subscribe(async(res:any)=>{
+async updateCard(){
 
-        const result=await this.stripe.confirmCardSetup(
-          res.clientSecret,
-          { payment_method:{ card:this.cardNumber } }
-        );
+  if(this.updatingCard) return;
+  this.updatingCard = true;
 
-        if(result.error){
-          this.toast.error(result.error.message || 'Card failed');
-          return;
+  this.billingService.createSetupIntent()
+    .subscribe(async (res:any)=>{
+
+      const result = await this.stripe.confirmCardSetup(
+        res.clientSecret,
+        {
+          payment_method:{
+            card:this.cardNumber
+          }
         }
+      );
 
-        const paymentMethodId=result.setupIntent.payment_method;
+      this.updatingCard = false;
 
-        this.billingService.setDefaultCard(paymentMethodId)
-          .subscribe({
-            next:()=>{
-              this.toast.success('Card updated');
-              this.closeCardModal();
+      if(result.error){
+        this.toast.error(result.error.message || 'Card failed');
+        return;
+      }
 
-              this.billingService.getCard()
-                .subscribe(c=>this.card=c);
-            },
-            error:()=>this.toast.error('Failed to save card')
-          });
+      const paymentMethodId = result.setupIntent.payment_method;
 
-      });
+      this.billingService.setDefaultCard(paymentMethodId)
+        .subscribe({
+          next:()=>{
+            this.toast.success('Card updated');
+
+            /* destroy stripe elements */
+            this.cardNumber.destroy();
+            this.cardExpiry.destroy();
+            this.cardCvc.destroy();
+
+            /* close modal */
+            this.cardModal = false;
+
+            /* reload card */
+            this.billingService.getCard()
+              .subscribe(c => this.card = c);
+          },
+          error:()=>this.toast.error('Failed to save card')
+        });
+
+    });
+}
+
+  download(url: string) {
+    window.open(url, '_blank');
   }
 
-  download(url:string){
-    window.open(url,'_blank');
-  }
-
-  loadSubscription(){
+  loadSubscription() {
     this.billingService.getSubscription()
       .subscribe({
-        next:(res:any)=>this.subscription=res,
-        error:()=>this.toast.error('Failed to load subscription')
+        next: (res: any) => this.subscription = res,
+        error: () => this.toast.error('Failed to load subscription')
       });
   }
 
-  get renewalMessage(){
+  get renewalMessage() {
 
-    if(!this.subscription){
-      return {title:'',description:''};
+    if (!this.subscription) {
+      return { title: '', description: '' };
     }
 
-    const date=new Date(this.subscription.subscriptionEnd).toLocaleDateString();
+    const date = new Date(this.subscription.subscriptionEnd).toLocaleDateString();
 
-    if(this.subscription.autoRenew){
-      return{
-        title:`Your annual subscription is paid until ${date}, and the automatic renewal is on.`,
-        description:`You can cancel the automatic renewal by clicking on the button below.`
+    if (this.subscription.autoRenew) {
+      return {
+        title: `Your annual subscription is paid until ${date}, and the automatic renewal is on.`,
+        description: `You can cancel the automatic renewal by clicking on the button below.`
       };
     }
 
-    return{
-      title:`Your annual subscription is paid until ${date}, and the automatic renewal is off.`,
-      description:`One month after the end of your subscription, we will remove all your files from our database.`
+    return {
+      title: `Your annual subscription is paid until ${date}, and the automatic renewal is off.`,
+      description: `One month after the end of your subscription, we will remove all your files from our database.`
     };
   }
 }

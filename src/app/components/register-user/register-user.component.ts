@@ -3,14 +3,14 @@ import { FormBuilder, Validators, ReactiveFormsModule, FormGroup } from '@angula
 import { CommonModule } from '@angular/common';
 import { ToastrService, ToastrModule } from 'ngx-toastr';
 import { AuthApiService } from '../../service/auth-api.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { StripeService } from '../../service/stripe.service';
 import { loadStripe } from '@stripe/stripe-js';
 import { environment } from '../../environment/environment';
 @Component({
   standalone: true,
   selector: 'app-register-user',
-  imports: [CommonModule, ReactiveFormsModule, ToastrModule],
+  imports: [CommonModule, ReactiveFormsModule, ToastrModule,RouterLink],
   templateUrl: './register-user.component.html'
 })
 export class RegisterUserComponent implements OnInit {
@@ -125,12 +125,10 @@ export class RegisterUserComponent implements OnInit {
     });
     const pending = localStorage.getItem('pending_payment');
 
-    if (pending === 'true') {
+    if (pending === 'true' && !this.checkoutInstance) {
       setTimeout(() => {
-        if (!this.checkoutInstance) {
-          this.openCheckout();
-        }
-      }, 200);
+        this.openCheckout();
+      }, 300);
     }
     this.form.valueChanges.subscribe(data => {
       if (!this.form.disabled) {
@@ -186,7 +184,8 @@ export class RegisterUserComponent implements OnInit {
 
         localStorage.setItem('token', res.token);
         localStorage.setItem('pending_payment', 'true');
-
+        localStorage.setItem('userId', res.id);
+        localStorage.setItem('subscriptionStatus', res.subscriptionStatus);
         this.toast.success('Registered');
 
         this.form.disable();
@@ -199,26 +198,44 @@ export class RegisterUserComponent implements OnInit {
   }
   async openCheckout() {
 
-    if (this.loading || this.checkoutInstance) return;
+    // prevent duplicate calls
+    if (this.loading) return;
 
     this.loading = true;
     this.showCheckout = true;
 
+    // destroy previous checkout if exists
+    if (this.checkoutInstance) {
+      this.checkoutInstance.destroy();
+      this.checkoutInstance = null;
+    }
+
     this.stripe = await loadStripe(environment.stripePublishableKey);
 
-    this.stripeService.createSubscription().subscribe(async (res: any) => {
+    this.stripeService.createSubscription().subscribe({
+      next: async (res: any) => {
 
-      if (this.checkoutInstance) return; // extra safety
+        try {
 
-      const checkout = await this.stripe.initEmbeddedCheckout({
-        clientSecret: res.clientSecret
-      });
+          const checkout = await this.stripe.initEmbeddedCheckout({
+            clientSecret: res.clientSecret
+          });
 
-      this.checkoutInstance = checkout;
+          this.checkoutInstance = checkout;
 
-      checkout.mount('#subscription-checkout');
+          checkout.mount('#subscription-checkout');
 
-      this.loading = false;
+        } catch (err) {
+          console.error('Stripe checkout error:', err);
+        }
+
+        this.loading = false;
+      },
+
+      error: () => {
+        this.loading = false;
+        this.toast.error('Unable to start checkout');
+      }
     });
   }
   closeCheckout() {

@@ -12,413 +12,386 @@
 
   <div class="max-w-6xl mx-auto mt-6 border border-[#3f5f78] rounded-xl p-6">
 
-<form [formGroup]="form" (ngSubmit)="submit()" class="grid lg:grid-cols-2 gap-8">
 
-<!-- ================= LEFT PERSONAL ================= -->
+    <form [formGroup]="form" (ngSubmit)="submit()" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-<div>
+      <!-- ================= PERSONAL DETAILS ================= -->
 
-<h2 class="sectionTitle">Personal Details:</h2>
+      <div>
 
-<div class="space-y-3">
+        <h2 class="text-lg font-semibold mb-4 text-[#3f5f78]">
+          Personal Details:
+        </h2>
 
-<div class="fieldRow">
-<label class="label">First Name <span class="star">*</span></label>
-<input class="input" formControlName="firstName" />
+        <div class="space-y-4">
 
-<div class="text-red-500 text-xs"
-*ngIf="form.get('firstName')?.touched && form.get('firstName')?.invalid">
-First name is required
-</div>
+          <!-- First Name -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-</div>
+            <label class="sm:w-48">
+              First Name <span class="text-red-500">*</span>
+            </label>
 
-<div class="fieldRow">
+            <input class="input w-full" formControlName="firstName">
 
-<label class="label">Last Name <span class="star">*</span></label>
+          </div>
 
-<input class="input" formControlName="lastName" />
+          <!-- Last Name -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<div class="text-red-500 text-xs"
-*ngIf="form.get('lastName')?.touched && form.get('lastName')?.invalid">
-Last name is required
-</div>
+            <label class="sm:w-48">
+              Last Name <span class="text-red-500">*</span>
+            </label>
 
-</div>
+            <input class="input w-full" formControlName="lastName">
 
-<div class="fieldRow">
+          </div>
 
-<label class="label">
-Company Name <span class="star">*</span>
-</label>
+          <!-- Company -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<input class="input" formControlName="companyName" />
+            <label class="sm:w-48">
+              Company Name <span class="text-red-500">*</span>
+            </label>
 
-</div>
+            <input class="input w-full" formControlName="companyName">
 
-<div class="fieldRow">
+          </div>
 
-<label class="label">Owner Name</label>
+          <!-- Owner -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<input class="input" formControlName="ownerName" />
+            <label class="sm:w-48">Owner Name</label>
 
-</div>
+            <input class="input w-full" formControlName="ownerName">
 
-<div class="fieldRow">
+          </div>
 
-<label class="label">Address Line 1 <span class="star">*</span></label>
+          <!-- Address 1 -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<input class="input" formControlName="addressLine1" />
+            <label class="sm:w-48">
+              Address Line 1 <span class="text-red-500">*</span>
+            </label>
 
-<div class="text-red-500 text-xs"
-*ngIf="form.get('addressLine1')?.touched && form.get('addressLine1')?.invalid">
-Address line 1 is required
-</div>
+            <input class="input w-full" formControlName="addressLine1">
 
-</div>
+          </div>
 
-<div class="fieldRow">
+          <!-- Address 2 -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<label class="label">Address Line 2</label>
+            <label class="sm:w-48">Address Line 2</label>
 
-<input class="input" formControlName="addressLine2" />
+            <input class="input w-full" formControlName="addressLine2">
 
-</div>
+          </div>
 
-<div class="fieldRow">
+          <!-- Zip -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<label class="label">Zip Code <span class="star">*</span></label>
+            <label class="sm:w-48">
+              Zip Code <span class="text-red-500">*</span>
+            </label>
 
-<input class="input" formControlName="zip" />
+            <input class="input w-full" formControlName="zip">
 
-<div class="text-red-500 text-xs"
-*ngIf="form.get('zip')?.touched && form.get('zip')?.invalid">
-Zip code is required
-</div>
+          </div>
 
-</div>
+          <!-- City -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<div class="fieldRow">
+            <label class="sm:w-48">
+              City <span class="text-red-500">*</span>
+            </label>
 
-<label class="label">City <span class="star">*</span></label>
+            <input class="input w-full" formControlName="city">
 
-<input class="input" formControlName="city" />
+          </div>
 
-<div class="text-red-500 text-xs"
-*ngIf="form.get('city')?.touched && form.get('city')?.invalid">
-City is required
-</div>
+          <!-- State -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-</div>
+            <label class="sm:w-48">State / Region</label>
 
-<div class="fieldRow">
+            <select *ngIf="form.value.country==='USA'" class="input w-full" formControlName="state">
 
-<label class="label">
-State / Region
-<span class="star" *ngIf="form.value.country==='USA'">*</span>
-</label>
+              <option value="">Select state</option>
+              <option *ngFor="let s of usStates" [value]="s">{{s}}</option>
 
-<select *ngIf="form.value.country==='USA'" class="input" formControlName="state">
+            </select>
 
-<option value="">Select state</option>
+            <input *ngIf="form.value.country!=='USA'" class="input w-full" formControlName="state">
 
-<option *ngFor="let s of usStates" [value]="s">{{s}}</option>
+          </div>
 
-</select>
+          <!-- Country -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<input *ngIf="form.value.country!=='USA'" class="input" formControlName="state" />
+            <label class="sm:w-48">
+              Country <span class="text-red-500">*</span>
+            </label>
 
-</div>
+            <input class="input w-full" formControlName="country">
 
-<div class="fieldRow">
+          </div>
 
-<label class="label">Country <span class="star">*</span></label>
+          <!-- Phone -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<input class="input" formControlName="country" />
+            <label class="sm:w-48">Phone number</label>
 
-<div class="text-red-500 text-xs"
-*ngIf="form.get('country')?.touched && form.get('country')?.invalid">
-Country is required
-</div>
+            <input class="input w-full" formControlName="phone">
 
-</div>
+          </div>
 
-<div class="fieldRow">
+          <!-- Profession -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<label class="label">Phone number</label>
+            <label class="sm:w-48">Profession</label>
 
-<input class="input" formControlName="phone" />
+            <input class="input w-full" formControlName="profession">
 
-</div>
+          </div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<div class="fieldRow">
+            <label class="sm:w-48">How did you hear about us?</label>
 
-<label class="label">Profession</label>
+            <input class="input w-full" formControlName="refSource">
 
-<input class="input" formControlName="profession" />
+          </div>
+          <!-- Email -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-</div>
+            <label class="sm:w-48">
+              Email <span class="text-red-500">*</span>
+            </label>
 
-<div class="fieldRow">
+            <input class="input w-full" formControlName="email">
 
-<label class="label">How did you hear about us?</label>
+          </div>
 
-<input class="input" formControlName="refSource" />
+          <!-- Confirm Email -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-</div>
+            <label class="sm:w-48">
+              Confirm Email <span class="text-red-500">*</span>
+            </label>
 
-<div class="fieldRow">
+            <input class="input w-full" formControlName="confirmEmail">
 
-<label class="label">Email <span class="star">*</span></label>
+          </div>
 
-<input class="input" formControlName="email" />
+          <!-- Password -->
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<div class="text-red-500 text-xs"
-*ngIf="form.get('email')?.touched && form.get('email')?.errors?.['required']">
-Email is required
-</div>
+            <label class="sm:w-48">
+              Password <span class="text-red-500">*</span>
+            </label>
 
-<div class="text-red-500 text-xs"
-*ngIf="form.get('email')?.touched && form.get('email')?.errors?.['email']">
-Invalid email
-</div>
+            <div class="relative">
 
-</div>
+              <input [type]="showPassword ? 'text':'password'" class="input pr-14" formControlName="password" />
 
-<div class="fieldRow">
+              <span class="showBtn cursor-pointer ml-3" (click)="togglePassword()">
 
-<label class="label">Confirm Email <span class="star">*</span></label>
+                {{ showPassword ? 'HIDE' : 'SHOW' }}
 
-<input class="input" formControlName="confirmEmail" />
+              </span>
 
-<div class="text-red-500 text-xs"
-*ngIf="form.get('confirmEmail')?.touched && form.get('confirmEmail')?.invalid">
-Confirm email is required
-</div>
+            </div>
 
-</div>
+          </div>
 
-<div class="fieldRow">
+        </div>
+      </div>
 
-<label class="label">Password <span class="star">*</span></label>
+      <!-- ================= BILLING ADDRESS ================= -->
 
-<div class="relative">
+      <div class="lg:border-l lg:border-[#3f5f78] lg:pl-8">
 
-<input [type]="showPassword ? 'text':'password'" class="input pr-14"
-formControlName="password" />
+        <h2 class="text-lg font-semibold mb-4 text-[#3f5f78]">
+          Billing Address:
+        </h2>
 
-<span class="showBtn cursor-pointer ml-3" (click)="togglePassword()">
+        <div class="space-y-4">
 
-{{ showPassword ? 'HIDE' : 'SHOW' }}
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-</span>
+            <label class="sm:w-48">Company</label>
 
-</div>
+            <input class="input w-full" formControlName="billingCompany">
 
-<div class="text-red-500 text-xs"
-*ngIf="form.get('password')?.touched && form.get('password')?.invalid">
-Password is required
-</div>
+          </div>
 
-</div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-</div>
+            <label class="sm:w-48">Name</label>
 
-</div>
+            <input class="input w-full" formControlName="billingName">
 
-<!-- ================= RIGHT BILLING ================= -->
+          </div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<div class="lg:border-l lg:border-[#3f5f78] lg:pl-8">
+            <label class="sm:w-48">VAT number</label>
 
-<h2 class="sectionTitle">Billing Address:</h2>
+            <input class="input w-full" formControlName="vatNumber">
 
-<div class="space-y-3">
+          </div>
+          <div class="flex items-center gap-2">
 
-<div class="fieldRow">
+            <input type="checkbox" formControlName="billingSameAsPersonal">
 
-<label class="label">Company</label>
+            Same as personal
 
-<input class="input" formControlName="billingCompany" />
+          </div>
 
-</div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<div class="fieldRow">
+            <label class="sm:w-48">
+              Address Line 1 <span class="text-red-500">*</span>
+            </label>
 
-<label class="label">Name</label>
+            <input class="input w-full" formControlName="billingAddress1">
 
-<input class="input" formControlName="billingName" />
+          </div>
 
-</div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<div class="fieldRow">
+            <label class="sm:w-48">Address Line 2</label>
 
-<label class="label">VAT number</label>
+            <input class="input w-full" formControlName="billingAddress2">
 
-<input class="input" formControlName="vatNumber" />
+          </div>
 
-</div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<div class="flex items-center gap-2 text-sm">
+            <label class="sm:w-48">
+              Zip Code <span class="text-red-500">*</span>
+            </label>
 
-<input type="checkbox" formControlName="billingSameAsPersonal" />
+            <input class="input w-full" formControlName="billingZip">
 
-Same as personal
+          </div>
 
-</div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<div class="fieldRow">
+            <label class="sm:w-48">
+              City <span class="text-red-500">*</span>
+            </label>
 
-<label class="label">Address Line 1 <span class="star">*</span></label>
+            <input class="input w-full" formControlName="billingCity">
 
-<input class="input" formControlName="billingAddress1" />
+          </div>
 
-<div class="text-red-500 text-xs"
-*ngIf="form.get('billingAddress1')?.touched && form.get('billingAddress1')?.invalid">
-Billing address is required
-</div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-</div>
+            <label class="sm:w-48">State / Region</label>
 
-<div class="fieldRow">
+            <input class="input w-full" formControlName="billingState">
 
-<label class="label">Address Line 2</label>
+          </div>
 
-<input class="input" formControlName="billingAddress2" />
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-</div>
+            <label class="sm:w-48">
+              Country <span class="text-red-500">*</span>
+            </label>
 
-<div class="fieldRow">
+            <input class="input w-full" formControlName="billingCountry">
 
-<label class="label">Zip Code <span class="star">*</span></label>
+          </div>
 
-<input class="input" formControlName="billingZip" />
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 
-<div class="text-red-500 text-xs"
-*ngIf="form.get('billingZip')?.touched && form.get('billingZip')?.invalid">
-Billing zip is required
-</div>
+            <label class="sm:w-48">Phone number</label>
 
-</div>
+            <input class="input w-full" formControlName="billingPhone">
 
-<div class="fieldRow">
+          </div>
 
-<label class="label">City <span class="star">*</span></label>
+        </div>
+      </div>
 
-<input class="input" formControlName="billingCity" />
+      <!-- SAVE BUTTON -->
 
-<div class="text-red-500 text-xs"
-*ngIf="form.get('billingCity')?.touched && form.get('billingCity')?.invalid">
-Billing city is required
-</div>
+      <div class="lg:col-span-2 flex justify-center mt-8">
 
-</div>
+        <button type="submit" class="bg-[#3f5f78] text-white px-10 py-3 rounded-lg w-full sm:w-auto">
 
-<div class="fieldRow">
+          SAVE
 
-<label class="label">State / Region</label>
+        </button>
 
-<input class="input" formControlName="billingState" />
+      </div>
 
-</div>
+    </form>
+    <div class="max-w-6xl mx-auto text-[#466d94] text-sm space-y-4 mt-10 mb-6">
 
-<div class="fieldRow">
+      <p>
+        <span class="font-semibold uppercase">
+          Your subscription:
+        </span>
+        "one-year subscription and five tokens", 45usd
+      </p>
 
-<label class="label">Country <span class="star">*</span></label>
+      <p>
+        You are covered by our 14-day money-back guarantee.
+      </p>
 
-<input class="input" formControlName="billingCountry" />
+      <p>
+        You will be billed every year, unless you cancel.
+        You can cancel at any time.
+      </p>
 
-<div class="text-red-500 text-xs"
-*ngIf="form.get('billingCountry')?.touched && form.get('billingCountry')?.invalid">
-Billing country is required
-</div>
+      <p>
+        If you want to buy additional tokens, at 1usd each,
+        please select a quantity (from 5 to 100):
+      </p>
 
-</div>
+      <p>
+        If you want to buy additional tokens, at 1usd each,
+        please select a quantity (from 5 to 100):
+      </p>
 
-<div class="fieldRow">
+      <!-- INFO LINE -->
+      <div class="flex items-center gap-2 text-[#466d94]">
+        <span class="text-lg">ℹ️</span>
+        <span>coupon benefits will appear here</span>
+      </div>
 
-<label class="label">Phone number</label>
+      <!-- TERMS -->
+      <p>
+        By signing up, you agree to My Copyright Evidence's
 
-<input class="input" formControlName="billingPhone" />
+        <a routerLink="/terms" target="_blank" class="text-green-600 underline">
+          Terms of Service
+        </a>
 
-</div>
+        and
 
-</div>
+        <a routerLink="/privacy" target="_blank" class="text-green-600 underline">
+          Privacy Statement
+        </a>.
 
-</div>
+      </p>
 
-<div class="col-span-2 flex justify-center mt-6">
-
-<button type="submit" class="bg-[#3f5f78] text-white px-10 py-2 rounded-lg">
-
-SAVE
-
-</button>
-
-</div>
-
-</form>
-  <div class="max-w-6xl mx-auto text-[#466d94] text-sm space-y-4 mt-10 mb-6">
-
-    <p>
-      <span class="font-semibold uppercase">
-        Your subscription:
-      </span>
-      "one-year subscription and five tokens", 45usd
-    </p>
-
-    <p>
-      You are covered by our 14-day money-back guarantee.
-    </p>
-
-    <p>
-      You will be billed every year, unless you cancel.
-      You can cancel at any time.
-    </p>
-
-    <p>
-      If you want to buy additional tokens, at 1usd each,
-      please select a quantity (from 5 to 100):
-    </p>
-
-    <p>
-      If you want to buy additional tokens, at 1usd each,
-      please select a quantity (from 5 to 100):
-    </p>
-
-    <!-- INFO LINE -->
-    <div class="flex items-center gap-2 text-[#466d94]">
-      <span class="text-lg">ℹ️</span>
-      <span>coupon benefits will appear here</span>
     </div>
 
-    <!-- TERMS -->
-    <p>
-      By signing up, you agree to My Copyright Evidence's
-      <a href="#" target="_blank" class="text-green-600 underline">
-        Term of Service
-      </a>
-      and
-      <a href="#" target="_blank" class="text-green-600 underline">
-        Privacy Statement
-      </a>.
-    </p>
+    <!-- STRIPE INLINE SECTION -->
+    <div *ngIf="showCheckout" class="max-w-6xl mx-auto mt-12 mb-20 border border-[#3f5f78] rounded-xl p-6 bg-white">
 
+      <div class="text-lg font-semibold text-center mb-6">
+        Complete subscription — billed yearly
+      </div>
+
+      <div *ngIf="loading" class="text-center text-gray-500 py-10">
+        Loading checkout...
+      </div>
+
+      <div id="subscription-checkout" class="min-h-[650px]"></div>
+
+    </div>
   </div>
-
-  <!-- STRIPE INLINE SECTION -->
-  <div *ngIf="showCheckout" class="max-w-6xl mx-auto mt-12 mb-20 border border-[#3f5f78] rounded-xl p-6 bg-white">
-
-    <div class="text-lg font-semibold text-center mb-6">
-      Complete subscription — billed yearly
-    </div>
-
-    <div *ngIf="loading" class="text-center text-gray-500 py-10">
-      Loading checkout...
-    </div>
-
-    <div id="subscription-checkout" class="min-h-[650px]"></div>
-
-  </div>
-</div>
 </div>
 <!-- CHECKOUT MODAL -->

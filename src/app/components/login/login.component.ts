@@ -47,22 +47,20 @@ export class LoginComponent implements OnInit {
 
     this.api.login(this.loginForm.value).subscribe({
 
-      next: (res) => {
-        localStorage.setItem('userId', res.id);
-        localStorage.setItem('subscriptionStatus', res.subscriptionStatus);   // ⭐ add
-        localStorage.setItem('tokens', res.tokens);
+ next: (res) => {
 
-        this.auth.login(res.token);
-        /* SAVE TOKEN */
-        this.auth.login(res.token);
+  localStorage.setItem('token', res.token);
+  localStorage.setItem('userId', res.id);
+  localStorage.setItem('subscriptionStatus', res.subscriptionStatus);
+  localStorage.setItem('tokens', String(res.tokens));
 
-        this.toast.success('Login success');
+  this.auth.login(res.token);
 
-        /* REDIRECT DASHBOARD */
-        this.router.navigate(['/dashboard']);
+  this.toast.success('Login success');
+  this.router.navigate(['/dashboard']);
 
-        this.loading = false;
-      },
+  this.loading = false;
+},
 
       error: e => {
         this.toast.error(e.error?.message || 'Login failed');

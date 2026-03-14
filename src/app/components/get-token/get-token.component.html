@@ -2,16 +2,16 @@
 
   <!-- TITLE -->
   <div class="bg-[#466d94] text-white px-6 py-3 flex justify-between mx-1">
-        <h2 class="text-red-500 font-semibold text-lg">Buy Token</h2>
-        <div class="text-lg font-semibold">
-            {{tokens}} Remaining Tokens - Next subscription billing on {{billingDate | date:'dd MMM yyyy'}}</div>
+    <h2 class="text-red-500 font-semibold text-lg">Buy Token</h2>
+    <div class="text-lg font-semibold">
+      {{tokens}} Remaining Tokens - Next subscription billing on {{billingDate | date:'dd MMM yyyy'}}
     </div>
+  </div>
 
-  <!-- WRAPPER -->
   <div class="max-w-5xl mx-auto px-4 py-10">
 
-    <!-- ACTIVE -->
-    <div *ngIf="subscriptionActive; else noSub">
+    <!-- SHOW ONLY IF SUBSCRIPTION ACTIVE -->
+    <div>
 
       <!-- SELECT -->
       <div class="mb-8">
@@ -23,9 +23,11 @@
           [(ngModel)]="quantity"
           (change)="changeQty()"
           class="border px-3 py-2 bg-white rounded w-44 shadow-sm">
+
           <option *ngFor="let q of quantities" [value]="q">
             {{q}}
           </option>
+
         </select>
       </div>
 
@@ -36,7 +38,6 @@
           Payment Summary & Checkout
         </div>
 
-        <!-- SUMMARY -->
         <div class="max-w-md mx-auto mb-8 space-y-3 text-sm">
 
           <div class="flex justify-between">
@@ -56,35 +57,14 @@
 
         </div>
 
-        <!-- STRIPE -->
         <div id="checkout" class="min-h-[620px]"></div>
 
       </div>
 
-   
-
     </div>
 
-    <!-- NO SUB -->
-    <ng-template #noSub>
-      <div class="max-w-lg mx-auto bg-white p-10 rounded-xl shadow-lg text-center mt-10">
-
-        <p class="font-semibold text-lg mb-4">
-          Subscription Required
-        </p>
-
-        <p class="text-sm text-gray-600 mb-6">
-          Activate your subscription first to receive 5 complimentary tokens and unlock token purchases.
-        </p>
-
-        <a
-          routerLink="/pricing"
-          class="inline-block bg-[#466e92] text-white px-6 py-2 rounded shadow cursor-pointer">
-          Subscribe Now
-        </a>
-
-      </div>
-    </ng-template>
+ 
 
   </div>
+
 </div>

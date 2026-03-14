@@ -1,24 +1,32 @@
 <div class="bg-[#cfe6ef] min-h-screen">
 
-  <div class="bg-[#466e92] text-white px-6 py-3 text-lg font-semibold mx-1">
+  <!-- HEADER -->
+  <div class="bg-[#466e92] text-white px-4 sm:px-6 py-3 text-base sm:text-lg font-semibold mx-1">
     Log In
   </div>
 
-  <div class="flex justify-center mt-24">
+  <!-- CENTER CONTAINER -->
+  <div class="flex justify-center items-start sm:items-center mt-10 sm:mt-16 lg:mt-24 px-4">
 
-    <form [formGroup]="loginForm" (ngSubmit)="submit()"
-      class="w-[540px] bg-[#cfe6ef] border border-[#466d94] rounded-xl shadow-lg p-8">
+    <form
+      [formGroup]="loginForm"
+      (ngSubmit)="submit()"
+      class="w-full max-w-[540px] bg-[#c5dee8] border border-[#466d94] rounded-xl shadow-lg p-5 sm:p-6 lg:p-8">
 
       <!-- EMAIL -->
-      <div class="fieldRow mb-5">
+      <div class="sm:fieldRow mb-4 sm:mb-5">
         <label class="label">
           Email <span class="star">*</span>
         </label>
-        <input class="input w-full" formControlName="email" autocomplete="off" />
+
+        <input
+          class="input w-full"
+          formControlName="email"
+          autocomplete="off"/>
       </div>
 
       <!-- PASSWORD -->
-      <div class="fieldRow mb-8">
+      <div class="sm:fieldRow mb-6 sm:mb-8">
 
         <label class="label">
           Password <span class="star">*</span>
@@ -26,32 +34,60 @@
 
         <div class="relative flex-1">
 
-          <input [type]="showPassword ? 'text':'password'" class="input pr-12 w-full" formControlName="password"
-            autocomplete="off" />
+          <input
+            [type]="showPassword ? 'text':'password'"
+            class="input pr-12 w-full"
+            formControlName="password"
+            autocomplete="off"/>
 
-          <button type="button" class="absolute right-3 top-2" (click)="togglePassword()">
+          <button
+            type="button"
+            class="absolute right-3 top-2"
+            (click)="togglePassword()">
 
-            <!-- SHOW ICON (Eye Open) -->
-            <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-600" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5
-               c4.477 0 8.268 2.943 9.542 7
-               -1.274 4.057-5.065 7-9.542 7
-               -4.477 0-8.268-2.943-9.542-7z" />
+            <!-- SHOW ICON -->
+            <svg *ngIf="!showPassword"
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-5 h-5 text-gray-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor">
+
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0" />
+
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5
+                       c4.477 0 8.268 2.943 9.542 7
+                       -1.274 4.057-5.065 7-9.542 7
+                       -4.477 0-8.268-2.943-9.542-7z" />
             </svg>
 
-            <!-- HIDE ICON (Eye Slash) -->
-            <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-600" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19
-               c-4.477 0-8.268-2.943-9.542-7
-               a9.956 9.956 0 012.042-3.362M6.42 6.42
-               A9.956 9.956 0 0112 5
-               c4.477 0 8.268 2.943 9.542 7
-               a9.956 9.956 0 01-4.043 5.21M15 12a3 3 0 00-4.243-2.829
-               M9.88 9.88L14.12 14.12M3 3l18 18" />
+            <!-- HIDE ICON -->
+            <svg *ngIf="showPassword"
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-5 h-5 text-gray-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor">
+
+              <path stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13.875 18.825A10.05 10.05 0 0112 19
+                       c-4.477 0-8.268-2.943-9.542-7
+                       a9.956 9.956 0 012.042-3.362
+                       M6.42 6.42
+                       A9.956 9.956 0 0112 5
+                       c4.477 0 8.268 2.943 9.542 7
+                       a9.956 9.956 0 01-4.043 5.21
+                       M15 12a3 3 0 00-4.243-2.829
+                       M9.88 9.88L14.12 14.12
+                       M3 3l18 18"/>
             </svg>
 
           </button>
@@ -61,10 +97,21 @@
 
       <!-- BUTTON -->
       <div class="flex justify-end">
-        <button type="submit" [disabled]="loading"
-          class="bg-[#4a7bd8] hover:bg-[#3c6bcc] text-white px-12 py-3 rounded-lg font-semibold">
+
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="bg-[#4a7bd8] hover:bg-[#3c6bcc] text-white
+                 px-6 sm:px-10 lg:px-12
+                 py-2.5 sm:py-3
+                 rounded-lg font-semibold
+                 text-sm sm:text-base
+                 w-full sm:w-auto">
+
           {{ loading ? 'Logging...' : 'Login' }}
+
         </button>
+
       </div>
 
     </form>

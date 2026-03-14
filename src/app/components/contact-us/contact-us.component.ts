@@ -1,7 +1,7 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import emailjs from '@emailjs/browser';
+import { WorkService } from '../../service/work-service.service';
 
 @Component({
   selector: 'app-contact-us',
@@ -22,6 +22,8 @@ export class ContactUsComponent {
     message: ''
   };
 
+  constructor(private workService: WorkService) {}
+
   submit(formRef: any) {
 
     if (!this.form.name || !this.form.email || !this.form.subject || !this.form.message) {
@@ -32,32 +34,21 @@ export class ContactUsComponent {
     this.successMessage = '';
     this.errorMessage = '';
 
-    emailjs.send(
-      'YOUR_SERVICE_ID',
-      'YOUR_TEMPLATE_ID',
-      {
-        to_email: 'chaim.miller@outlook.com', // client test email
-        from_name: this.form.name,
-        from_email: this.form.email,
-        subject: this.form.subject,
-        message: this.form.message
+    this.workService.contactUs(this.form).subscribe({
+
+      next: () => {
+        this.successMessage = 'Your message has been sent successfully.';
+        this.loading = false;
+        formRef.resetForm();
       },
-      'YOUR_PUBLIC_KEY'
-    )
-    .then(() => {
 
-      this.successMessage = 'Your message has been sent successfully.';
-      this.loading = false;
+      error: () => {
+        this.errorMessage = 'Something went wrong. Please try again.';
+        this.loading = false;
+      }
 
-      formRef.resetForm(); // properly clears form
-
-    })
-    .catch((error) => {
-
-      this.errorMessage = 'Something went wrong. Please try again.';
-      this.loading = false;
-
-      console.error(error);
     });
+
   }
+
 }

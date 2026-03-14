@@ -19,7 +19,7 @@ export class WorkService {
   private registerUrl = '/users';
   private uploadFileUrl = '/works/upload';
   private workListUrl = '/works';
-
+private contactUrl = '/contact';
   constructor(private http: HttpClient) { }
 
   /* ================= WORKS ================= */
@@ -118,4 +118,7 @@ export class WorkService {
   verifyShare(shareId: string, password: string) {
     return this.http.post(`${this.apiUrl}/shares/${shareId}`, { password })
   }
+  contactUs(body: any): Observable<any> {
+  return this.http.post(`${this.apiUrl}${this.contactUrl}`, body);
+}
 }

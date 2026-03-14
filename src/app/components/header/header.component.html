@@ -1,11 +1,10 @@
+<div class="add h-6 bg-[#d5e8ef]"></div>
 
-<div class="add h-6 bg-[#d5e8ef]">
-</div>
 <header class="shadow-md bg-[#b6d4ee]">
   <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
 
     <!-- LEFT -->
-    <div class="flex items-center gap-3 ">
+    <div class="flex items-center gap-3">
 
       <a routerLink="/" class="text-white font-semibold leading-tight">
         <div class="text-lg sm:text-xl lg:text-3xl">
@@ -18,7 +17,8 @@
     <!-- RIGHT (desktop) -->
 
     <!-- NOT LOGGED -->
-    <div class="hidden sm:flex items-center gap-3" *ngIf="!(auth.isLoggedIn$ | async) || isPendingPayment()"  >
+    <div class="hidden sm:flex items-center gap-3"
+         *ngIf="!(auth.isLoggedIn$ | async) || isPendingPayment()">
 
       <a routerLink="/register"
         class="px-4 py-2 rounded-full bg-[#6F93AD] text-white text-sm font-medium hover:bg-[#5d819c] transition">
@@ -35,9 +35,9 @@
              stroke="currentColor"
              stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round"
-                d="M12 11c1.657 0 3-1.343 3-3V7a3 3 0 10-6 0v1c0 1.657 1.343 3 3 3z" />
+                d="M12 11c1.657 0 3-1.343 3-3V7a3 3 0 10-6 0v1c0 1.657 1.343 3 3 3z"/>
           <path stroke-linecap="round" stroke-linejoin="round"
-                d="M5 11h14v10H5z" />
+                d="M5 11h14v10H5z"/>
         </svg>
 
         Log in
@@ -46,27 +46,32 @@
     </div>
 
     <!-- LOGGED -->
-    <div class="hidden sm:flex items-center gap-4" *ngIf="auth.isLoggedIn$ | async">
+    <div class="hidden sm:flex items-center gap-4"
+         *ngIf="auth.isLoggedIn$ | async">
 
-      <!-- USER NAME -->
       <div class="text-[#3F5F78] font-semibold">
         {{ user?.firstName }} {{ user?.lastName }}
       </div>
 
-    
-
     </div>
 
     <!-- MOBILE -->
-
-    <div class="sm:hidden">
+    <div class="sm:hidden flex items-center gap-2">
 
       <!-- NOT LOGGED -->
-      <a *ngIf="!(auth.isLoggedIn$ | async) || isPendingPayment()"
-         routerLink="/login"
-         class="text-[#3F5F78] text-sm font-semibold">
-        Login
-      </a>
+      <ng-container *ngIf="!(auth.isLoggedIn$ | async) || isPendingPayment()">
+
+        <a routerLink="/register"
+           class="px-3 py-1 rounded-full bg-[#6F93AD] text-white text-xs font-medium">
+          Sign up
+        </a>
+
+        <a routerLink="/login"
+           class="px-3 py-1 rounded-full bg-[#3F5F78] text-white text-xs font-medium">
+          Login
+        </a>
+
+      </ng-container>
 
       <!-- LOGGED -->
       <div *ngIf="auth.isLoggedIn$ | async"

@@ -1,82 +1,130 @@
 <div class="bg-[#d5e8ef] min-h-screen">
 
   <!-- HEADER -->
-  <div class="bg-[#466d94] text-white px-6 py-3 flex justify-between mx-1">
-    <h2 class="text-red-500 font-semibold text-lg"> Billing, Automatic Renewal and Credit Cards
+  <div
+    class="bg-[#466d94] text-white px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mx-1">
+
+    <h2 class="text-red-500 font-semibold text-base sm:text-lg">
+      Billing, Automatic Renewal and Credit Cards
     </h2>
-    <div class="text-lg font-semibold">
-      {{tokens}} Remaining Tokens - Next subscription billing on {{billingDate | date:'dd MMM yyyy'}}</div>
+
+    <div class="text-sm sm:text-lg font-semibold">
+      {{tokens}} Remaining Tokens - Next subscription billing on
+      {{billingDate | date:'dd MMM yyyy'}}
+    </div>
+
   </div>
 
-  <div class="max-w-7xl mx-auto p-8 text-[#3f5f78] space-y-12">
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 text-[#3f5f78] space-y-10">
 
     <!-- SUBSCRIPTION -->
     <div class="space-y-4">
 
       <p>{{ renewalMessage.title }}</p>
 
-      <p class="text-sm text-[#3f5f78]">
+      <p class="text-sm">
         {{ renewalMessage.description }}
       </p>
 
-      <button *ngIf="subscription?.autoRenew" (click)="cancel()" class="bg-[#3f5f78] text-white px-6 py-2 rounded-lg">
+      <button *ngIf="subscription?.autoRenew" (click)="cancel()"
+        class="bg-[#3f5f78] text-white px-6 py-2 rounded-lg w-full sm:w-auto">
+
         CANCEL SUBSCRIPTION
+
       </button>
 
-      <button *ngIf="!subscription?.autoRenew" (click)="resume()" class="bg-green-600 text-white px-6 py-2 rounded-lg">
+      <button *ngIf="!subscription?.autoRenew" (click)="resume()"
+        class="bg-green-600 text-white px-6 py-2 rounded-lg w-full sm:w-auto">
+
         RESUME SUBSCRIPTION
+
       </button>
 
     </div>
+
 
     <!-- CARD -->
     <div class="space-y-4">
-      <p *ngIf="card">
+
+      <p *ngIf="card" class="text-sm sm:text-base">
+
         Current Card:
         {{card.brand | uppercase}} ending {{card.last4}}
         (Exp {{card.expMonth}}/{{card.expYear}})
+
       </p>
 
-      <button (click)="openCardModal()" class="bg-[#3f5f78] text-white px-6 py-2 rounded-lg">
+      <button (click)="openCardModal()" class="bg-[#3f5f78] text-white px-6 py-2 rounded-lg w-full sm:w-auto">
+
         UPDATE CARD DETAILS
+
       </button>
+
     </div>
+
 
     <!-- INVOICES -->
-    <div class="space-y-6">
+   <!-- INVOICES -->
+<div class="space-y-6">
 
-      <h3 class="font-semibold">Invoice list</h3>
+<h3 class="font-semibold">Invoice list</h3>
 
-      <div class="grid grid-cols-4 font-semibold">
-        <div>DATE</div>
-        <div>ID</div>
-        <div>AMOUNT</div>
-        <div></div>
-      </div>
-
-      <div *ngFor="let i of invoices" class="grid grid-cols-4 items-center">
-        <div>{{i.date*1000 | date}}</div>
-        <div>{{i.id}}</div>
-        <div>{{i.amount}} {{i.currency}}</div>
-
-        <button (click)="download(i.invoicePdf)" class="bg-[#3f5f78] text-white px-5 py-2 rounded-lg">
-          DOWNLOAD
-        </button>
-      </div>
-
-    </div>
-
-  </div>
+<!-- HEADER -->
+<div class="hidden md:grid grid-cols-4 font-semibold text-[#3f5f78]">
+  <div>DATE</div>
+  <div>ID</div>
+  <div>AMOUNT</div>
+  <div></div>
 </div>
 
-<!-- MODAL -->
-<!-- MODAL -->
-<div *ngIf="cardModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+<!-- ROWS -->
+<div *ngFor="let i of invoices"
+     class="grid grid-cols-1 md:grid-cols-4 items-center gap-3 py-3 border-b text-[#3f5f78]">
 
-  <div class="bg-[#d5e8ef] rounded-xl shadow-xl w-[360px] p-6 relative">
+  <!-- DATE -->
+  <div class="text-sm">
+    {{ i.date | date:'dd MMM yyyy' }}
+  </div>
+
+  <!-- ID -->
+  <div class="break-all">
+    {{ i.id }}
+  </div>
+
+  <!-- AMOUNT -->
+  <div>
+    {{ i.amount }} {{ i.currency | uppercase }}
+  </div>
+
+  <!-- DOWNLOAD -->
+  <button
+    (click)="download(i.invoicePdf)"
+    class="bg-[#3f5f78] text-white px-5 py-2 rounded-lg w-full md:w-auto">
+
+    DOWNLOAD
+
+  </button>
+
+</div>
+
+</div>
+
+  </div>
+
+</div>
+
+
+
+<!-- CARD MODAL -->
+<div *ngIf="cardModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
+
+  <div class="bg-[#d5e8ef] rounded-xl shadow-xl w-full max-w-sm p-6 relative">
 
     <button (click)="closeCardModal()" class="absolute right-3 top-2 text-gray-400 hover:text-black">
+
       ✕
+
     </button>
 
     <h3 class="text-center font-semibold text-lg mb-1">
@@ -88,16 +136,22 @@
     </p>
 
     <!-- CARD NUMBER -->
-    <div id="card-number" class="border rounded mb-3 bg-white p-1"></div>
+    <div id="card-number" class="border rounded mb-3 bg-white p-2"></div>
 
     <div class="grid grid-cols-2 gap-3 mb-4">
-      <div id="card-expiry" class="border rounded bg-white p-1"></div>
-      <div id="card-cvc" class="border rounded bg-white p-1"></div>
+
+      <div id="card-expiry" class="border rounded bg-white p-2"></div>
+
+      <div id="card-cvc" class="border rounded bg-white p-2"></div>
+
     </div>
 
     <button (click)="updateCard()" class="bg-[#3f5f78] text-white w-full py-2 rounded shadow">
+
       Update Card Details
+
     </button>
 
   </div>
+
 </div>

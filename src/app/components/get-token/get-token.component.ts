@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-buy-tokens',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule],
   templateUrl: './get-token.component.html'
 })
 export class GetTokenComponent implements OnInit {
@@ -34,6 +34,7 @@ export class GetTokenComponent implements OnInit {
   constructor(private stripeService: StripeService, private workService: WorkService) { }
 
   ngOnInit() {
+    console.log("Stripe Publishable Key:", this.stripeKey);
     this.workService.getTokenDetails()
       .subscribe((res: any) => {
 
@@ -54,27 +55,52 @@ export class GetTokenComponent implements OnInit {
     });
   }
 
-  async initCheckout() {
+ async initCheckout() {
 
-    this.stripe = await loadStripe(this.stripeKey);
+  // prevent multiple checkout instances
+  if (this.checkoutInstance) {
+    this.checkoutInstance.destroy();
+    this.checkoutInstance = null;
+  }
 
-    this.stripeService.getClientSecret(this.quantity)
-      .subscribe(async (res: any) => {
-        console.log("STRIPE RESPONSE 👉", res);
+  this.stripe = await loadStripe(this.stripeKey);
 
-        const checkout = await this.stripe.initEmbeddedCheckout({
-          clientSecret: res.clientSecret
-        });
+  this.stripeService.getClientSecret(this.quantity)
+    .subscribe(async (res: any) => {
 
-        this.checkoutInstance = checkout;
-        checkout.mount('#checkout');
+      const checkout = await this.stripe.initEmbeddedCheckout({
+        clientSecret: res.clientSecret
       });
+
+      this.checkoutInstance = checkout;
+
+      checkout.mount('#checkout');
+
+      checkout.on('complete', () => {
+        checkout.destroy();
+        this.checkoutInstance = null;
+
+        // refresh tokens after purchase
+        this.workService.getTokenDetails()
+          .subscribe((res:any)=>{
+            this.tokens = res.remainingTokens;
+          });
+      });
+
+    });
+
+}
+
+changeQty() {
+
+  if (this.checkoutInstance) {
+    this.checkoutInstance.destroy();
+    this.checkoutInstance = null;
   }
 
-  changeQty() {
-    if (this.checkoutInstance) {
-      this.checkoutInstance.destroy();
-    }
+  setTimeout(() => {
     this.initCheckout();
-  }
+  }, 100);
+
+}
 }

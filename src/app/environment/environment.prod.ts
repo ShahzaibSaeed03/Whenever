@@ -2,5 +2,5 @@ export const environment = {
   production: true,
   apiUrl: 'https://mycopyrightlybackend-d4htk.ondigitalocean.app/api',
   // apiUrl:'http://localhost:5000/api',
-  stripePublishableKey:'pk_test_51R4haHLIxobea5p9MB1Po7qydXzckU1Xnv5PIgvDoEYnp9CwT4UEm23xpegbORk4lELoAUH3ietslmpte7GqrXJ300BeDPsC0l'
+  stripePublishableKey: 'pk_test_51T3MflDxGM1NMeB9ZoTqkYeHc3eisLhTg3hz6JWQk1UMTaIAq888JQqVg9UveF3urVocsBsF9xcFnBtN7xIOnQgw00zKNJZezC'
 };
