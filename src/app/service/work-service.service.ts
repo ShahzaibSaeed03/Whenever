@@ -81,6 +81,9 @@ private contactUrl = '/contact';
   }
 
   /* ================= SHARE ================= */
+getSharedWork(shareId: string){
+  return this.http.get(`${this.apiUrl}/shares/${shareId}`);
+}
 
   shareWork(workId: string, password: string) {
     return this.http.post(`${this.apiUrl}/shares/create`, { workId, password });

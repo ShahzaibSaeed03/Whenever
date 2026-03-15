@@ -1,86 +1,68 @@
 <!-- GLOBAL HEADER -->
 <div class="bg-[#466d94] text-white h-12 px-6 py-3 flex justify-between">
-      <span class="font-semibold">View Work</span>
-
+  <span class="font-semibold">View Work</span>
 </div>
 
+<!-- CERTIFICATE VIEW -->
+<div *ngIf="work" class="min-h-screen flex items-center justify-center px-4 py-10 bg-[#cfe6ef]">
 
-<!-- PASSWORD SCREEN -->
-<div *ngIf="!showViewer"
-     class="min-h-screen flex items-center justify-center bg-[#d5e8ef]">
+  <div class="relative w-full max-w-[470px] min-h-[650px]">
 
-  <div class="bg-white p-6 rounded w-96 shadow">
+    <img
+      [src]="certificateImg"
+      class="w-full rounded-lg shadow-lg"/>
 
-    <h2 class="font-semibold mb-4">Enter password</h2>
+    <div
+      class="absolute inset-0 z-10 text-gray-800 pt-[90px] px-[30px]">
 
-    <input
-      [(ngModel)]="password"
-      type="password"
-      class="border w-full p-2 rounded mb-4"
-      placeholder="Password"/>
+      <table class="w-full border-separate border-spacing-y-3 text-sm">
 
-    <button
-      (click)="submit()"
-      class="w-full bg-[#466d94] text-white py-2 rounded">
-      Access
-    </button>
+        <tr>
+          <td class="font-semibold pr-4 whitespace-nowrap">Work Title:</td>
+          <td>{{ work?.title }}</td>
+        </tr>
 
-  </div>
-</div>
-<div *ngIf="showViewer" class="min-h-screen">
+        <tr>
+          <td class="font-semibold pr-4 whitespace-nowrap">Copyright Owner:</td>
+          <td>{{ work?.copyright_owner }}</td>
+        </tr>
 
-</div>
+        <tr *ngIf="work?.additional_copyright_owners">
+          <td class="font-semibold pr-4 whitespace-nowrap">Additional Owners:</td>
+          <td>{{ work?.additional_copyright_owners }}</td>
+        </tr>
 
-<!-- VIEWER MODAL -->
-<div *ngIf="showViewer"
-     class="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+        <tr>
+          <td class="font-semibold pr-4 whitespace-nowrap">Reference Number:</td>
+          <td>{{ work?.displayed_ID }}</td>
+        </tr>
 
-  <div class="bg-[#d5e8ef] w-[500px] rounded-xl shadow-xl overflow-hidden">
+        <tr>
+          <td class="font-semibold pr-4 whitespace-nowrap">Registration Date:</td>
+          <td>{{ work?.registration_date | date }}</td>
+        </tr>
 
-    <!-- HEADER -->
-    <div class="bg-[#466d94] text-white px-6 py-4 flex justify-between items-center">
-      <div>
-        <div class="font-semibold text-lg">{{ work?.title }}</div>
-        <div class="text-sm opacity-80">{{ work?.file_name }}</div>
-      </div>
+        <tr>
+          <td class="font-semibold pr-4 whitespace-nowrap">Timestamp Authority:</td>
+          <td>OpenTimestamps</td>
+        </tr>
 
-      <button (click)="closeViewer()"
-              class="text-xl hover:opacity-70">
-        ✕
-      </button>
-    </div>
+        <tr>
+          <td class="font-semibold pr-4 whitespace-nowrap">File Name:</td>
+          <td class="break-all">{{ work?.file_name }}</td>
+        </tr>
 
-    <!-- BODY -->
-    <div class="px-6 py-8 text-center space-y-6">
+        <tr>
+          <td class="font-semibold pr-4 whitespace-nowrap">Fingerprint:</td>
+          <td class="font-mono text-[12px] break-all">
+            {{ work?.file_fingerprint }}
+          </td>
+        </tr>
 
-      <p class="text-[#466d94] font-medium">
-        Choose an action:
-      </p>
-
-      <div class="flex flex-col gap-3">
-
-        <button
-          (click)="download(work.downloadUrl, work.file_name)"
-          class="bg-[#6f8faf] hover:bg-[#5f7f9f] text-white py-3 rounded-lg transition">
-          Download Original File
-        </button>
-
-        <button
-          (click)="download(work.certificateUrl, 'certificate.pdf')"
-          class="bg-[#567ba1] hover:bg-[#486a8f] text-white py-3 rounded-lg transition">
-          Download Certificate
-        </button>
-
-        <button
-          *ngIf="work?.otsUrl"
-          (click)="download(work.otsUrl, 'timestamp.ots')"
-          class="bg-[#466d94] hover:bg-[#3b5f82] text-white py-3 rounded-lg transition">
-          Download OTS File
-        </button>
-
-      </div>
+      </table>
 
     </div>
 
   </div>
+
 </div>
