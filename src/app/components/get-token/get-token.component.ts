@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { StripeService } from '../../service/stripe.service';
 import { loadStripe } from '@stripe/stripe-js';
 import { environment } from '../../environment/environment';
 import { WorkService } from '../../service/work-service.service';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-buy-tokens',
@@ -13,10 +12,11 @@ import { RouterLink } from '@angular/router';
   imports: [CommonModule, FormsModule],
   templateUrl: './get-token.component.html'
 })
-export class GetTokenComponent implements OnInit {
+export class GetTokenComponent implements OnInit, OnDestroy {
 
   stripe: any;
   checkoutInstance: any = null;
+
   tokens = 0;
   billingDate = '';
   stripeKey = environment.stripePublishableKey;
@@ -26,81 +26,97 @@ export class GetTokenComponent implements OnInit {
   max = 100;
   step = 5;
 
+  subscriptionActive = false;
+
   quantities = Array.from(
     { length: (this.max - this.min) / this.step + 1 },
     (_, i) => this.min + i * this.step
-  ); subscriptionActive = false;
+  );
 
-  constructor(private stripeService: StripeService, private workService: WorkService) { }
+  constructor(
+    private stripeService: StripeService,
+    private workService: WorkService
+  ) {}
 
-  ngOnInit() {
-    console.log("Stripe Publishable Key:", this.stripeKey);
-    this.workService.getTokenDetails()
-      .subscribe((res: any) => {
+  async ngOnInit() {
 
-        this.tokens = res.remainingTokens;
-        this.billingDate = res.nextBillingDate;
+    this.stripe = await loadStripe(this.stripeKey);
 
-      });
-    this.checkSubscription()
+    this.workService.getTokenDetails().subscribe((res: any) => {
+      this.tokens = res.remainingTokens;
+      this.billingDate = res.nextBillingDate;
+    });
+
+    this.checkSubscription();
+  }
+
+  ngOnDestroy() {
+    this.destroyCheckout();
   }
 
   checkSubscription() {
     this.stripeService.getSubscriptionStatus().subscribe((res: any) => {
+
       this.subscriptionActive = !!res.nextBillingDate;
 
       if (this.subscriptionActive) {
         this.initCheckout();
       }
-    });
-  }
-
- async initCheckout() {
-
-  // prevent multiple checkout instances
-  if (this.checkoutInstance) {
-    this.checkoutInstance.destroy();
-    this.checkoutInstance = null;
-  }
-
-  this.stripe = await loadStripe(this.stripeKey);
-
-  this.stripeService.getClientSecret(this.quantity)
-    .subscribe(async (res: any) => {
-
-      const checkout = await this.stripe.initEmbeddedCheckout({
-        clientSecret: res.clientSecret
-      });
-
-      this.checkoutInstance = checkout;
-
-      checkout.mount('#checkout');
-
-      checkout.on('complete', () => {
-        checkout.destroy();
-        this.checkoutInstance = null;
-
-        // refresh tokens after purchase
-        this.workService.getTokenDetails()
-          .subscribe((res:any)=>{
-            this.tokens = res.remainingTokens;
-          });
-      });
 
     });
-
-}
-
-changeQty() {
-
-  if (this.checkoutInstance) {
-    this.checkoutInstance.destroy();
-    this.checkoutInstance = null;
   }
 
-  setTimeout(() => {
-    this.initCheckout();
-  }, 100);
+  destroyCheckout() {
 
-}
+    if (this.checkoutInstance) {
+      this.checkoutInstance.destroy();
+      this.checkoutInstance = null;
+    }
+
+    const container = document.getElementById('checkout');
+    if (container) {
+      container.innerHTML = '';
+    }
+
+  }
+
+  async initCheckout() {
+
+    this.destroyCheckout();
+
+    this.stripeService.getClientSecret(this.quantity)
+      .subscribe(async (res: any) => {
+
+        const checkout = await this.stripe.initEmbeddedCheckout({
+          clientSecret: res.clientSecret
+        });
+
+        this.checkoutInstance = checkout;
+
+        checkout.mount('#checkout');
+
+        checkout.on('complete', () => {
+
+          this.destroyCheckout();
+
+          this.workService.getTokenDetails()
+            .subscribe((res: any) => {
+              this.tokens = res.remainingTokens;
+              this.billingDate = res.nextBillingDate;
+            });
+
+          this.initCheckout();
+
+        });
+
+      });
+
+  }
+
+  changeQty() {
+    if (this.subscriptionActive) {
+      this.initCheckout();
+    }
+  }
+
 }
