@@ -3,8 +3,8 @@
   <!-- TITLE BAR -->
   <div class="bg-[#466d94] text-white px-6 py-3 flex justify-between mx-1">
     <span class="font-semibold text-lg">Verify a registration</span>
-<div class="text-lg font-semibold">
-            {{tokens}} Remaining Tokens - Next subscription billing on {{billingDate | date:'dd MMM yyyy'}}</div>   
+    <div class="text-lg font-semibold">
+      {{tokens}} Remaining Tokens - Next subscription billing on {{billingDate | date:'dd MMM yyyy'}}</div>
   </div>
 
   <!-- CENTER CONTENT -->
@@ -15,7 +15,8 @@
       <!-- Heading -->
       <div class="mb-5 sm:mb-6">
         <p class="text-md font-bold">
-          Please upload your original file, its certificate and the corresponding .ots file, and we will verify its registration.
+          Please upload your original file, its certificate and the corresponding .ots file, and we will verify its
+          registration.
         </p>
       </div>
 
@@ -26,19 +27,13 @@
         <div class="flex flex-col sm:flex-row sm:items-center gap-5">
           <label class="w-full sm:w-[20%] text-right font-bold">File to verify:</label>
 
-          <button
-            type="button"
-            class="bg-[#507897] text-white uppercase w-full sm:w-32 px-2 py-1 rounded-md"
+          <button type="button" class="bg-[#507897] text-white uppercase w-full sm:w-32 px-2 py-1 rounded-md"
             (click)="fileInput.click()">
             Choose File
           </button>
 
-          <input
-            type="text"
-            [value]="fileName"
-            readonly
-            class="w-full sm:w-[40%] border border-gray-300 rounded-md px-3 py-1 bg-white text-sm"
-          />
+          <input type="text" [value]="fileName" readonly
+            class="w-full sm:w-[40%] border border-gray-300 rounded-md px-3 py-1 bg-white text-sm" />
 
           <input type="file" #fileInput (change)="onFileChange($event, 'file')" hidden />
         </div>
@@ -47,19 +42,13 @@
         <div class="flex flex-col sm:flex-row sm:items-center gap-5">
           <label class="w-full sm:w-[20%] text-right font-bold">Certificate:</label>
 
-          <button
-            type="button"
-            class="bg-[#507897] text-white uppercase w-full sm:w-32 px-2 py-1 rounded-md"
+          <button type="button" class="bg-[#507897] text-white uppercase w-full sm:w-32 px-2 py-1 rounded-md"
             (click)="certInput.click()">
             Choose File
           </button>
 
-          <input
-            type="text"
-            [value]="certificateName"
-            readonly
-            class="w-full sm:w-[40%] border border-gray-300 rounded-md px-3 py-1 bg-white text-sm"
-          />
+          <input type="text" [value]="certificateName" readonly
+            class="w-full sm:w-[40%] border border-gray-300 rounded-md px-3 py-1 bg-white text-sm" />
 
           <input type="file" #certInput accept=".pdf" (change)="onFileChange($event,'certificate')" hidden />
         </div>
@@ -68,28 +57,20 @@
         <div class="flex flex-col sm:flex-row sm:items-center gap-5">
           <label class="w-full sm:w-[20%] text-right font-bold">.ots File:</label>
 
-          <button
-            type="button"
-            class="bg-[#507897] text-white uppercase w-full sm:w-32 px-2 py-1 rounded-md"
+          <button type="button" class="bg-[#507897] text-white uppercase w-full sm:w-32 px-2 py-1 rounded-md"
             (click)="otsInput.click()">
             Choose File
           </button>
 
-          <input
-            type="text"
-            [value]="otsFileName"
-            readonly
-            class="w-full sm:w-[40%] border border-gray-300 rounded-md px-3 py-1 bg-white text-sm"
-          />
+          <input type="text" [value]="otsFileName" readonly
+            class="w-full sm:w-[40%] border border-gray-300 rounded-md px-3 py-1 bg-white text-sm" />
 
           <input type="file" #otsInput accept=".ots" (change)="onFileChange($event,'otsFile')" hidden />
         </div>
 
         <!-- VERIFY BUTTON CENTER -->
         <div class="flex justify-center pt-2">
-          <button
-            (click)="verify()"
-            [disabled]="isVerifying"
+          <button (click)="verify()" [disabled]="isVerifying"
             class="bg-[#00ff0e] hover:bg-green-500 text-white px-12 py-2 rounded-md font-medium">
             VERIFY
           </button>
@@ -102,10 +83,9 @@
 </div>
 
 <!-- Error Overlay -->
-<div *ngIf="errorMessage" 
-     class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4 overflow-auto">
+<div *ngIf="errorMessage" class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4 overflow-auto">
   <div class="relative bg-red-50 border border-red-300 p-6 rounded-sm shadow-lg max-w-full sm:max-w-xl w-full">
-    
+
     <!-- Close button in top-right -->
     <button (click)="errorMessage=null"
       class="absolute -top-7 right-0 text-white bg-[#df1c22] hover:bg-red-700 px-3 py-1 text-sm rounded">
@@ -125,8 +105,7 @@
   <img class="loader-spinner" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/loader-spinner.png" />
 </div>
 <!-- Success Overlay -->
-<div *ngIf="successMessage"
-     class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4 overflow-auto">
+<div *ngIf="successMessage" class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 px-4 overflow-auto">
   <div class="relative bg-green-50 border border-green-300 p-6 rounded-sm shadow-lg max-w-full sm:max-w-xl w-full">
 
     <button (click)="successMessage=null"
@@ -139,6 +118,8 @@
       <span class="font-semibold text-green-600 text-lg">Status</span>
     </div>
 
-    <p class="text-[#507897]">{{ successMessage }}</p>
+    <p class="text-[#507897] whitespace-pre-line">
+      {{ successMessage }}
+    </p>
   </div>
 </div>
