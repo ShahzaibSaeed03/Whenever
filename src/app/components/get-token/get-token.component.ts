@@ -16,7 +16,7 @@ export class GetTokenComponent implements OnInit, OnDestroy {
 
   stripe: any;
   checkoutInstance: any = null;
-
+  isTokenLoaded = false;
   tokens = 0;
   billingDate = '';
   stripeKey = environment.stripePublishableKey;
@@ -36,16 +36,18 @@ export class GetTokenComponent implements OnInit, OnDestroy {
   constructor(
     private stripeService: StripeService,
     private workService: WorkService
-  ) {}
+  ) { }
 
   async ngOnInit() {
 
     this.stripe = await loadStripe(this.stripeKey);
 
-    this.workService.getTokenDetails().subscribe((res: any) => {
-      this.tokens = res.remainingTokens;
-      this.billingDate = res.nextBillingDate;
-    });
+   this.workService.getTokenDetails()
+  .subscribe((res: any) => {
+    this.tokens = res.remainingTokens;
+    this.billingDate = res.nextBillingDate;
+    this.isTokenLoaded = true; 
+  });
 
     this.checkSubscription();
   }

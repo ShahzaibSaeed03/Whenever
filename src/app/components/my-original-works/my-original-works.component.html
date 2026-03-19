@@ -7,9 +7,13 @@
 My Original Works
 </h2>
 
-<div class="text-sm sm:text-lg font-semibold">
-{{tokens}} Remaining Tokens - Next subscription billing on
-{{billingDate | date:'dd MMM yyyy'}}
+<div
+  *ngIf="isTokenLoaded"
+  class="text-sm sm:text-lg font-semibold">
+
+  {{tokens}} Remaining Tokens - Next subscription billing on
+  {{billingDate | date:'dd MMM yyyy'}}
+
 </div>
 
 </div>
@@ -110,7 +114,7 @@ Set password
 </div>
 
 <div class="cursor-pointer hover:underline"
-(click)="copyLink(item)">
+(click)="openShareModal(item)">
 Share
 </div>
 
@@ -169,7 +173,7 @@ Set password
 </div>
 
 <div class="cursor-pointer hover:underline"
-(click)="copyLink(item)">
+(click)="openShareModal(item)">
 Share
 </div>
 
@@ -198,42 +202,51 @@ Delete
 
 <!-- PASSWORD MODAL -->
 <div
-*ngIf="showPasswordModal"
-class="fixed inset-0 bg-black/40 flex justify-center items-center z-50 p-4">
+  *ngIf="showPasswordModal"
+  class="fixed inset-0 bg-black/40 flex justify-center items-center z-50 p-4">
 
-<div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md">
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
 
-<h3 class="font-semibold mb-3">
-Set password
-</h3>
+    <h2 class="text-center text-[#466d94] font-semibold mb-6">
+      Enter a password for this file:
+    </h2>
 
-<input
-[(ngModel)]="sharePassword"
-placeholder="Enter password"
-class="border w-full p-2 rounded mb-4" />
+    <!-- PASSWORD -->
+    <div class="mb-4">
+      <label class="block text-sm text-gray-600 mb-1">Password:</label>
+      <input
+        type="password"
+        [(ngModel)]="sharePassword"
+        class="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-[#466d94]" />
+    </div>
 
-<div class="flex flex-col sm:flex-row gap-2">
+    <!-- CONFIRM PASSWORD -->
+    <div class="mb-6">
+      <label class="block text-sm text-gray-600 mb-1">Password again:</label>
+      <input
+        type="password"
+        [(ngModel)]="confirmPassword"
+        class="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-[#466d94]" />
+    </div>
 
-<button
-(click)="savePassword()"
-class="flex-1 bg-[#507897] text-white py-2 rounded">
+    <!-- ACTIONS -->
+    <div class="flex flex-col gap-3">
 
-Save
+      <button
+        (click)="savePassword()"
+        class="bg-[#466d94] text-white py-2 rounded font-semibold">
+        SAVE
+      </button>
 
-</button>
+      <button
+        (click)="closeModal()"
+        class="border border-[#466d94] text-[#466d94] py-2 rounded font-semibold">
+        CANCEL
+      </button>
 
-<button
-(click)="closeModal()"
-class="flex-1 border py-2 rounded">
+    </div>
 
-Cancel
-
-</button>
-
-</div>
-
-</div>
-
+  </div>
 </div>
 
 
@@ -273,5 +286,128 @@ Cancel
 </div>
 
 </div>
+
+</div>
+
+
+<!-- SHARE MODAL -->
+<div
+  *ngIf="showShareModal"
+  class="fixed inset-0 bg-black/40 flex justify-center items-center z-50 p-4">
+
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 text-center">
+
+    <!-- TITLE -->
+    <h2 class="text-xl font-semibold text-[#466d94] mb-4">
+      Share the work
+    </h2>
+
+    <!-- DESCRIPTION -->
+    <p class="text-sm text-[#466d94] mb-4">
+      The link below will give access to this work during the next 15 days.
+      Copy it and share it (no password will be needed).
+    </p>
+
+    <!-- LINK BOX -->
+    <div class="bg-gray-100 border rounded p-3 text-blue-700 text-sm break-all mb-6">
+      {{ shareLink }}
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="flex flex-col gap-3">
+
+      <button
+        (click)="copyFromModal()"
+        class="bg-[#466d94] text-white py-2 rounded font-semibold">
+        COPY THE LINK
+      </button>
+
+      <button
+        (click)="closeShareModal()"
+        class="border border-[#466d94] text-[#466d94] py-2 rounded font-semibold">
+        CANCEL
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- CERTIFICATE MODAL -->
+<!-- CERTIFICATE MODAL -->
+<div
+  *ngIf="showCertificateModal"
+  class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4 overflow-auto">
+
+  <div class="relative w-full max-w-[470px] min-h-[650px]">
+
+    <!-- CLOSE -->
+    <button
+      (click)="closeCertificateModal()"
+      class="absolute top-2 right-2 bg-red-500 text-white rounded-md px-2 py-1 text-sm shadow z-20">
+      CLOSE
+    </button>
+
+    <!-- CERTIFICATE IMAGE -->
+    <img src="Certif.png" class="w-full rounded-lg shadow-lg" />
+
+    <!-- CONTENT (EXACT SAME STYLE) -->
+    <div class="absolute inset-0 z-10 text-gray-800 pt-[90px] px-[30px]">
+
+      <table class="w-full border-separate border-spacing-y-3 text-sm">
+
+        <tr>
+          <td class="font-semibold pr-4 whitespace-nowrap">Work Title:</td>
+          <td>{{ selectedCertificate?.workTitle }}</td>
+        </tr>
+
+        <tr>
+          <td class="font-semibold pr-4 whitespace-nowrap">Copyright Owner:</td>
+          <td>{{ selectedCertificate?.copyrightOwner }}</td>
+        </tr>
+
+        <tr *ngIf="selectedCertificate?.additionalOwners">
+          <td class="font-semibold pr-4 whitespace-nowrap">Additional Owners:</td>
+          <td>{{ selectedCertificate?.additionalOwners }}</td>
+        </tr>
+
+        <tr>
+          <td class="font-semibold pr-4 whitespace-nowrap">Reference Number:</td>
+          <td>{{ selectedCertificate?.referenceNumber }}</td>
+        </tr>
+
+        <tr>
+          <td class="font-semibold pr-4 whitespace-nowrap">Registration Date:</td>
+          <td>{{ selectedCertificate?.registrationDateFormatted }}</td>
+        </tr>
+
+        <tr>
+          <td class="font-semibold pr-4 whitespace-nowrap">Timestamp Authority:</td>
+          <td>{{ selectedCertificate?.timestampAuthority }}</td>
+        </tr>
+
+        <tr>
+          <td class="font-semibold pr-4 whitespace-nowrap">File Name:</td>
+          <td
+            class="break-all text-blue-600 cursor-pointer underline"
+            (click)="downloadAllFiles(selectedCertificate)">
+            {{ selectedCertificate?.file_name }}
+          </td>
+        </tr>
+
+        <tr>
+          <td class="font-semibold pr-4 whitespace-nowrap">Fingerprint:</td>
+          <td class="font-mono text-[12px] break-all">
+            {{ selectedCertificate?.fingerprint }}
+          </td>
+        </tr>
+
+      </table>
+
+    </div>
+
+  </div>
 
 </div>

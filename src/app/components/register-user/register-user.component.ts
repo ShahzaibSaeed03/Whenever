@@ -58,21 +58,7 @@ export class RegisterUserComponent implements OnInit {
       profession: [''],
       refSource: [''],
 
-      billingSameAsPersonal: [false],
-
-      billingCompany: [''],
-      billingName: [''],
-      vatNumber: [''],
-
-      billingAddress1: ['', Validators.required],
-      billingAddress2: [''],
-
-      billingZip: ['', Validators.required],
-      billingCity: ['', Validators.required],
-      billingState: [''],
-      billingCountry: ['', Validators.required],
-
-      billingPhone: ['']
+      
     });
 
     /* RESTORE FORM AFTER REFRESH */

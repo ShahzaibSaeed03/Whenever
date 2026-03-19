@@ -45,5 +45,24 @@ export class ViewWorkComponent implements OnInit {
       });
 
   }
+downloadAll() {
 
+  if (!this.work) return;
+
+  // Original file
+  this.download(this.work.downloadUrl, this.work.file_name);
+
+  // Certificate PDF
+  this.download(
+    this.work.certificateUrl,
+    `Certificate-${this.work.displayed_ID}.pdf`
+  );
+
+  // OTS file
+  this.download(
+    this.work.otsUrl,
+    `Timestamp-${this.work.displayed_ID}.ots`
+  );
+
+}
 }

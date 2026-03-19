@@ -37,12 +37,13 @@ export class HomeComponent implements OnInit {
 
     });
   }
-
+isTokenLoaded = false;
   loadTokenData() {
-    this.workService.getTokenDetails()
-      .subscribe((res: any) => {
-        this.tokens = res.remainingTokens;
-        this.billingDate = res.nextBillingDate;
-      });
+  this.workService.getTokenDetails()
+  .subscribe((res: any) => {
+    this.tokens = res.remainingTokens;
+    this.billingDate = res.nextBillingDate;
+    this.isTokenLoaded = true; // ✅ mark loaded
+  });
   }
 }

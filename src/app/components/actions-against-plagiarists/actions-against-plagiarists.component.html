@@ -1,273 +1,272 @@
 <div class="w-full bg-[#d0e1fd] min-h-screen">
 
-<!-- HEADER -->
-<div class="bg-[#466d94] text-white px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mx-1">
+    <!-- HEADER -->
+    <div
+        class="bg-[#466d94] text-white px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mx-1">
 
-<h2 class="text-red-500 font-semibold text-base sm:text-lg">
-Actions Against Plagiarists
-</h2>
+        <h2 class="text-red-500 font-semibold text-base sm:text-lg">
+            Actions Against Plagiarists
+        </h2>
 
-<div class="text-sm sm:text-lg font-semibold">
-{{tokens}} Remaining Tokens - Next subscription billing on
-{{billingDate | date:'dd MMM yyyy'}}
-</div>
+        <div *ngIf="isTokenLoaded" class="text-sm sm:text-lg font-semibold">
 
-</div>
+            {{tokens}} Remaining Tokens - Next subscription billing on
+            {{billingDate | date:'dd MMM yyyy'}}
 
+        </div>
 
-<div class="px-4 sm:px-8 lg:px-12 py-6 sm:py-10 space-y-6 max-w-6xl mx-auto">
+    </div>
 
-<!-- Deterrent -->
-<h3 class="text-lg sm:text-xl font-semibold">
-Deterrent effect
-</h3>
 
-<div class="bg-white shadow rounded-xl p-4 sm:p-5">
+    <div class="px-4 sm:px-8 lg:px-12 py-6 sm:py-10 space-y-6 max-w-6xl mx-auto">
 
-<p>
-In your communications, warn that your work has been protected, displaying our website url.
-</p>
+        <!-- Deterrent -->
+        <h3 class="text-lg sm:text-xl font-semibold">
+            Deterrent effect
+        </h3>
 
-<img src="myca.png" class="h-24 sm:h-32 mt-3" />
+        <div class="bg-white shadow rounded-xl p-4 sm:p-5">
 
-<img src="c.png" class="mt-3 max-w-full" />
+            <p>
+                In your communications, warn that your work has been protected, displaying our website url.
+            </p>
 
-</div>
+            <img src="myca.png" class="h-24 sm:h-32 mt-3" />
 
+            <img src="c.png" class="mt-3 max-w-full" />
 
-<!-- TAKEDOWN -->
-<h3 class="text-lg sm:text-xl font-semibold">
-Takedown Guide
-</h3>
+        </div>
 
-<div class="bg-white shadow rounded-xl p-4 sm:p-5">
 
-<p>
-Contact the infringer and ask him to remove his infringing work.
-</p>
+        <!-- TAKEDOWN -->
+        <h3 class="text-lg sm:text-xl font-semibold">
+            Takedown Guide
+        </h3>
 
-<ul class="list-disc pl-6 mt-3 space-y-2">
+        <div class="bg-white shadow rounded-xl p-4 sm:p-5">
 
-<li>
-<b>First method:</b> Send certificate pdf
-<img src="c.png" class="h-6 mt-2" />
-</li>
+            <p>
+                Contact the infringer and ask him to remove his infringing work.
+            </p>
 
-<li>
-<b>Second method:</b> Send reference id + password
-</li>
+            <ul class="list-disc pl-6 mt-3 space-y-2">
 
-</ul>
+                <li>
+                    <b>First method:</b> Send certificate pdf
+                    <img src="c.png" class="h-6 mt-2" />
+                </li>
 
-</div>
+                <li>
+                    <b>Second method:</b> Send reference id + password
+                </li>
 
+            </ul>
 
-<!-- ACCORDION -->
-<div class="bg-white shadow rounded-xl mt-5">
+        </div>
 
-<button
-(click)="toggleMain()"
-class="w-full text-left p-4 sm:p-5 font-semibold flex justify-between items-center">
 
-<span>Where to sue them?</span>
+        <!-- ACCORDION -->
+        <div class="bg-white shadow rounded-xl mt-5">
 
-<span class="text-lg">
-{{openMain ? '-' : '+'}}
-</span>
+            <button (click)="toggleMain()"
+                class="w-full text-left p-4 sm:p-5 font-semibold flex justify-between items-center">
 
-</button>
+                <span>Where to sue them?</span>
 
+                <span class="text-lg">
+                    {{openMain ? '-' : '+'}}
+                </span>
 
-<div *ngIf="openMain" class="p-4 sm:p-5 border-t space-y-4">
+            </button>
 
-<!-- UNITED STATES -->
-<div class="border rounded-lg">
 
-<button
-(click)="toggleUS()"
-class="w-full text-left p-4 font-medium flex justify-between items-center">
+            <div *ngIf="openMain" class="p-4 sm:p-5 border-t space-y-4">
 
-<span>United States</span>
+                <!-- UNITED STATES -->
+                <div class="border rounded-lg">
 
-<span>
-{{openUS ? '-' : '+'}}
-</span>
+                    <button (click)="toggleUS()"
+                        class="w-full text-left p-4 font-medium flex justify-between items-center">
 
-</button>
+                        <span>United States</span>
 
-<div *ngIf="openUS" class="p-4 border-t">
+                        <span>
+                            {{openUS ? '-' : '+'}}
+                        </span>
 
-<ol class="list-decimal pl-6 space-y-4">
+                    </button>
 
-<li>
-<b>Copyright Claims Board (CCB)</b>
+                    <div *ngIf="openUS" class="p-4 border-t">
 
-<ul class="list-disc pl-6 mt-2 space-y-1">
+                        <ol class="list-decimal pl-6 space-y-4">
 
-<li><b>What it is:</b> Tribunal under U.S. Copyright Office for small claims.</li>
-<li><b>Jurisdiction:</b> Up to $30,000.</li>
-<li><b>When to use:</b> Small disputes without federal court.</li>
-<li><b>How to file:</b> File online through CCB portal.</li>
+                            <li>
+                                <b>Copyright Claims Board (CCB)</b>
 
-</ul>
+                                <ul class="list-disc pl-6 mt-2 space-y-1">
 
-</li>
+                                    <li><b>What it is:</b> Tribunal under U.S. Copyright Office for small claims.</li>
+                                    <li><b>Jurisdiction:</b> Up to $30,000.</li>
+                                    <li><b>When to use:</b> Small disputes without federal court.</li>
+                                    <li><b>How to file:</b> File online through CCB portal.</li>
 
-<li>
-<b>Federal Court</b>
+                                </ul>
 
-<ul class="list-disc pl-6 mt-2 space-y-1">
+                            </li>
 
-<li>Main venue for copyright cases.</li>
-<li>Exclusive jurisdiction.</li>
-<li>Used for significant cases.</li>
+                            <li>
+                                <b>Federal Court</b>
 
-</ul>
+                                <ul class="list-disc pl-6 mt-2 space-y-1">
 
-</li>
+                                    <li>Main venue for copyright cases.</li>
+                                    <li>Exclusive jurisdiction.</li>
+                                    <li>Used for significant cases.</li>
 
-</ol>
+                                </ul>
 
-</div>
+                            </li>
 
-</div>
+                        </ol>
 
+                    </div>
 
-<!-- EU -->
-<div class="border rounded-lg">
+                </div>
 
-<button
-(click)="toggleEU()"
-class="w-full text-left p-4 font-medium flex justify-between items-center">
 
-<span>European Union</span>
+                <!-- EU -->
+                <div class="border rounded-lg">
 
-<span>
-{{openEU ? '-' : '+'}}
-</span>
+                    <button (click)="toggleEU()"
+                        class="w-full text-left p-4 font-medium flex justify-between items-center">
 
-</button>
+                        <span>European Union</span>
 
-<div *ngIf="openEU" class="p-4 border-t">
+                        <span>
+                            {{openEU ? '-' : '+'}}
+                        </span>
 
-<ol class="list-decimal pl-6 space-y-4">
+                    </button>
 
-<li>
+                    <div *ngIf="openEU" class="p-4 border-t">
 
-<b>National Courts</b>
+                        <ol class="list-decimal pl-6 space-y-4">
 
-<ul class="list-disc pl-6 mt-2 space-y-1">
+                            <li>
 
-<li>Each member state handles copyright cases.</li>
-<li>Filed where infringement occurred.</li>
-<li>Example: Germany specialized chambers.</li>
+                                <b>National Courts</b>
 
-</ul>
+                                <ul class="list-disc pl-6 mt-2 space-y-1">
 
-</li>
+                                    <li>Each member state handles copyright cases.</li>
+                                    <li>Filed where infringement occurred.</li>
+                                    <li>Example: Germany specialized chambers.</li>
 
-<li>
+                                </ul>
 
-<b>Court of Justice of the European Union (CJEU)</b>
+                            </li>
 
-<ul class="list-disc pl-6 mt-2 space-y-1">
+                            <li>
 
-<li>Interprets EU copyright law.</li>
-<li>Accessible via national courts.</li>
+                                <b>Court of Justice of the European Union (CJEU)</b>
 
-</ul>
+                                <ul class="list-disc pl-6 mt-2 space-y-1">
 
-</li>
+                                    <li>Interprets EU copyright law.</li>
+                                    <li>Accessible via national courts.</li>
 
-</ol>
+                                </ul>
 
-</div>
+                            </li>
 
-</div>
+                        </ol>
 
+                    </div>
 
-<!-- UK -->
-<div class="border rounded-lg">
+                </div>
 
-<button
-(click)="toggleUK()"
-class="w-full text-left p-4 font-medium flex justify-between items-center">
 
-<span>United Kingdom</span>
+                <!-- UK -->
+                <div class="border rounded-lg">
 
-<span>
-{{openUK ? '-' : '+'}}
-</span>
+                    <button (click)="toggleUK()"
+                        class="w-full text-left p-4 font-medium flex justify-between items-center">
 
-</button>
+                        <span>United Kingdom</span>
 
-<div *ngIf="openUK" class="p-4 border-t">
+                        <span>
+                            {{openUK ? '-' : '+'}}
+                        </span>
 
-<ol class="list-decimal pl-6 space-y-4">
+                    </button>
 
-<li>
+                    <div *ngIf="openUK" class="p-4 border-t">
 
-<b>Intellectual Property Enterprise Court (IPEC)</b>
+                        <ol class="list-decimal pl-6 space-y-4">
 
-<ul class="list-disc pl-6 mt-2 space-y-1">
+                            <li>
 
-<li>Specialized IP court.</li>
-<li>Claims up to £500,000.</li>
-<li>Streamlined procedures.</li>
+                                <b>Intellectual Property Enterprise Court (IPEC)</b>
 
-</ul>
+                                <ul class="list-disc pl-6 mt-2 space-y-1">
 
-</li>
+                                    <li>Specialized IP court.</li>
+                                    <li>Claims up to £500,000.</li>
+                                    <li>Streamlined procedures.</li>
 
-<li>
+                                </ul>
 
-<b>High Court (Chancery Division)</b>
+                            </li>
 
-<ul class="list-disc pl-6 mt-2 space-y-1">
+                            <li>
 
-<li>Handles complex/high-value cases.</li>
-<li>No monetary cap.</li>
+                                <b>High Court (Chancery Division)</b>
 
-</ul>
+                                <ul class="list-disc pl-6 mt-2 space-y-1">
 
-</li>
+                                    <li>Handles complex/high-value cases.</li>
+                                    <li>No monetary cap.</li>
 
-</ol>
+                                </ul>
 
-</div>
+                            </li>
 
-</div>
+                        </ol>
 
-</div>
+                    </div>
 
-</div>
+                </div>
 
+            </div>
 
-<!-- EXTRA SECTION -->
-<div class="bg-white shadow rounded-xl p-4 sm:p-5">
+        </div>
 
-Gather proofs and sue them if needed.
 
-</div>
+        <!-- EXTRA SECTION -->
+        <div class="bg-white shadow rounded-xl p-4 sm:p-5">
 
+            Gather proofs and sue them if needed.
 
-<!-- SCREENSHOTS -->
-<h3 class="text-lg sm:text-xl font-semibold">
-About screenshots
-</h3>
+        </div>
 
-<div class="bg-white shadow rounded-xl p-4 sm:p-5">
 
-<ol class="list-decimal pl-6 space-y-2">
+        <!-- SCREENSHOTS -->
+        <h3 class="text-lg sm:text-xl font-semibold">
+            About screenshots
+        </h3>
 
-<li>Take screenshots</li>
-<li>Zip files</li>
-<li>Upload to timestamp</li>
+        <div class="bg-white shadow rounded-xl p-4 sm:p-5">
 
-</ol>
+            <ol class="list-decimal pl-6 space-y-2">
 
-</div>
+                <li>Take screenshots</li>
+                <li>Zip files</li>
+                <li>Upload to timestamp</li>
 
-</div>
+            </ol>
+
+        </div>
+
+    </div>
 
 </div>

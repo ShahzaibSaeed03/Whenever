@@ -24,7 +24,7 @@ export class MyOriginalWorksComponent implements OnInit {
   showPasswordModal = false;
   selectedWork: any = null;
   sharePassword = '';
-
+  isTokenLoaded = false;
   filters: any = {
     id: '',
     title: '',
@@ -44,6 +44,7 @@ export class MyOriginalWorksComponent implements OnInit {
       .subscribe((res: any) => {
         this.tokens = res.remainingTokens;
         this.billingDate = res.nextBillingDate;
+        this.isTokenLoaded = true; // ✅ mark loaded
       });
   }
 
@@ -52,7 +53,13 @@ export class MyOriginalWorksComponent implements OnInit {
     const userId = localStorage.getItem('userId');
 
     this.workService.getWorkById(userId).subscribe((res: any) => {
-      this.data = res.data || [];
+      this.data = (res.data || []).map((item: any) => ({
+        ...item,
+        shareUrl: item.shareId
+          ? `${window.location.origin}/share/${item.shareId}`
+          : null
+      }));
+
       this.originalData = [...this.data];
     });
   }
@@ -99,20 +106,10 @@ export class MyOriginalWorksComponent implements OnInit {
     this.data = [...this.originalData];
   }
 
-viewCertificate(item: any) {
-  if (!item.certificateViewUrl) {
-    this.toast.error('Certificate not available');
-    return;
+  viewCertificate(item: any) {
+    this.selectedCertificate = item;
+    this.showCertificateModal = true;
   }
-
-  const a = document.createElement('a');
-  a.href = item.certificateViewUrl;
-  a.target = '_blank';
-  a.rel = 'noopener';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
 
   download(item: any) {
     if (!item.downloadUrl) {
@@ -142,7 +139,10 @@ viewCertificate(item: any) {
         this.closeDelete();
       });
   }
-
+  closeCertificateModal() {
+    this.showCertificateModal = false;
+    this.selectedCertificate = null;
+  }
   closeDelete() {
     this.showDeleteModal = false;
     this.deleteWorkId = null;
@@ -153,11 +153,9 @@ viewCertificate(item: any) {
     this.showPasswordModal = true;
   }
 
-  closeModal() {
-    this.showPasswordModal = false;
-    this.sharePassword = '';
-    this.selectedWork = null;
-  }
+
+
+  confirmPassword = '';
 
   savePassword() {
 
@@ -165,6 +163,11 @@ viewCertificate(item: any) {
 
     if (this.sharePassword.length < 6) {
       this.toast.error('Password min 6');
+      return;
+    }
+
+    if (this.sharePassword !== this.confirmPassword) {
+      this.toast.error('Passwords do not match');
       return;
     }
 
@@ -178,41 +181,86 @@ viewCertificate(item: any) {
         this.closeModal();
       });
   }
+
+  closeModal() {
+    this.showPasswordModal = false;
+    this.sharePassword = '';
+    this.confirmPassword = '';
+    this.selectedWork = null;
+  }
   downloadAllFiles(work: any) {
 
     const urls = [
-      work.otsUrl,
-      work.certificateUrl,
-      work.downloadUrl
-    ].filter(Boolean);
+      { url: work.downloadUrl, name: work.file_name },
+      { url: work.certificateUrl, name: 'certificate.pdf' },
+      { url: work.otsUrl, name: 'timestamp.ots' }
+    ].filter(f => f.url);
 
-    let delay = 0;
-
-    urls.forEach((url: string) => {
+    urls.forEach((file, index) => {
       setTimeout(() => {
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = '';
-        a.rel = 'noopener';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      }, delay);
 
-      delay += 1000; // 1.5s gap between downloads
+        fetch(file.url)
+          .then(res => res.blob())
+          .then(blob => {
+            const blobUrl = window.URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = file.name || 'file';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            window.URL.revokeObjectURL(blobUrl);
+          });
+
+      }, index * 1200); // delay to avoid browser blocking
+
     });
 
   }
   copyLink(item: any) {
 
-    if (!item.passwordProtected) {
-      this.toast.warning('Set password first');
+    if (!item.shareId) {
+      this.toast.error('Share link not available');
       return;
     }
 
     const link = `${window.location.origin}/share/${item.shareId}`;
-    navigator.clipboard.writeText(link);
 
-    this.toast.success('Share link copied');
+    navigator.clipboard.writeText(link)
+      .then(() => this.toast.success('Share link copied'))
+      .catch(() => this.toast.error('Failed to copy link'));
   }
+
+
+  showShareModal = false;
+  shareLink = '';
+
+  openShareModal(item: any) {
+
+    if (!item.shareId) {
+      this.toast.error('Share link not available');
+      return;
+    }
+
+    this.shareLink = `${window.location.origin}/share/${item.shareId}`;
+    this.showShareModal = true;
+  }
+
+  closeShareModal() {
+    this.showShareModal = false;
+    this.shareLink = '';
+  }
+
+  copyFromModal() {
+    navigator.clipboard.writeText(this.shareLink)
+      .then(() => {
+        this.toast.success('Link copied');
+        this.closeShareModal(); // 👈 close modal here
+      })
+      .catch(() => this.toast.error('Failed to copy'));
+  }
+  showCertificateModal = false;
+  selectedCertificate: any = null;
 }

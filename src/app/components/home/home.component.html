@@ -3,7 +3,7 @@
   <!-- TITLE BAR -->
   <div class="bg-[#466d94] text-white px-6 py-3 flex justify-between mx-1">
     <h2 class="text-red-500 font-semibold text-lg">Home Page</h2>
-    <div *ngIf="isLoggedIn" class="text-lg font-semibold">
+    <div *ngIf="isLoggedIn && isTokenLoaded" class="text-lg font-semibold">
       {{ tokens }} Remaining Tokens -
       Next subscription billing on
       {{ billingDate | date:'dd MMM yyyy' }}

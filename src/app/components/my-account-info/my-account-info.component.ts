@@ -60,7 +60,7 @@ export class MyAccountInfoComponent implements OnInit {
 
   newEmail = "";
   emailCode = "";
-
+  isTokenLoaded = false;
   constructor(
     private api: AuthApiService,
     private workService: WorkService,
@@ -75,6 +75,7 @@ export class MyAccountInfoComponent implements OnInit {
       .subscribe((res: any) => {
         this.tokens = res.remainingTokens;
         this.billingDate = res.nextBillingDate;
+        this.isTokenLoaded = true; // ✅ mark loaded
       });
   }
 

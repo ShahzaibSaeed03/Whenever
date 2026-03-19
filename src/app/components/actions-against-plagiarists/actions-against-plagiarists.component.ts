@@ -12,36 +12,35 @@ import { WorkService } from '../../service/work-service.service';
 export class ActionsAgainstPlagiaristsComponent {
 
   tokens = 0;
- 
+
   billingDate = '';
 
   openMain = false;
   openUS = false;
   openEU = false;
   openUK = false;
+  isTokenLoaded = false;
+
+  constructor(
+    private workService: WorkService,
+    private toast: ToastrService
+  ) { }
+
+  ngOnInit() {
+
+    this.workService.getTokenDetails()
+      .subscribe((res: any) => {
+        this.tokens = res.remainingTokens;
+        this.billingDate = res.nextBillingDate;
+        this.isTokenLoaded = true; // ✅ mark loaded
+      });
+
+  }
 
 
-constructor(
-private workService:WorkService,
-private toast:ToastrService
-){}
-
-ngOnInit(){
-
-this.workService.getTokenDetails()
-  .subscribe((res:any)=>{
-
-    this.tokens = res.remainingTokens;
-    this.billingDate = res.nextBillingDate;
-
-  });
-  
-}
-
-
-  toggleMain(){ this.openMain = !this.openMain; }
-  toggleUS(){ this.openUS = !this.openUS; }
-  toggleEU(){ this.openEU = !this.openEU; }
-  toggleUK(){ this.openUK = !this.openUK; }
+  toggleMain() { this.openMain = !this.openMain; }
+  toggleUS() { this.openUS = !this.openUS; }
+  toggleEU() { this.openEU = !this.openEU; }
+  toggleUK() { this.openUK = !this.openUK; }
 
 }

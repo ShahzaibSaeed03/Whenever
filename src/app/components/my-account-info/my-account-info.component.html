@@ -1,5 +1,6 @@
 <!-- HEADER -->
-<div class="bg-[#466d94] text-white px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+<div
+  class="bg-[#466d94] text-white px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
   <h2 class="text-red-500 font-semibold text-base sm:text-lg">
     My Account Info
   </h2>
@@ -13,105 +14,93 @@
 
 <div class="bg-[#d5e8ef] min-h-screen p-3 sm:p-6">
 
-<!-- INTRO -->
-<div class="max-w-6xl mx-auto mt-4 text-[#3f5f78] text-sm space-y-1">
-  <p>Please enter your personal details and billing address.</p>
-  <p>Once your payment is validated, you will be able to upload your work.</p>
-  <p>If you are facing a problem while registering, please send an email.</p>
-</div>
+  <!-- INTRO -->
+  <div class="max-w-6xl mx-auto mt-4 text-[#3f5f78] text-sm space-y-1">
+    <p>Please enter your personal details and billing address.</p>
+    <p>Once your payment is validated, you will be able to upload your work.</p>
+    <p>If you are facing a problem while registering, please send an email.</p>
+  </div>
 
 
-<!-- MAIN FORM -->
-<div class="max-w-6xl mx-auto mt-6 border border-[#3f5f78] rounded-xl p-4 sm:p-6">
+  <!-- MAIN FORM -->
+  <div class="max-w-6xl mx-auto mt-6 border border-[#3f5f78] rounded-xl p-4 sm:p-6">
 
-<form class="grid grid-cols-1 lg:grid-cols-2 gap-8" (ngSubmit)="updateProfile()">
+    <form class="grid grid-cols-1 lg:grid-cols-2 gap-8" (ngSubmit)="updateProfile()">
 
-<!-- PERSONAL -->
-<div>
+      <!-- PERSONAL -->
+      <div>
 
-<h2 class="text-lg font-semibold mb-4">
-Personal Details:
-</h2>
+        <h2 class="text-lg font-semibold mb-4">
+          Personal Details:
+        </h2>
 
-<div class="space-y-4">
+        <div class="space-y-4">
 
-<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-<label class="sm:w-48">First Name *</label>
-<input class="border rounded px-3 py-1 w-full bg-white"
-[(ngModel)]="profile.firstName"
-name="firstName">
-</div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <label class="sm:w-48">First Name *</label>
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.firstName" name="firstName">
+          </div>
 
-<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-<label class="sm:w-48">Last Name *</label>
-<input class="border rounded px-3 py-1 w-full bg-white"
-[(ngModel)]="profile.lastName"
-name="lastName">
-</div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <label class="sm:w-48">Last Name *</label>
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.lastName" name="lastName">
+          </div>
 
-<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-<label class="sm:w-48">Address Line 1 *</label>
-<input class="border rounded px-3 py-1 w-full bg-white"
-[(ngModel)]="profile.personalAddress.address1"
-name="a1">
-</div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <label class="sm:w-48">Address Line 1 *</label>
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.address1"
+              name="a1">
+          </div>
 
-<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-<label class="sm:w-48">Address Line 2</label>
-<input class="border rounded px-3 py-1 w-full bg-white"
-[(ngModel)]="profile.personalAddress.address2"
-name="a2">
-</div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <label class="sm:w-48">Address Line 2</label>
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.address2"
+              name="a2">
+          </div>
 
-<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-<label class="sm:w-48">Zip *</label>
-<input class="border rounded px-3 py-1 w-full bg-white"
-[(ngModel)]="profile.personalAddress.zip"
-name="zip">
-</div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <label class="sm:w-48">Zip *</label>
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.zip"
+              name="zip">
+          </div>
 
-<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-<label class="sm:w-48">City *</label>
-<input class="border rounded px-3 py-1 w-full bg-white"
-[(ngModel)]="profile.personalAddress.city"
-name="city">
-</div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <label class="sm:w-48">City *</label>
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.city"
+              name="city">
+          </div>
 
-<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-<label class="sm:w-48">State</label>
-<input class="border rounded px-3 py-1 w-full bg-white"
-[(ngModel)]="profile.personalAddress.state"
-name="state">
-</div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <label class="sm:w-48">State</label>
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.state"
+              name="state">
+          </div>
 
-<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-<label class="sm:w-48">Country *</label>
-<input class="border rounded px-3 py-1 w-full bg-white"
-[(ngModel)]="profile.personalAddress.country"
-name="country">
-</div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <label class="sm:w-48">Country *</label>
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.country"
+              name="country">
+          </div>
 
-<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-<label class="sm:w-48">Phone</label>
-<input class="border rounded px-3 py-1 w-full bg-white"
-[(ngModel)]="profile.personalAddress.phone"
-name="phone">
-</div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <label class="sm:w-48">Phone</label>
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.phone"
+              name="phone">
+          </div>
 
-<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-<label class="sm:w-48">Profession</label>
-<input class="border rounded px-3 py-1 w-full bg-white"
-[(ngModel)]="profile.personalAddress.profession"
-name="prof">
-</div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <label class="sm:w-48">Profession</label>
+            <input class="border rounded px-3 py-1 w-full bg-white" [(ngModel)]="profile.personalAddress.profession"
+              name="prof">
+          </div>
 
-</div>
+        </div>
 
-</div>
+      </div>
 
 
-<!-- BILLING -->
-<div class="lg:border-l lg:border-[#3f5f78] lg:pl-8">
+      <!-- BILLING -->
+      <!-- <div class="lg:border-l lg:border-[#3f5f78] lg:pl-8">
 
 <h2 class="text-lg font-semibold mb-4">
 Billing Address:
@@ -170,137 +159,103 @@ name="bcountry">
 
 </div>
 
-</div>
+</div> -->
 
 
-<!-- BUTTON -->
-<div class="lg:col-span-2 flex justify-center mt-6">
-<button class="bg-[#3f5f78] text-white px-10 py-2 rounded-lg w-full sm:w-auto">
-UPDATE
-</button>
-</div>
+      <!-- BUTTON -->
+      <div class="lg:col-span-2 flex justify-center mt-6">
+        <button class="bg-[#3f5f78] text-white px-10 py-2 rounded-lg w-full sm:w-auto">
+          UPDATE
+        </button>
+      </div>
 
-</form>
+    </form>
 
-</div>
-
-
-<!-- PASSWORD -->
-<div class="max-w-6xl mx-auto mt-8 border border-[#3f5f78] rounded-xl p-4 sm:p-6">
-
-<h3 class="font-semibold mb-4">
-CHANGE PASSWORD
-</h3>
-
-<div class="space-y-3 max-w-lg">
-
-<div class="relative">
-<input
-[type]="showCurrent ? 'text':'password'"
-placeholder="Current"
-[(ngModel)]="currentPassword"
-name="cp"
-class="border px-3 py-2 w-full bg-white">
-
-<span
-(click)="toggle('c')"
-class="absolute right-3 top-2 cursor-pointer text-gray-500">
-👁
-</span>
-</div>
-
-<div class="relative">
-<input
-[type]="showNew ? 'text':'password'"
-placeholder="New"
-[(ngModel)]="newPassword"
-name="np"
-class="border px-3 py-2 w-full bg-white">
-
-<span
-(click)="toggle('n')"
-class="absolute right-3 top-2 cursor-pointer text-gray-500">
-👁
-</span>
-</div>
-
-<div class="relative">
-<input
-[type]="showConfirm ? 'text':'password'"
-placeholder="Confirm"
-[(ngModel)]="confirmPassword"
-name="cnp"
-class="border px-3 py-2 w-full bg-white">
-
-<span
-(click)="toggle('cn')"
-class="absolute right-3 top-2 cursor-pointer text-gray-500">
-👁
-</span>
-</div>
-
-<button
-(click)="changePassword()"
-class="bg-[#3f5f78] text-white px-6 py-2 rounded w-full sm:w-auto">
-
-UPDATE
-
-</button>
-
-</div>
-
-</div>
+  </div>
 
 
-<!-- CHANGE EMAIL -->
-<div class="max-w-6xl mx-auto mt-8 mb-10 border border-[#3f5f78] rounded-xl p-4 sm:p-6 space-y-4">
+  <!-- PASSWORD -->
+  <div class="max-w-6xl mx-auto mt-8 border border-[#3f5f78] rounded-xl p-4 sm:p-6">
 
-<h3 class="font-semibold">
-CHANGE EMAIL
-</h3>
+    <h3 class="font-semibold mb-4">
+      CHANGE PASSWORD
+    </h3>
 
-<div class="flex flex-col sm:flex-row sm:items-center gap-3">
+    <div class="space-y-3 max-w-lg">
 
-<input
-class="border px-3 py-2 bg-gray-100 w-full sm:w-72"
-[value]="profile.email"
-disabled>
+      <div class="relative">
+        <input [type]="showCurrent ? 'text':'password'" placeholder="Current" [(ngModel)]="currentPassword" name="cp"
+          class="border px-3 py-2 w-full bg-white">
 
-<input
-placeholder="New email"
-[(ngModel)]="newEmail"
-name="ne"
-class="border px-3 py-2 bg-white w-full sm:w-72">
+        <span (click)="toggle('c')" class="absolute right-3 top-2 cursor-pointer text-gray-500">
+          👁
+        </span>
+      </div>
 
-<button
-(click)="requestEmail()"
-class="bg-[#365369] text-white px-6 py-2 rounded w-full sm:w-auto">
+      <div class="relative">
+        <input [type]="showNew ? 'text':'password'" placeholder="New" [(ngModel)]="newPassword" name="np"
+          class="border px-3 py-2 w-full bg-white">
 
-SEND CODE
+        <span (click)="toggle('n')" class="absolute right-3 top-2 cursor-pointer text-gray-500">
+          👁
+        </span>
+      </div>
 
-</button>
+      <div class="relative">
+        <input [type]="showConfirm ? 'text':'password'" placeholder="Confirm" [(ngModel)]="confirmPassword" name="cnp"
+          class="border px-3 py-2 w-full bg-white">
 
-</div>
+        <span (click)="toggle('cn')" class="absolute right-3 top-2 cursor-pointer text-gray-500">
+          👁
+        </span>
+      </div>
+
+      <button (click)="changePassword()" class="bg-[#3f5f78] text-white px-6 py-2 rounded w-full sm:w-auto">
+
+        UPDATE
+
+      </button>
+
+    </div>
+
+  </div>
 
 
-<div class="flex flex-col sm:flex-row sm:items-center gap-3">
+  <!-- CHANGE EMAIL -->
+  <div class="max-w-6xl mx-auto mt-8 mb-10 border border-[#3f5f78] rounded-xl p-4 sm:p-6 space-y-4">
 
-<input
-placeholder="Verification code"
-[(ngModel)]="emailCode"
-name="code"
-class="border px-3 py-2 bg-white w-full sm:w-72">
+    <h3 class="font-semibold">
+      CHANGE EMAIL
+    </h3>
 
-<button
-(click)="confirmEmail()"
-class="bg-green-600 text-white px-6 py-2 rounded w-full sm:w-auto">
+    <div class="flex flex-col sm:flex-row sm:items-center gap-3">
 
-CONFIRM
+      <input class="border px-3 py-2 bg-gray-100 w-full sm:w-72" [value]="profile.email" disabled>
 
-</button>
+      <input placeholder="New email" [(ngModel)]="newEmail" name="ne" class="border px-3 py-2 bg-white w-full sm:w-72">
 
-</div>
+      <button (click)="requestEmail()" class="bg-[#365369] text-white px-6 py-2 rounded w-full sm:w-auto">
 
-</div>
+        SEND CODE
+
+      </button>
+
+    </div>
+
+
+    <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+
+      <input placeholder="Verification code" [(ngModel)]="emailCode" name="code"
+        class="border px-3 py-2 bg-white w-full sm:w-72">
+
+      <button (click)="confirmEmail()" class="bg-green-600 text-white px-6 py-2 rounded w-full sm:w-auto">
+
+        CONFIRM
+
+      </button>
+
+    </div>
+
+  </div>
 
 </div>

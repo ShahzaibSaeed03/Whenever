@@ -13,11 +13,11 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './billing.component.html'
 })
 export class BillingComponent implements OnInit {
-
+subscriptionLoaded = false;
   subscription: any;
   invoices: any[] = [];
   card: any;
-
+isTokenLoaded = false;
   cardNumber: any;
   cardExpiry: any;
   cardCvc: any;
@@ -51,11 +51,12 @@ export class BillingComponent implements OnInit {
         error: () => this.toast.error('Failed to load card')
       });
 
-    this.workService.getTokenDetails()
-      .subscribe((res: any) => {
-        this.tokens = res.remainingTokens;
-        this.billingDate = res.nextBillingDate;
-      });
+  this.workService.getTokenDetails()
+  .subscribe((res: any) => {
+    this.tokens = res.remainingTokens;
+    this.billingDate = res.nextBillingDate;
+    this.isTokenLoaded = true; // ✅ mark loaded
+  });
   }
 
   /* CANCEL */
@@ -189,13 +190,19 @@ async updateCard(){
     window.open(url, '_blank');
   }
 
-  loadSubscription() {
-    this.billingService.getSubscription()
-      .subscribe({
-        next: (res: any) => this.subscription = res,
-        error: () => this.toast.error('Failed to load subscription')
-      });
-  }
+loadSubscription() {
+  this.billingService.getSubscription()
+    .subscribe({
+      next: (res: any) => {
+        this.subscription = res;
+        this.subscriptionLoaded = true; // ✅ mark loaded
+      },
+      error: () => {
+        this.toast.error('Failed to load subscription');
+        this.subscriptionLoaded = true; // still stop loading
+      }
+    });
+}
 
   get renewalMessage() {
 

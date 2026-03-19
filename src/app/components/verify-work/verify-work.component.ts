@@ -20,6 +20,7 @@ export class VerifyWorkComponent implements OnInit {
   fileName = '';
   certificateName = '';
   otsFileName = '';
+  isTokenLoaded = false;
 
   tokens = 0;
   billingDate = '';
@@ -34,14 +35,16 @@ export class VerifyWorkComponent implements OnInit {
   constructor(
     private workService: WorkService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
 
-    this.workService.getTokenDetails().subscribe((res: any) => {
-      this.tokens = res.remainingTokens;
-      this.billingDate = res.nextBillingDate;
-    });
+ this.workService.getTokenDetails()
+  .subscribe((res: any) => {
+    this.tokens = res.remainingTokens;
+    this.billingDate = res.nextBillingDate;
+    this.isTokenLoaded = true; // ✅ mark loaded
+  });
 
   }
 
@@ -106,7 +109,7 @@ export class VerifyWorkComponent implements OnInit {
         if (status === 'verified') {
 
           this.successMessage =
-`Timestamp Verified on Bitcoin Blockchain
+            `Timestamp Verified on Bitcoin Blockchain
 
 Bitcoin Block : ${res.otsStatus.bitcoinBlock}
 
@@ -117,7 +120,7 @@ Registration Date : ${res.registeration_date}`;
         else if (status === 'pending') {
 
           this.successMessage =
-            'Timestamp exists but Bitcoin confirmation is pending. Please check again later.';
+            'Timestamp exists but Bitcoin confirmation is pending. Please try again in 2 to 24 hours.';
 
         }
 

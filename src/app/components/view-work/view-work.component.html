@@ -4,16 +4,13 @@
 </div>
 
 <!-- CERTIFICATE VIEW -->
-<div *ngIf="work" class="min-h-screen flex items-center justify-center px-4 py-10 bg-[#cfe6ef]">
+<div *ngIf="work" class="min-h-screen flex items-center justify-center px-4 py-10 a">
 
   <div class="relative w-full max-w-[470px] min-h-[650px]">
 
-    <img
-      [src]="certificateImg"
-      class="w-full rounded-lg shadow-lg"/>
+    <img [src]="certificateImg" class="w-full rounded-lg shadow-lg" />
 
-    <div
-      class="absolute inset-0 z-10 text-gray-800 pt-[90px] px-[30px]">
+    <div class="absolute inset-0 z-10 text-gray-800 pt-[90px] px-[30px]">
 
       <table class="w-full border-separate border-spacing-y-3 text-sm">
 
@@ -49,7 +46,9 @@
 
         <tr>
           <td class="font-semibold pr-4 whitespace-nowrap">File Name:</td>
-          <td class="break-all">{{ work?.file_name }}</td>
+          <td class="break-all text-blue-600 cursor-pointer underline" (click)="downloadAll()">
+            {{ work?.file_name }}
+          </td>
         </tr>
 
         <tr>
