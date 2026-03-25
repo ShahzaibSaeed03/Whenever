@@ -39,12 +39,12 @@ export class VerifyWorkComponent implements OnInit {
 
   ngOnInit(): void {
 
- this.workService.getTokenDetails()
-  .subscribe((res: any) => {
-    this.tokens = res.remainingTokens;
-    this.billingDate = res.nextBillingDate;
-    this.isTokenLoaded = true; // ✅ mark loaded
-  });
+    this.workService.getTokenDetails()
+      .subscribe((res: any) => {
+        this.tokens = res.remainingTokens;
+        this.billingDate = res.nextBillingDate;
+        this.isTokenLoaded = true; // ✅ mark loaded
+      });
 
   }
 
@@ -108,22 +108,37 @@ export class VerifyWorkComponent implements OnInit {
 
         if (status === 'verified') {
 
+          const block = res.otsStatus.blockHeight || 'N/A';
+          const utcDate = res.otsStatus.blockTime
+            ? new Date(res.otsStatus.blockTime).toUTCString()
+            : 'N/A';
+
+          const localDate = res.otsStatus.blockTime
+            ? new Date(res.otsStatus.blockTime).toLocaleString()
+            : 'N/A';
+
           this.successMessage =
-            `Timestamp Verified on Bitcoin Blockchain
+            `✔ Proof Verified Successfully
 
-Bitcoin Block : ${res.otsStatus.bitcoinBlock}
+The file is securely anchored in the Bitcoin Blockchain.
 
-Registration Date : ${res.registeration_date}`;
+📦 Bitcoin Block: ${block}
 
+🕒 Registration Time (UTC): ${utcDate}
+`;
         }
-
         else if (status === 'pending') {
 
           this.successMessage =
-            'Timestamp exists but Bitcoin confirmation is pending. Please try again in 2 to 24 hours.';
+            `⏳ Timestamp Created Successfully
+
+Your file is securely timestamped but waiting for Bitcoin confirmation.
+
+⏱ Expected Time: 10–60 minutes
+
+Please check again later.`;
 
         }
-
         else {
 
           this.setError(res.otsStatus.message || 'Verification failed.');
