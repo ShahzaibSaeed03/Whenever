@@ -104,46 +104,107 @@ export class VerifyWorkComponent implements OnInit {
           return;
         }
 
-        const status = res.otsStatus.status;
+const status = res.otsStatus.status;
+const raw = (res.otsStatus.raw || '').toLowerCase();
+/* -------- VERIFIED (Bitcoin anchored) -------- */
+if (status === 'verified') {
 
-        if (status === 'verified') {
+  const block = res.otsStatus.blockHeight || 'N/A';
 
-          const block = res.otsStatus.blockHeight || 'N/A';
-          const utcDate = res.otsStatus.blockTime
-            ? new Date(res.otsStatus.blockTime).toUTCString()
-            : 'N/A';
+  const utcDate = res.otsStatus.blockTime
+    ? new Date(res.otsStatus.blockTime).toUTCString()
+    : 'N/A';
 
-          const localDate = res.otsStatus.blockTime
-            ? new Date(res.otsStatus.blockTime).toLocaleString()
-            : 'N/A';
+  this.successMessage =
+    `🔒 Proof Verified on Bitcoin Blockchain
 
-          this.successMessage =
-            `✔ Proof Verified Successfully
-
-The file is securely anchored in the Bitcoin Blockchain.
+Your file is permanently anchored and tamper-proof.
 
 📦 Bitcoin Block: ${block}
+🕒 Time (UTC): ${utcDate}`;
+}
 
-🕒 Registration Time (UTC): ${utcDate}
-`;
-        }
-        else if (status === 'pending') {
 
-          this.successMessage =
-            `⏳ Timestamp Created Successfully
+/* -------- MATCHED (Proof OK but NOT anchored) -------- */
+else if (status === 'matched') {
 
-Your file is securely timestamped but waiting for Bitcoin confirmation.
+  this.successMessage =
+    `✅ File Verified Successfully
 
-⏱ Expected Time: 10–60 minutes
+The file matches the timestamp proof.
+
+⚠️ Not yet anchored on Bitcoin blockchain.
+⏳ This usually takes 2–24 hours.
 
 Please check again later.`;
+}
 
-        }
-        else {
 
-          this.setError(res.otsStatus.message || 'Verification failed.');
+/* -------- PENDING (Still processing by calendars) -------- */
+/* -------- VERIFIED -------- */
+if (status === 'verified' && res.otsStatus.blockHeight) {
 
-        }
+  const block = res.otsStatus.blockHeight;
+
+  const utcDate = res.otsStatus.blockTime
+    ? new Date(res.otsStatus.blockTime).toUTCString()
+    : 'N/A';
+
+  this.successMessage =
+    `🔒 Proof Verified on Bitcoin Blockchain
+
+📦 Block: ${block}
+🕒 Time (UTC): ${utcDate}`;
+}else if (status === 'verified' && !res.otsStatus.blockHeight) {
+
+  this.successMessage =
+    `⏳ Timestamp Pending
+
+The proof is created but not yet confirmed on Bitcoin.
+
+⏱ Takes 2–24 hours.
+🔄 Please try again later.`;
+}
+
+
+/* -------- MATCHED -------- */
+else if (status === 'matched') {
+
+  this.successMessage =
+    `✅ File Verified Successfully
+
+File matches the proof but not yet anchored on Bitcoin.
+
+⏳ Takes 2–24 hours. Try again later.`;
+}
+
+
+/* -------- FORCE PENDING (RAW DETECTION) -------- */
+else if (
+  status === 'pending' ||
+  raw.includes('pending confirmation in bitcoin') ||
+  raw.includes('calendar')
+) {
+
+  this.successMessage =
+    `⏳ Timestamp Pending
+
+Your proof is submitted to Bitcoin calendars but not yet confirmed.
+
+⏱ Expected time: 2–24 hours
+🔄 Please try again later.`;
+}
+
+
+/* -------- ERROR -------- */
+else {
+
+  this.setError(res.otsStatus.message || 'Verification failed.');
+
+}
+
+
+
 
       },
 
