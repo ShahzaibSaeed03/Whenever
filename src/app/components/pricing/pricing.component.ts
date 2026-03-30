@@ -55,15 +55,15 @@ get isSubscriptionInactive(): boolean {
 
     this.stripe = await loadStripe(environment.stripePublishableKey);
 
-    this.stripeService.createSubscription().subscribe(async (res: any) => {
-      const checkout = await this.stripe.initEmbeddedCheckout({
-        clientSecret: res.clientSecret
-      });
+    // this.stripeService.createSubscription().subscribe(async (res: any) => {
+    //   const checkout = await this.stripe.initEmbeddedCheckout({
+    //     clientSecret: res.clientSecret
+    //   });
 
-      this.checkoutInstance = checkout;
-      checkout.mount('#subscription-checkout');
-      this.loading = false;
-    });
+    //   this.checkoutInstance = checkout;
+    //   checkout.mount('#subscription-checkout');
+    //   this.loading = false;
+    // });
   }
 
   close() {

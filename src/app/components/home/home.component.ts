@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { WorkService } from '../../service/work-service.service';
 import { AuthService } from '../../service/auth-service.service';
+import { AuthApiService } from '../../service/auth-api.service';
 
 @Component({
   selector: 'app-home',
@@ -19,7 +20,8 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private workService: WorkService,
-    private authService: AuthService
+    private authService: AuthService,
+    private authApi: AuthApiService   
   ) {}
 
   ngOnInit() {
@@ -46,4 +48,18 @@ isTokenLoaded = false;
     this.isTokenLoaded = true; // ✅ mark loaded
   });
   }
+
+  user: any = null;
+
+loadProfile() {
+  this.authApi.getProfile().subscribe({
+    next: (res: any) => {
+      this.user = res;
+      console.log("PROFILE:", res);
+    },
+    error: (err) => {
+      console.error("Profile error", err);
+    }
+  });
+}
 }

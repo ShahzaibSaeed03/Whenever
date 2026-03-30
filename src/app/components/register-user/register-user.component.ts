@@ -10,7 +10,7 @@ import { environment } from '../../environment/environment';
 @Component({
   standalone: true,
   selector: 'app-register-user',
-  imports: [CommonModule, ReactiveFormsModule, ToastrModule,RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, ToastrModule, RouterLink],
   templateUrl: './register-user.component.html'
 })
 export class RegisterUserComponent implements OnInit {
@@ -58,7 +58,7 @@ export class RegisterUserComponent implements OnInit {
       profession: [''],
       refSource: [''],
 
-      
+
     });
 
     /* RESTORE FORM AFTER REFRESH */
@@ -159,28 +159,16 @@ export class RegisterUserComponent implements OnInit {
 
     const payload: any = {
       ...this.form.value,
-      email: email
+      email
     };
 
     delete payload.confirmEmail;
 
-    this.api.register(payload).subscribe({
+    // ✅ SAVE FORM TEMP (IMPORTANT)
+    localStorage.setItem('signup_form', JSON.stringify(payload));
 
-      next: (res: any) => {
-
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('pending_payment', 'true');
-        localStorage.setItem('userId', res.id);
-        localStorage.setItem('subscriptionStatus', res.subscriptionStatus);
-        this.toast.success('Registered');
-
-        this.form.disable();
-
-        this.openCheckout();
-      },
-
-      error: e => this.toast.error(e.error?.message || 'Error')
-    });
+    // ✅ DIRECT STRIPE OPEN (NO REGISTER)
+    this.openCheckout();
   }
   async openCheckout() {
 
@@ -198,7 +186,7 @@ export class RegisterUserComponent implements OnInit {
 
     this.stripe = await loadStripe(environment.stripePublishableKey);
 
-    this.stripeService.createSubscription().subscribe({
+    this.stripeService.createSubscription(this.form.value).subscribe({
       next: async (res: any) => {
 
         try {

@@ -11,9 +11,11 @@ export class StripeService {
 
   /* ===== SUBSCRIPTION ===== */
 
-  createSubscription(){
-    return this.http.post(`${this.baseUrl}/billing/subscription-checkout`,{});
-  }
+createSubscription(formData:any){
+  return this.http.post(`${this.baseUrl}/billing/subscription-checkout`,{
+    formData
+  });
+}
 
   getSubscriptionStatus(){
     return this.http.get(`${this.baseUrl}/subscription/status`);

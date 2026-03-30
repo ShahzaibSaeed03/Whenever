@@ -120,7 +120,6 @@ export class MyOriginalWorksComponent implements OnInit {
     const a = document.createElement('a');
     a.href = item.downloadUrl;
     a.download = item.file_name || 'file';
-    a.target = '_blank';
     a.click();
 
     this.toast.success('Download started');
@@ -190,11 +189,11 @@ export class MyOriginalWorksComponent implements OnInit {
   }
   downloadAllFiles(work: any) {
 
-    const urls = [
-      { url: work.downloadUrl, name: work.file_name },
-      { url: work.certificateUrl, name: 'certificate.pdf' },
-      { url: work.otsUrl, name: 'timestamp.ots' }
-    ].filter(f => f.url);
+ const urls = [
+  { url: work.downloadUrl, name: work.file_name },
+  { url: work.certificateUrl, name: `Certificate-${work.displayed_ID}.pdf` },
+  { url: work.otsUrl, name: `Timestamp-${work.displayed_ID}.ots` }
+].filter(f => f.url);
 
     urls.forEach((file, index) => {
       setTimeout(() => {
