@@ -14,31 +14,35 @@ import { AuthApiService } from '../../service/auth-api.service';
 export class HeaderComponent {
   user: any = null;
 
-  constructor(
-    public auth: AuthService,
-    private api: AuthApiService,
-    private router: Router
+constructor(
+  public auth: AuthService,
+  private api: AuthApiService,
+  private router: Router,
+  private cdr: ChangeDetectorRef
+) {}
 
-  ) { }
+ngOnInit() {
+  this.auth.isLoggedIn$.subscribe((loggedIn) => {
+    const pending = localStorage.getItem('pending_payment');
 
- ngOnInit() {
-
-  const pending = localStorage.getItem('pending_payment');
-
-  if (localStorage.getItem('token') && pending !== 'true') {
-    this.loadProfile();
-  }
+    if (loggedIn && pending !== 'true') {
+      this.loadProfile();
+    }
+  });
 }
 isPendingPayment(): boolean {
   return localStorage.getItem('pending_payment') === 'true';
 }
-  loadProfile() {
-    this.api.getProfile().subscribe({
-      next: (res: any) => {
-        this.user = res;   // {firstName,lastName}
-      }
-    });
-  }
+loadProfile() {
+  this.api.getProfile().subscribe({
+    next: (res: any) => {
+      this.user = res;
+
+      // 🔥 force UI update
+      this.cdr.detectChanges();
+    }
+  });
+}
   logout() {
     this.auth.logout();
     this.router.navigate(['/login']);
