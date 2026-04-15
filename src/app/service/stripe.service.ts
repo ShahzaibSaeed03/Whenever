@@ -11,12 +11,19 @@ export class StripeService {
 
   /* ===== SUBSCRIPTION ===== */
 
-createSubscription(formData:any){
-  return this.http.post(`${this.baseUrl}/billing/subscription-checkout`,{
-    formData
-  });
-}
+createSubscription(){
+  const token = localStorage.getItem('token');
 
+  return this.http.post(
+    `${this.baseUrl}/billing/subscription-checkout`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+}
   getSubscriptionStatus(){
     return this.http.get(`${this.baseUrl}/subscription/status`);
   }
