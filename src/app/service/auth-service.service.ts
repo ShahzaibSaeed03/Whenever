@@ -3,16 +3,6 @@ import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private subscriptionStatus = new BehaviorSubject<string>(
-  localStorage.getItem('subscriptionStatus') || ''
-);
-
-subscriptionStatus$ = this.subscriptionStatus.asObservable();
-
-setSubscriptionStatus(status: string) {
-  localStorage.setItem('subscriptionStatus', status);
-  this.subscriptionStatus.next(status);
-}
   private loggedIn = new BehaviorSubject<boolean>(!!localStorage.getItem('token'));
   isLoggedIn$ = this.loggedIn.asObservable();
 
