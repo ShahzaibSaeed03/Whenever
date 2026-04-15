@@ -117,4 +117,20 @@
     </form>
 
   </div>
+
+  <!-- STRIPE CHECKOUT -->
+<div *ngIf="showCheckout"
+     class="max-w-5xl mx-auto mt-10 border border-[#3f5f78] rounded-xl p-6 bg-white">
+
+  <div class="text-lg font-semibold text-center mb-6">
+    Complete your subscription
+  </div>
+
+  <div *ngIf="loadingCheckout" class="text-center text-gray-500 py-6">
+    Loading checkout...
+  </div>
+
+  <div id="login-checkout" class="min-h-[600px]"></div>
+
+</div>
 </div>
