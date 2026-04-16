@@ -18,8 +18,7 @@
   </div>
 
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 text-[#3f5f78] space-y-10"   *ngIf="subscriptionLoaded"
->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 text-[#3f5f78] space-y-10" *ngIf="subscriptionLoaded">
 
     <!-- SUBSCRIPTION -->
     <div class="space-y-4">
@@ -30,18 +29,16 @@
         {{ renewalMessage.description }}
       </p>
 
-      <button *ngIf="!subscription?.autoRenew" (click)="cancel()"
+      <!-- CANCEL (when active) -->
+      <button *ngIf="subscription?.autoRenew" (click)="cancel()"
         class="bg-[#3f5f78] text-white px-6 py-2 rounded-lg w-full sm:w-auto">
-
         CANCEL SUBSCRIPTION
-
       </button>
 
-      <button *ngIf="subscription?.autoRenew" (click)="resume()"
+      <!-- REACTIVATE (when cancelled) -->
+      <button *ngIf="!subscription?.autoRenew" (click)="resume()"
         class="bg-green-600 text-white px-6 py-2 rounded-lg w-full sm:w-auto">
-
-          REACTIVATE SUBSCRIPTION
-
+        REACTIVATE SUBSCRIPTION
       </button>
 
     </div>
