@@ -30,14 +30,14 @@
         {{ renewalMessage.description }}
       </p>
 
-      <button *ngIf="subscription?.autoRenew" (click)="cancel()"
+      <button *ngIf="!subscription?.autoRenew" (click)="cancel()"
         class="bg-[#3f5f78] text-white px-6 py-2 rounded-lg w-full sm:w-auto">
 
         CANCEL SUBSCRIPTION
 
       </button>
 
-      <button *ngIf="!subscription?.autoRenew" (click)="resume()"
+      <button *ngIf="subscription?.autoRenew" (click)="resume()"
         class="bg-green-600 text-white px-6 py-2 rounded-lg w-full sm:w-auto">
 
           REACTIVATE SUBSCRIPTION

@@ -1,55 +1,58 @@
 <div class="bg-[#d5e8ef] min-h-screen">
 
-  <!-- TITLE -->
-  <div class="bg-[#466d94] text-white px-6 py-3 mx-1">
+  <!-- HEADER -->
+  <div class="bg-[#466d94] text-white px-4 py-3">
     <span class="font-semibold">Access a registered work</span>
   </div>
 
-  <div class="max-w-7xl mx-auto px-6 py-12 text-[#3f5f78] bg-[#cfe6ef]">
- <div class="space-y-4 text-sm leading-relaxed">
-      <p>
-        Please type the work reference number and its password,
-        given by the Copyright Owner, in order to access this work.
-      </p>
+  <div class="max-w-5xl mx-auto px-4 py-8 text-[#3f5f78]">
 
+    <!-- INFO -->
+    <div class="space-y-3 text-sm leading-relaxed">
       <p>
-        You will see the Certificate, and will be able to download the corresponding work.
+        Please type the work reference number and its password
+        to access this registered work.
+      </p>
+      <p>
+        You will see the certificate and can download the file.
       </p>
     </div>
+
     <!-- FORM -->
-    <div class="space-y-6 mt-7 w-2xl">
+    <div class="space-y-4 mt-6">
 
       <!-- Reference -->
-      <div class="flex gap-6 items-center">
-        <label class="w-48 text-right font-semibold">
+      <div class="flex flex-col md:flex-row gap-2 md:items-center">
+        <label class="md:w-48 font-semibold">
           Work reference number:
         </label>
 
         <input
           [(ngModel)]="reference"
-          class="flex-1 bg-white border px-3 py-2 rounded"
+          class="flex-1 bg-white border px-3 py-2 rounded w-full"
           placeholder="Enter reference ID"
         />
       </div>
 
       <!-- Password -->
-      <div class="flex gap-6 items-center">
-        <label class="w-48 text-right font-semibold">
+      <div class="flex flex-col md:flex-row gap-2 md:items-center">
+        <label class="md:w-48 font-semibold">
           Password:
         </label>
 
         <input
           [(ngModel)]="password"
           type="password"
-          class="flex-1 bg-white border px-3 py-2 rounded"
+          class="flex-1 bg-white border px-3 py-2 rounded w-full"
           placeholder="Enter password"
         />
       </div>
 
+      <!-- Button -->
       <div class="flex justify-center">
         <button
           (click)="access()"
-          class="bg-green-500 hover:bg-green-600 text-white px-10 py-2 rounded-lg">
+          class="bg-green-500 hover:bg-green-600 text-white px-8 py-2 rounded-lg">
           ACCESS
         </button>
       </div>
@@ -58,107 +61,120 @@
 
     <!-- SUCCESS -->
     <div *ngIf="successMessage"
-         class="mt-6 bg-green-50 border-l-4 border-green-400 text-green-800 p-4 rounded">
+         class="mt-4 bg-green-50 border-l-4 border-green-400 text-green-800 p-3 rounded">
       {{ successMessage }}
     </div>
 
     <!-- ERROR -->
     <div *ngIf="errorMessage"
-         class="mt-6 bg-red-50 border-l-4 border-red-400 text-red-800 p-4 rounded">
+         class="mt-4 bg-red-50 border-l-4 border-red-400 text-red-800 p-3 rounded">
       {{ errorMessage }}
     </div>
-
- 
 
   </div>
 </div>
 
-<!-- POPUP MODAL -->
+
+<!-- MODAL -->
 <div *ngIf="workData"
-class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4 py-6">
+     class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
 
-<div class="bg-[#cfe6ef] rounded-xl shadow-lg w-full max-w-[520px] max-h-[90vh] overflow-y-auto">
+  <div class="bg-[#cfe6ef] rounded-xl shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
 
-<!-- HEADER -->
-<div class="bg-[#466d94] text-white px-6 py-3 flex justify-between items-center">
-<span class="font-semibold">Registered Work Certificate</span>
+    <!-- HEADER -->
+    <div class="bg-[#466d94] text-white px-4 py-3 flex justify-between items-center">
+      <span class="font-semibold">Registered Work Certificate</span>
 
-<button
-(click)="workData=null"
-class="text-white text-xl leading-none hover:opacity-70">
-✕
-</button>
-</div>
+      <button
+        (click)="workData=null"
+        class="text-white text-xl hover:opacity-70">
+        ✕
+      </button>
+    </div>
 
-<!-- CERTIFICATE -->
-<div class="relative p-6">
+    <!-- CERTIFICATE CONTENT -->
+    <div class="p-4">
 
-<img
-src="Certif.png"
-class="w-full rounded shadow"/>
+      <!-- Certificate Image -->
+      <img
+        src="Certif.png"
+        class="w-full rounded shadow mb-4"
+      />
 
-<div
-class="absolute inset-0 pt-[110px] px-[55px] text-gray-800 text-[13px] leading-6">
+      <!-- Details -->
+      <div class="text-sm space-y-2">
 
-<div class="grid grid-cols-[160px_1fr] gap-y-3">
+        <div>
+          <span class="font-semibold">Work Title:</span>
+          {{ workData?.title }}
+        </div>
 
-<div class="font-semibold">Work Title:</div>
-<div>{{ workData?.title }}</div>
+        <div>
+          <span class="font-semibold">Copyright Owner:</span>
+          {{ workData?.copyright_owner }}
+        </div>
 
-<div class="font-semibold">Copyright Owner:</div>
-<div>{{ workData?.copyright_owner }}</div>
+        <div *ngIf="workData?.additional_copyright_owners">
+          <span class="font-semibold">Additional Owners:</span>
+          {{ workData?.additional_copyright_owners }}
+        </div>
 
-<div *ngIf="workData?.additional_copyright_owners" class="font-semibold">
-Additional Owners:
-</div>
-<div *ngIf="workData?.additional_copyright_owners">
-{{ workData?.additional_copyright_owners }}
-</div>
+        <div>
+          <span class="font-semibold">Reference Number:</span>
+          {{ workData?.displayed_ID }}
+        </div>
 
-<div class="font-semibold">Reference Number:</div>
-<div>{{ workData?.displayed_ID }}</div>
+        <div>
+          <span class="font-semibold">Registration Date:</span>
+          {{ workData?.registration_date | date }}
+        </div>
 
-<div class="font-semibold">Registration Date:</div>
-<div>{{ workData?.registration_date | date }}</div>
+        <div>
+          <span class="font-semibold">File Name:</span>
+          <span class="break-all">{{ workData?.file_name }}</span>
+        </div>
 
-<div class="font-semibold">File Name:</div>
-<div class="break-all">{{ workData?.file_name }}</div>
+        <div>
+          <span class="font-semibold">Fingerprint:</span>
+          <div class="font-mono text-[11px] break-all">
+            {{ workData?.file_fingerprint }}
+          </div>
+        </div>
 
-<div class="font-semibold">Fingerprint:</div>
-<div class="font-mono text-[11px] break-all">
-{{ workData?.file_fingerprint }}
-</div>
+        <!-- ✅ ALWAYS SHOW -->
+        <div>
+          <span class="font-semibold">Timestamp Authority:</span>
+          OpenTimestamps
+        </div>
 
-</div>
+      </div>
 
-</div>
-</div>
+    </div>
 
-<!-- ACTION BUTTONS -->
-<div class="px-6 pb-6 flex flex-wrap gap-3">
+    <!-- ACTION BUTTONS -->
+    <div class="p-4 flex flex-col sm:flex-row gap-3">
 
-<button
-(click)="download()"
-class="flex-1 min-w-[140px] bg-[#6f8faf] hover:bg-[#5f7f9f] text-white py-2 rounded-lg transition">
-Download Work
-</button>
+      <button
+        (click)="download()"
+        class="flex-1 bg-[#6f8faf] hover:bg-[#5f7f9f] text-white py-2 rounded-lg">
+        Download Work
+      </button>
 
-<button
-(click)="viewCertificate()"
-class="flex-1 min-w-[140px] bg-[#567ba1] hover:bg-[#486a8f] text-white py-2 rounded-lg transition">
-Certificate
-</button>
+      <button
+        (click)="viewCertificate()"
+        class="flex-1 bg-[#567ba1] hover:bg-[#486a8f] text-white py-2 rounded-lg">
+        View Certificate
+      </button>
 
-<a
-*ngIf="workData?.otsUrl"
-[href]="workData.otsUrl"
-target="_blank"
-class="flex-1 min-w-[140px] bg-[#466d94] hover:bg-[#3b5f82] text-white py-2 rounded-lg text-center transition">
-OTS File
-</a>
+      <a
+        *ngIf="workData?.otsUrl"
+        [href]="workData.otsUrl"
+        target="_blank"
+        class="flex-1 bg-[#466d94] hover:bg-[#3b5f82] text-white py-2 rounded-lg text-center">
+        OTS File
+      </a>
 
-</div>
+    </div>
 
-</div>
-
+  </div>
 </div>

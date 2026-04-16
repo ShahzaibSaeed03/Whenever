@@ -1,59 +1,89 @@
 <!-- GLOBAL HEADER -->
-<div class="bg-[#466d94] text-white h-12 px-6 py-3 flex justify-between">
+<div class="bg-[#466d94] text-white h-12 px-4 flex items-center justify-between">
   <span class="font-semibold">View Work</span>
 </div>
 
 <!-- CERTIFICATE VIEW -->
-<div *ngIf="work" class="min-h-screen flex items-center justify-center px-4 pt-10 ">
+<div *ngIf="work"
+     class="min-h-screen flex items-start md:items-center justify-center px-3 py-6">
 
-  <div class="relative w-full max-w-[470px] min-h-[650px]">
+  <div class="relative w-full max-w-[480px]">
 
-    <img [src]="certificateImg" class="w-full rounded-lg shadow-lg" />
+    <!-- IMAGE -->
+    <img
+      [src]="certificateImg"
+      class="w-full rounded-lg shadow-lg"
+    />
 
-    <div class="absolute inset-0 z-10 text-gray-800 pt-[90px] px-[30px]">
+    <!-- OVERLAY TEXT -->
+    <div class="absolute inset-0 z-10 text-gray-800
+                pt-[18%] px-[6%]
+                text-[12px] sm:text-[13px] leading-5">
 
-      <table class="w-full border-separate border-spacing-y-3 text-sm">
+      <table class="w-full border-separate border-spacing-y-2">
 
         <tr>
-          <td class="font-semibold pr-4 whitespace-nowrap">Work Title:</td>
-          <td>{{ work?.title }}</td>
+          <td class="font-semibold pr-2 align-top whitespace-nowrap">
+            Work Title:
+          </td>
+          <td class="break-words">
+            {{ work?.title }}
+          </td>
         </tr>
 
         <tr>
-          <td class="font-semibold pr-4 whitespace-nowrap">Copyright Owner:</td>
-          <td>{{ work?.copyright_owner }}</td>
+          <td class="font-semibold pr-2 align-top whitespace-nowrap">
+            Copyright Owner:
+          </td>
+          <td class="break-words">
+            {{ work?.copyright_owner }}
+          </td>
         </tr>
 
         <tr *ngIf="work?.additional_copyright_owners">
-          <td class="font-semibold pr-4 whitespace-nowrap">Additional Owners:</td>
-          <td>{{ work?.additional_copyright_owners }}</td>
+          <td class="font-semibold pr-2 align-top whitespace-nowrap">
+            Additional Owners:
+          </td>
+          <td class="break-words">
+            {{ work?.additional_copyright_owners }}
+          </td>
         </tr>
 
         <tr>
-          <td class="font-semibold pr-4 whitespace-nowrap">Reference Number:</td>
+          <td class="font-semibold pr-2 whitespace-nowrap">
+            Reference Number:
+          </td>
           <td>{{ work?.displayed_ID }}</td>
         </tr>
 
         <tr>
-          <td class="font-semibold pr-4 whitespace-nowrap">Registration Date:</td>
+          <td class="font-semibold pr-2 whitespace-nowrap">
+            Registration Date:
+          </td>
           <td>{{ work?.registration_date | date }}</td>
         </tr>
 
         <tr>
-          <td class="font-semibold pr-4 whitespace-nowrap">Timestamp Authority:</td>
+          <td class="font-semibold pr-2 whitespace-nowrap">
+            Timestamp Authority:
+          </td>
           <td>OpenTimestamps</td>
         </tr>
 
         <tr>
-          <td class="font-semibold pr-4 whitespace-nowrap">File Name:</td>
-          <td class="break-all  cursor-pointer " >
+          <td class="font-semibold pr-2 whitespace-nowrap">
+            File Name:
+          </td>
+          <td class="break-all">
             {{ work?.file_name }}
           </td>
         </tr>
 
         <tr>
-          <td class="font-semibold pr-4 whitespace-nowrap">Fingerprint:</td>
-          <td class="font-mono text-[12px] break-all">
+          <td class="font-semibold pr-2 align-top whitespace-nowrap">
+            Fingerprint:
+          </td>
+          <td class="font-mono text-[10px] sm:text-[11px] break-all">
             {{ work?.file_fingerprint }}
           </td>
         </tr>
@@ -65,20 +95,23 @@
   </div>
 
 </div>
-    <!-- ACTION BUTTONS -->
-  <div class="px-6 pb-6 flex justify-center gap-3 max-w-xl mx-auto">
+
+
+<!-- ACTION BUTTONS -->
+<div *ngIf="work"
+     class="px-4 pb-6 flex flex-col sm:flex-row justify-center gap-3 max-w-xl mx-auto">
 
   <!-- DOWNLOAD -->
   <button
     (click)="download(work.downloadUrl, work.file_name)"
-    class="w-36 bg-[#6f8faf] hover:bg-[#5f7f9f] text-white py-1.5 text-sm rounded-md transition text-center">
-    Download work
+    class="flex-1 bg-[#6f8faf] hover:bg-[#5f7f9f] text-white py-2 rounded-md text-sm">
+    Download Work
   </button>
 
   <!-- CERTIFICATE -->
   <button
     (click)="downloadCertificate()"
-    class="w-36 bg-[#567ba1] hover:bg-[#486a8f] text-white py-1.5 text-sm rounded-md transition text-center">
+    class="flex-1 bg-[#567ba1] hover:bg-[#486a8f] text-white py-2 rounded-md text-sm">
     Certificate
   </button>
 
@@ -87,7 +120,7 @@
     *ngIf="work?.otsUrl"
     [href]="work.otsUrl"
     target="_blank"
-    class="w-36 bg-[#466d94] hover:bg-[#3b5f82] text-white py-1.5 text-sm rounded-md text-center transition flex items-center justify-center">
+    class="flex-1 bg-[#466d94] hover:bg-[#3b5f82] text-white py-2 rounded-md text-sm text-center flex items-center justify-center">
     OTS File
   </a>
 
