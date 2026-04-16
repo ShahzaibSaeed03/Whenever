@@ -93,63 +93,42 @@
     </div>
 
     <!-- CERTIFICATE CONTENT -->
-    <div class="p-4">
+<div class="relative w-full">
 
-      <!-- Certificate Image -->
-      <img
-        src="Certif.png"
-        class="w-full rounded shadow mb-4"
-      />
+  <!-- Certificate Image -->
+  <img src="Certif.png" class="w-full rounded shadow" />
 
-      <!-- Details -->
-      <div class="text-sm space-y-2">
+  <!-- Overlay Content -->
+  <div class="absolute inset-0 flex flex-col justify-start p-[6%] text-[10px] sm:text-xs md:text-sm text-gray-800">
 
-        <div>
-          <span class="font-semibold">Work Title:</span>
-          {{ workData?.title }}
-        </div>
+    <div class="mt-[20%] space-y-2">
 
-        <div>
-          <span class="font-semibold">Copyright Owner:</span>
-          {{ workData?.copyright_owner }}
-        </div>
+      <div><b>Work Title:</b> {{ workData?.title }}</div>
 
-        <div *ngIf="workData?.additional_copyright_owners">
-          <span class="font-semibold">Additional Owners:</span>
-          {{ workData?.additional_copyright_owners }}
-        </div>
+      <div><b>Copyright Owner:</b> {{ workData?.copyright_owner }}</div>
 
-        <div>
-          <span class="font-semibold">Reference Number:</span>
-          {{ workData?.displayed_ID }}
-        </div>
+      <div *ngIf="workData?.additional_copyright_owners">
+        <b>Additional Owners:</b> {{ workData?.additional_copyright_owners }}
+      </div>
 
-        <div>
-          <span class="font-semibold">Registration Date:</span>
-          {{ workData?.registration_date | date }}
-        </div>
+      <div><b>Reference Number:</b> {{ workData?.displayed_ID }}</div>
 
-        <div>
-          <span class="font-semibold">File Name:</span>
-          <span class="break-all">{{ workData?.file_name }}</span>
-        </div>
+      <div><b>Registration Date:</b> {{ workData?.registration_date | date }}</div>
 
-        <div>
-          <span class="font-semibold">Fingerprint:</span>
-          <div class="font-mono text-[11px] break-all">
-            {{ workData?.file_fingerprint }}
-          </div>
-        </div>
+      <div><b>File Name:</b> {{ workData?.file_name }}</div>
 
-        <!-- ✅ ALWAYS SHOW -->
-        <div>
-          <span class="font-semibold">Timestamp Authority:</span>
-          OpenTimestamps
-        </div>
+      <div class="break-all text-[9px] sm:text-xs">
+        <b>Fingerprint:</b> {{ workData?.file_fingerprint }}
+      </div>
 
+      <div>
+        <b>Timestamp Authority:</b> OpenTimestamps
       </div>
 
     </div>
+
+  </div>
+</div>
 
     <!-- ACTION BUTTONS -->
     <div class="p-4 flex flex-col sm:flex-row gap-3">
