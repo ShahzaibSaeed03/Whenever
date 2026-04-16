@@ -30,16 +30,21 @@
       </p>
 
       <!-- CANCEL (when active) -->
-      <button *ngIf="subscription?.autoRenew" (click)="cancel()"
-        class="bg-[#3f5f78] text-white px-6 py-2 rounded-lg w-full sm:w-auto">
-        CANCEL SUBSCRIPTION
-      </button>
+    <!-- CANCEL (only if active AND autoRenew ON) -->
+<button 
+  *ngIf="subscription?.isActive && subscription?.autoRenew"
+  (click)="cancel()"
+  class="bg-[#3f5f78] text-white px-6 py-2 rounded-lg w-full sm:w-auto">
+  CANCEL SUBSCRIPTION
+</button>
 
-      <!-- REACTIVATE (when cancelled) -->
-      <button *ngIf="!subscription?.autoRenew" (click)="resume()"
-        class="bg-green-600 text-white px-6 py-2 rounded-lg w-full sm:w-auto">
-        REACTIVATE SUBSCRIPTION
-      </button>
+<!-- REACTIVATE (only if active BUT autoRenew OFF) -->
+<button 
+  *ngIf="subscription?.isActive && !subscription?.autoRenew"
+  (click)="resume()"
+  class="bg-green-600 text-white px-6 py-2 rounded-lg w-full sm:w-auto">
+  REACTIVATE SUBSCRIPTION
+</button>
 
     </div>
 
