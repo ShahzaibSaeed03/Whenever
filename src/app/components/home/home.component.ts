@@ -24,22 +24,27 @@ export class HomeComponent implements OnInit {
     private authApi: AuthApiService
   ) { }
 
-  ngOnInit() {
-    this.authService.isLoggedIn$.subscribe(status => {
+ngOnInit() {
+  this.authService.isLoggedIn$.subscribe(status => {
 
-      this.isLoggedIn = status;
+    this.isLoggedIn = status;
 
-      if (status) {
+    if (status) {
+
+      // 🔥 small delay ensures token is set
+      setTimeout(() => {
         this.loadTokenData();
         this.loadProfile();
+      }, 0);
 
-      } else {
-        this.tokens = 0;
-        this.billingDate = '';
-      }
+    } else {
+      this.tokens = 0;
+      this.billingDate = '';
+      this.user = null;
+    }
 
-    });
-  }
+  });
+}
   isTokenLoaded = false;
   loadTokenData() {
     this.workService.getTokenDetails()
