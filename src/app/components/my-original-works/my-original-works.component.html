@@ -334,26 +334,25 @@ Cancel
 
 </div>
 
-
-<!-- CERTIFICATE MODAL -->
 <!-- CERTIFICATE MODAL -->
 <div
   *ngIf="showCertificateModal"
-  class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4 overflow-auto">
+  class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
 
-  <div class="relative w-full max-w-[470px] min-h-[650px]">
-
-    <!-- CLOSE -->
-    <button
+  <!-- MAKE THIS RELATIVE -->
+<div class="relative w-full max-w-[470px]">
+   <button
       (click)="closeCertificateModal()"
-      class="absolute top-2 right-2 bg-red-500 text-white rounded-md px-2 py-1 text-sm shadow z-20">
+      class="absolute -top-7 right-1 bg-red-500 text-white rounded-md px-2 py-1 text-sm shadow z-20">
       CLOSE
     </button>
 
     <!-- CERTIFICATE IMAGE -->
     <img src="Certif.png" class="w-full rounded-lg shadow-lg" />
 
-    <!-- CONTENT (EXACT SAME STYLE) -->
+    <!-- ✅ CLOSE BUTTON (NOW INSIDE CERTIFICATE) -->
+   
+    <!-- CONTENT -->
     <div class="absolute inset-0 z-10 text-gray-800 pt-[90px] px-[30px]">
 
       <table class="w-full border-separate border-spacing-y-3 text-sm">
