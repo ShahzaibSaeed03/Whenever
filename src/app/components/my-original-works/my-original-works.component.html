@@ -27,35 +27,62 @@ This is the list of your Works:
 
 
 <!-- FILTER -->
-<div class="border border-[#466d94]/40 rounded-lg p-4 sm:p-6">
+<div class="border-2 border-[#2f4e6f] rounded-md p-3 bg-[#cfe6ef] w-fit mx-auto">
 
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+  <div class="flex flex-wrap items-center gap-3">
 
-<input [(ngModel)]="filters.id"
-placeholder="ID"
-class="bg-gray-50 p-2 rounded w-full" />
+    <!-- ID -->
+    <div class="flex flex-col">
+      <label class="text-sm text-[#2f4e6f] font-semibold mb-1">ID</label>
+      <input
+        [(ngModel)]="filters.id"
+         (input)="search()"
+        class="bg-white border border-gray-400 px-2 py-1 w-[100px]"
+      />
+    </div>
 
-<input [(ngModel)]="filters.title"
-placeholder="Title"
-class="bg-gray-50 p-2 rounded w-full" />
+    <!-- TITLE -->
+    <div class="flex flex-col">
+      <label class="text-sm text-[#2f4e6f] font-semibold mb-1">Title</label>
+      <input
+        [(ngModel)]="filters.title"
+         (input)="search()"
+        class="bg-white border border-gray-400 px-2 py-1 w-[200px]"
+      />
+    </div>
 
-<input [(ngModel)]="filters.from"
-type="date"
-class="bg-gray-50 p-2 rounded w-full" />
+    <!-- FROM -->
+    <div class="flex flex-col">
+      <label class="text-sm text-[#2f4e6f] font-semibold mb-1">from</label>
+      <input
+        type="date"
+        [(ngModel)]="filters.from"
+         (input)="search()"
+        class="bg-white border border-gray-400 px-2 py-1 w-[130px]"
+      />
+    </div>
 
-<input [(ngModel)]="filters.to"
-type="date"
-class="bg-gray-50 p-2 rounded w-full" />
+    <!-- TO -->
+    <div class="flex flex-col">
+      <label class="text-sm text-[#2f4e6f] font-semibold mb-1">to</label>
+      <input
+        type="date"
+        [(ngModel)]="filters.to"
+         (input)="search()"
+        class="bg-white border border-gray-400 px-2 py-1 w-[130px]"
+      />
+    </div>
 
-<button
-(click)="search()"
-class="bg-[#466d94] text-white py-2 rounded w-full">
+    <!-- BUTTON -->
+    <div class="flex items-end">
+      <button
+        (click)="search()"
+        class="bg-[#466d94] hover:bg-[#3b5f82] text-white px-6 py-1  mt-5">
+        SEARCH
+      </button>
+    </div>
 
-SEARCH
-
-</button>
-
-</div>
+  </div>
 
 </div>
 
@@ -335,75 +362,113 @@ Cancel
 </div>
 
 <!-- CERTIFICATE MODAL -->
-<div
-  *ngIf="showCertificateModal"
-  class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
+<div *ngIf="showCertificateModal"
+     class="fixed inset-0 bg-black/60 flex justify-center items-start z-50 px-4">
 
-  <!-- MAKE THIS RELATIVE -->
-<div class="relative w-full max-w-[470px]">
-   <button
+  <div class="relative w-full max-w-[470px] mt-16 sm:mt-10">
+
+    <!-- CLOSE BUTTON -->
+    <button
       (click)="closeCertificateModal()"
-      class="absolute -top-7 right-1 bg-red-500 text-white rounded-md px-2 py-1 text-sm shadow z-20">
+      class="absolute -top-7 right-0 border border-gray-300 bg-[#ff5758] text-white rounded-sm px-3 py-1 text-sm shadow-sm z-20">
       CLOSE
     </button>
 
     <!-- CERTIFICATE IMAGE -->
-    <img src="Certif.png" class="w-full rounded-lg shadow-lg" />
+    <img
+      src="Certif.png"
+      alt="Certificate template"
+      class="w-full h-[75vh] sm:h-[80vh] md:h-[93vh] rounded-lg shadow-lg select-none pointer-events-none" />
 
-    <!-- ✅ CLOSE BUTTON (NOW INSIDE CERTIFICATE) -->
-   
-    <!-- CONTENT -->
-    <div class="absolute inset-0 z-10 text-gray-800 pt-[90px] px-[30px]">
+    <!-- CONTENT OVERLAY -->
+    <div
+      class="absolute inset-0 z-10 text-gray-800 pt-[80px] px-[28px] sm:pt-[96px] sm:px-[44px] md:pt-[110px] md:px-[25px]">
 
-      <table class="w-full border-separate border-spacing-y-3 text-sm">
+      <div class="text-sm sm:text-base">
 
-        <tr>
-          <td class="font-semibold pr-4 whitespace-nowrap">Work Title:</td>
-          <td>{{ selectedCertificate?.workTitle }}</td>
-        </tr>
+        <table class="w-full border-separate border-spacing-y-3">
 
-        <tr>
-          <td class="font-semibold pr-4 whitespace-nowrap">Copyright Owner:</td>
-          <td>{{ selectedCertificate?.copyrightOwner }}</td>
-        </tr>
+          <tr>
+            <td class="font-semibold pr-4 align-top whitespace-nowrap">
+              Work Title:
+            </td>
+            <td class="align-top">
+              {{ selectedCertificate?.workTitle }}
+            </td>
+          </tr>
 
-        <tr *ngIf="selectedCertificate?.additionalOwners">
-          <td class="font-semibold pr-4 whitespace-nowrap">Additional Owners:</td>
-          <td>{{ selectedCertificate?.additionalOwners }}</td>
-        </tr>
+          <tr>
+            <td class="font-semibold pr-4 align-top whitespace-nowrap">
+              Copyright Owner:
+            </td>
+            <td class="align-top">
+              {{ selectedCertificate?.copyrightOwner }}
+            </td>
+          </tr>
 
-        <tr>
-          <td class="font-semibold pr-4 whitespace-nowrap">Reference Number:</td>
-          <td>{{ selectedCertificate?.referenceNumber }}</td>
-        </tr>
+          <tr *ngIf="selectedCertificate?.additionalOwners">
+            <td class="font-semibold pr-4 align-top whitespace-nowrap">
+              Additional Owners:
+            </td>
+            <td class="align-top">
+              {{ selectedCertificate?.additionalOwners }}
+            </td>
+          </tr>
 
-        <tr>
-          <td class="font-semibold pr-4 whitespace-nowrap">Registration Date:</td>
-          <td>{{ selectedCertificate?.registrationDateFormatted }}</td>
-        </tr>
+          <tr>
+            <td class="font-semibold pr-4 align-top whitespace-nowrap">
+              Reference Number:
+            </td>
+            <td class="align-top">
+              {{ selectedCertificate?.referenceNumber }}
+            </td>
+          </tr>
 
-        <tr>
-          <td class="font-semibold pr-4 whitespace-nowrap">Timestamp Authority:</td>
-          <td>{{ selectedCertificate?.timestampAuthority }}</td>
-        </tr>
+          <tr>
+            <td class="font-semibold pr-4 align-top whitespace-nowrap">
+              Registration Date:
+            </td>
+            <td class="align-top">
+              {{ selectedCertificate?.registrationDateFormatted }}
+            </td>
+          </tr>
 
-        <tr>
-          <td class="font-semibold pr-4 whitespace-nowrap">File Name:</td>
-          <td
-            class="break-all text-blue-600 cursor-pointer underline"
-            (click)="downloadAllFiles(selectedCertificate)">
-            {{ selectedCertificate?.file_name }}
-          </td>
-        </tr>
+          <tr>
+            <td class="font-semibold pr-4 align-top whitespace-nowrap">
+              Timestamping Authority:
+            </td>
+            <td class="align-top">
+              {{ selectedCertificate?.timestampAuthority }}
+            </td>
+          </tr>
 
-        <tr>
-          <td class="font-semibold pr-4 whitespace-nowrap">Fingerprint:</td>
-          <td class="font-mono text-[12px] break-all">
-            {{ selectedCertificate?.fingerprint }}
-          </td>
-        </tr>
+          <tr>
+            <td class="font-semibold pr-4 align-top whitespace-nowrap">
+              Copyrighted File Name:
+            </td>
+            <td class="align-top">
+              <a
+                (click)="downloadAllFiles(selectedCertificate)"
+                class="break-all cursor-pointer underline">
+                {{ selectedCertificate?.file_name }}
+              </a>
+            </td>
+          </tr>
 
-      </table>
+          <tr>
+            <td class="font-semibold pr-4 align-top whitespace-nowrap">
+              File SHA256 Fingerprint:
+            </td>
+            <td class="align-top break-all">
+              <span class="font-mono text-[12px] sm:text-[13px]">
+                {{ selectedCertificate?.fingerprint }}
+              </span>
+            </td>
+          </tr>
+
+        </table>
+
+      </div>
 
     </div>
 

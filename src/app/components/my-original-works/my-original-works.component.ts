@@ -65,40 +65,21 @@ export class MyOriginalWorksComponent implements OnInit {
   }
 
   /* SEARCH */
-  search() {
+search() {
+  let filtered = [...this.originalData];
 
-    let filtered = [...this.originalData];
+  const title = this.filters.title?.toLowerCase().trim();
 
-    if (this.filters.id) {
-      filtered = filtered.filter(w =>
-        String(w.displayed_ID).toLowerCase()
-          .includes(this.filters.id.toLowerCase())
-      );
-    }
-
-    if (this.filters.title) {
-      filtered = filtered.filter(w =>
-        w.title?.toLowerCase()
-          .includes(this.filters.title.toLowerCase())
-      );
-    }
-
-    if (this.filters.from) {
-      const from = new Date(this.filters.from);
-      filtered = filtered.filter(w =>
-        new Date(w.registration_date) >= from
-      );
-    }
-
-    if (this.filters.to) {
-      const to = new Date(this.filters.to);
-      filtered = filtered.filter(w =>
-        new Date(w.registration_date) <= to
-      );
-    }
-
-    this.data = filtered;
+  if (title) {
+    filtered = filtered.filter(w =>
+      (w.title || '')
+        .toLowerCase()
+        .includes(title)   // ✅ SAME as LIKE '%text%'
+    );
   }
+
+  this.data = filtered;
+}
 
   /* RESET */
   resetFilters() {
@@ -187,37 +168,29 @@ export class MyOriginalWorksComponent implements OnInit {
     this.confirmPassword = '';
     this.selectedWork = null;
   }
-  downloadAllFiles(work: any) {
+downloadAllFiles(work: any) {
 
- const urls = [
-  { url: work.downloadUrl, name: work.file_name },
-  { url: work.certificateUrl, name: `Certificate-${work.displayed_ID}.pdf` },
-  { url: work.otsUrl, name: `Timestamp-${work.displayed_ID}.ots` }
-].filter(f => f.url);
+  const urls = [
+    { url: work.downloadUrl, name: work.file_name },
+    { url: work.certificateUrl, name: `Certificate-${work.displayed_ID}.pdf` },
+    { url: work.otsUrl, name: `Timestamp-${work.displayed_ID}.ots` }
+  ].filter(f => f.url);
 
-    urls.forEach((file, index) => {
-      setTimeout(() => {
+  urls.forEach((file, index) => {
+    setTimeout(() => {
 
-        fetch(file.url)
-          .then(res => res.blob())
-          .then(blob => {
-            const blobUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = file.url;
+      a.download = file.name || 'file';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
 
-            const a = document.createElement('a');
-            a.href = blobUrl;
-            a.download = file.name || 'file';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+    }, index * 1000);
 
-            window.URL.revokeObjectURL(blobUrl);
-          });
+  });
 
-      }, index * 1200); // delay to avoid browser blocking
-
-    });
-
-  }
+}
   copyLink(item: any) {
 
     if (!item.shareId) {

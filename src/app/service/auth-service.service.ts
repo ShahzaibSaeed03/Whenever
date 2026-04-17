@@ -19,4 +19,7 @@ export class AuthService {
   checkLogin() {
     this.loggedIn.next(!!localStorage.getItem('token'));
   }
+   getToken() {
+    return localStorage.getItem('token');
+  }
 }

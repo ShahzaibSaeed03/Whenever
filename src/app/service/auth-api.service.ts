@@ -12,6 +12,7 @@ export class AuthApiService {
 
   register(data: any): Observable<any> {
     return this.http.post(`${this.base}/auth/register`, data);
+    
   }
 
   login(data: { email: string; password: string }): Observable<any> {

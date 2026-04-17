@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit {
   ) { }
 
 ngOnInit() {
+    
   this.authService.isLoggedIn$.subscribe(status => {
 
     this.isLoggedIn = status;

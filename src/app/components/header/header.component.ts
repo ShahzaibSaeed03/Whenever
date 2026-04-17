@@ -22,12 +22,17 @@ constructor(
 ) {}
 
 ngOnInit() {
-  this.auth.isLoggedIn$.subscribe((loggedIn) => {
-    const pending = localStorage.getItem('pending_payment');
 
-    if (loggedIn && pending !== 'true') {
+  this.auth.checkLogin(); // keep this
+
+  this.auth.isLoggedIn$.subscribe((loggedIn) => {
+
+    if (loggedIn) {
       this.loadProfile();
+    } else {
+      this.user = null;
     }
+
   });
 }
 isPendingPayment(): boolean {

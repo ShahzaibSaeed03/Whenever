@@ -7,10 +7,11 @@ import { Router, RouterLink } from '@angular/router';
 import { StripeService } from '../../service/stripe.service';
 import { loadStripe } from '@stripe/stripe-js';
 import { environment } from '../../environment/environment';
+import { AuthService } from '../../service/auth-service.service';
 @Component({
   standalone: true,
   selector: 'app-register-user',
-  imports: [CommonModule, ReactiveFormsModule, ToastrModule,RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, ToastrModule, RouterLink],
   templateUrl: './register-user.component.html'
 })
 export class RegisterUserComponent implements OnInit {
@@ -27,7 +28,8 @@ export class RegisterUserComponent implements OnInit {
     private api: AuthApiService,
     private toast: ToastrService,
     private router: Router,
-    private stripeService: StripeService
+    private stripeService: StripeService,
+    private authService: AuthService
 
 
   ) { }
@@ -58,7 +60,7 @@ export class RegisterUserComponent implements OnInit {
       profession: [''],
       refSource: [''],
 
-      
+
     });
 
     /* RESTORE FORM AFTER REFRESH */
@@ -168,10 +170,12 @@ export class RegisterUserComponent implements OnInit {
 
       next: (res: any) => {
 
-        localStorage.setItem('token', res.token);
+        this.authService.login(res.token); // ✅ FIX
+
         localStorage.setItem('pending_payment', 'true');
         localStorage.setItem('userId', res.id);
         localStorage.setItem('subscriptionStatus', res.subscriptionStatus);
+
         this.toast.success('Registered');
 
         this.form.disable();

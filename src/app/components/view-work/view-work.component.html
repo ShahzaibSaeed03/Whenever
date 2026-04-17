@@ -60,7 +60,7 @@
           <td class="font-semibold pr-2 whitespace-nowrap">
             Registration Date:
           </td>
-          <td>{{ work?.registration_date | date }}</td>
+          {{ work?.registration_date | date:'medium':'UTC' }}
         </tr>
 
         <tr>
