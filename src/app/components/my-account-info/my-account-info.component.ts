@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthApiService } from '../../service/auth-api.service';
 import { WorkService } from '../../service/work-service.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../service/auth-service.service';
 
 @Component({
   selector: 'app-my-account-info',
@@ -64,7 +65,8 @@ export class MyAccountInfoComponent implements OnInit {
   constructor(
     private api: AuthApiService,
     private workService: WorkService,
-    private toast: ToastrService
+    private toast: ToastrService,
+    private auth: AuthService
   ) { }
 
   ngOnInit() {
@@ -113,24 +115,29 @@ export class MyAccountInfoComponent implements OnInit {
     });
   }
 
-  updateProfile() {
+updateProfile() {
 
-    const payload = {
-      ...this.profile,
-      country: this.profile.personalAddress.country,
-      state: this.profile.personalAddress.state
-    };
+  const payload = {
+    ...this.profile,
+    country: this.profile.personalAddress.country,
+    state: this.profile.personalAddress.state
+  };
 
-    this.api.updateProfile(payload).subscribe({
-      next: () => {
-        this.toast.success("Profile updated");
-      },
-      error: () => {
-        this.toast.error("Update failed");
-      }
-    });
+  this.api.updateProfile(payload).subscribe({
+    next: (res: any) => {
 
-  }
+      this.toast.success("Profile updated");
+
+      // 🔥 instant header update
+      this.auth.setUser(res || this.profile);
+
+    },
+    error: () => {
+      this.toast.error("Update failed");
+    }
+  });
+
+}
 
   /* ================= PASSWORD ================= */
 

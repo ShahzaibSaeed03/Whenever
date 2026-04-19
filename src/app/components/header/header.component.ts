@@ -21,29 +21,32 @@ export class HeaderComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
-    this.auth.checkLogin();
+ ngOnInit(): void {
 
-    this.auth.isLoggedIn$.subscribe((loggedIn) => {
-      if (loggedIn) {
-        this.loadProfile();
-      } else {
-        this.user = null;
-      }
-    });
-  }
+  this.auth.checkLogin();
 
-  loadProfile(): void {
-    this.api.getProfile().subscribe({
-      next: (res: any) => {
-        this.user = res;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.user = null;
-      }
-    });
-  }
+  // 🔥 listen to global user changes
+  this.auth.user$.subscribe(user => {
+    this.user = user;
+  });
+
+  // load profile if not loaded
+  this.auth.isLoggedIn$.subscribe((loggedIn) => {
+    if (loggedIn && !this.user) {
+      this.loadProfile();
+    }
+  });
+}
+
+loadProfile() {
+  this.api.getProfile().subscribe({
+    next: (res: any) => {
+      this.auth.setUser(res); // 🔥 update global user
+    }
+  });
+}
+
+ 
 
   logout(): void {
     this.auth.logout();
