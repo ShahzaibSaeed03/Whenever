@@ -8,10 +8,9 @@ import { CommonModule } from '@angular/common';
   selector: 'app-my-original-works',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './my-original-works.component.html'
+  templateUrl: './my-original-works.component.html',
 })
 export class MyOriginalWorksComponent implements OnInit {
-
   originalData: any[] = [];
   data: any[] = [];
 
@@ -29,23 +28,23 @@ export class MyOriginalWorksComponent implements OnInit {
     id: '',
     title: '',
     from: '',
-    to: ''
+    to: '',
   };
 
   constructor(
     private workService: WorkService,
-    private toast: ToastrService
-  ) { }
+    private toast: ToastrService,
+  ) {}
 
   ngOnInit() {
     this.load();
+    this.resetFilters();
 
-    this.workService.getTokenDetails()
-      .subscribe((res: any) => {
-        this.tokens = res.remainingTokens;
-        this.billingDate = res.nextBillingDate;
-        this.isTokenLoaded = true; // ✅ mark loaded
-      });
+    this.workService.getTokenDetails().subscribe((res: any) => {
+      this.tokens = res.remainingTokens;
+      this.billingDate = res.nextBillingDate;
+      this.isTokenLoaded = true; // ✅ mark loaded
+    });
   }
 
   /* LOAD */
@@ -57,7 +56,7 @@ export class MyOriginalWorksComponent implements OnInit {
         ...item,
         shareUrl: item.shareId
           ? `${window.location.origin}/share/${item.shareId}`
-          : null
+          : null,
       }));
 
       this.originalData = [...this.data];
@@ -65,21 +64,19 @@ export class MyOriginalWorksComponent implements OnInit {
   }
 
   /* SEARCH */
-search() {
-  let filtered = [...this.originalData];
+  search() {
+    let filtered = [...this.originalData];
 
-  const title = this.filters.title?.toLowerCase().trim();
+    const title = this.filters.title?.toLowerCase().trim();
 
-  if (title) {
-    filtered = filtered.filter(w =>
-      (w.title || '')
-        .toLowerCase()
-        .includes(title)   // ✅ SAME as LIKE '%text%'
-    );
+    if (title) {
+      filtered = filtered.filter(
+        (w) => (w.title || '').toLowerCase().includes(title), // ✅ SAME as LIKE '%text%'
+      );
+    }
+
+    this.data = filtered;
   }
-
-  this.data = filtered;
-}
 
   /* RESET */
   resetFilters() {
@@ -112,12 +109,11 @@ search() {
   }
 
   confirmDelete() {
-    this.workService.deleteWork(this.deleteWorkId)
-      .subscribe(() => {
-        this.toast.success('Deleted');
-        this.load();
-        this.closeDelete();
-      });
+    this.workService.deleteWork(this.deleteWorkId).subscribe(() => {
+      this.toast.success('Deleted');
+      this.load();
+      this.closeDelete();
+    });
   }
   closeCertificateModal() {
     this.showCertificateModal = false;
@@ -133,12 +129,27 @@ search() {
     this.showPasswordModal = true;
   }
 
+  downloadOriginalFile(work: any) {
+    if (!work?.downloadUrl) {
+      this.toast.error('File not available');
+      return;
+    }
 
+    const a = document.createElement('a');
+    a.href = work.downloadUrl;
 
+    // force correct filename (important)
+    a.setAttribute('download', work.file_name || 'file');
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    this.toast.success('File download started');
+  }
   confirmPassword = '';
 
   savePassword() {
-
     if (!this.selectedWork) return;
 
     if (this.sharePassword.length < 6) {
@@ -168,31 +179,28 @@ search() {
     this.confirmPassword = '';
     this.selectedWork = null;
   }
-downloadAllFiles(work: any) {
+  downloadAllFiles(work: any) {
+    const urls = [
+      { url: work.downloadUrl, name: work.file_name },
+      {
+        url: work.certificateUrl,
+        name: `Certificate-${work.displayed_ID}.pdf`,
+      },
+      { url: work.otsUrl, name: `Timestamp-${work.displayed_ID}.ots` },
+    ].filter((f) => f.url);
 
-  const urls = [
-    { url: work.downloadUrl, name: work.file_name },
-    { url: work.certificateUrl, name: `Certificate-${work.displayed_ID}.pdf` },
-    { url: work.otsUrl, name: `Timestamp-${work.displayed_ID}.ots` }
-  ].filter(f => f.url);
-
-  urls.forEach((file, index) => {
-    setTimeout(() => {
-
-      const a = document.createElement('a');
-      a.href = file.url;
-      a.download = file.name || 'file';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-
-    }, index * 1000);
-
-  });
-
-}
+    urls.forEach((file, index) => {
+      setTimeout(() => {
+        const a = document.createElement('a');
+        a.href = file.url;
+        a.download = file.name || 'file';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }, index * 1000);
+    });
+  }
   copyLink(item: any) {
-
     if (!item.shareId) {
       this.toast.error('Share link not available');
       return;
@@ -200,17 +208,16 @@ downloadAllFiles(work: any) {
 
     const link = `${window.location.origin}/share/${item.shareId}`;
 
-    navigator.clipboard.writeText(link)
+    navigator.clipboard
+      .writeText(link)
       .then(() => this.toast.success('Share link copied'))
       .catch(() => this.toast.error('Failed to copy link'));
   }
-
 
   showShareModal = false;
   shareLink = '';
 
   openShareModal(item: any) {
-
     if (!item.shareId) {
       this.toast.error('Share link not available');
       return;
@@ -226,7 +233,8 @@ downloadAllFiles(work: any) {
   }
 
   copyFromModal() {
-    navigator.clipboard.writeText(this.shareLink)
+    navigator.clipboard
+      .writeText(this.shareLink)
       .then(() => {
         this.toast.success('Link copied');
         this.closeShareModal(); // 👈 close modal here

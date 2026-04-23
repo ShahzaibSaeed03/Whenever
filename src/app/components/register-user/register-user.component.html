@@ -67,75 +67,7 @@
 
           </div>
 
-          <!-- Address 1 -->
-          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-
-            <label class="sm:w-48">
-              Address Line 1 <span class="text-red-500">*</span>
-            </label>
-
-            <input class="input w-full" formControlName="addressLine1">
-
-          </div>
-
-          <!-- Address 2 -->
-          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-
-            <label class="sm:w-48">Address Line 2</label>
-
-            <input class="input w-full" formControlName="addressLine2">
-
-          </div>
-
-          <!-- Zip -->
-          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-
-            <label class="sm:w-48">
-              Zip Code <span class="text-red-500">*</span>
-            </label>
-
-            <input class="input w-full" formControlName="zip">
-
-          </div>
-
-          <!-- City -->
-          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-
-            <label class="sm:w-48">
-              City <span class="text-red-500">*</span>
-            </label>
-
-            <input class="input w-full" formControlName="city">
-
-          </div>
-
-          <!-- State -->
-          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-
-            <label class="sm:w-48">State / Region</label>
-
-            <select *ngIf="form.value.country==='USA'" class="input w-full" formControlName="state">
-
-              <option value="">Select state</option>
-              <option *ngFor="let s of usStates" [value]="s">{{s}}</option>
-
-            </select>
-
-            <input *ngIf="form.value.country!=='USA'" class="input w-full" formControlName="state">
-
-          </div>
-
-          <!-- Country -->
-          <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-
-            <label class="sm:w-48">
-              Country <span class="text-red-500">*</span>
-            </label>
-
-            <input class="input w-full" formControlName="country">
-
-          </div>
-
+      
           <!-- Phone -->
           <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 

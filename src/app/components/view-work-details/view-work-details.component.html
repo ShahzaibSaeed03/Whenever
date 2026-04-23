@@ -1,31 +1,24 @@
 <div class="bg-[#d5e8ef] min-h-screen">
-
   <!-- HEADER -->
   <div class="bg-[#466d94] text-white px-4 py-3">
     <span class="font-semibold">Access a registered work</span>
   </div>
 
   <div class="max-w-5xl mx-auto px-4 py-8 text-[#3f5f78]">
-
     <!-- INFO -->
     <div class="space-y-3 text-sm leading-relaxed">
       <p>
-        Please type the work reference number and its password
-        to access this registered work.
+        Please type the work reference number and its password to access this
+        registered work.
       </p>
-      <p>
-        You will see the certificate and can download the file.
-      </p>
+      <p>You will see the certificate and can download the file.</p>
     </div>
 
     <!-- FORM -->
     <div class="space-y-4 mt-6">
-
       <!-- Reference -->
       <div class="flex flex-col md:flex-row gap-2 md:items-center">
-        <label class="md:w-48 font-semibold">
-          Work reference number:
-        </label>
+        <label class="md:w-48 font-semibold"> Work reference number: </label>
 
         <input
           [(ngModel)]="reference"
@@ -36,9 +29,7 @@
 
       <!-- Password -->
       <div class="flex flex-col md:flex-row gap-2 md:items-center">
-        <label class="md:w-48 font-semibold">
-          Password:
-        </label>
+        <label class="md:w-48 font-semibold"> Password: </label>
 
         <input
           [(ngModel)]="password"
@@ -52,155 +43,154 @@
       <div class="flex justify-center">
         <button
           (click)="access()"
-          class="bg-green-500 hover:bg-green-600 text-white px-8 py-2 rounded-lg">
+          class="bg-green-500 hover:bg-green-600 text-white px-8 py-2 rounded-lg"
+        >
           ACCESS
         </button>
       </div>
-
     </div>
 
     <!-- SUCCESS -->
-    <div *ngIf="successMessage"
-         class="mt-4 bg-green-50 border-l-4 border-green-400 text-green-800 p-3 rounded">
+    <div
+      *ngIf="successMessage"
+      class="mt-4 bg-green-50 border-l-4 border-green-400 text-green-800 p-3 rounded"
+    >
       {{ successMessage }}
     </div>
 
     <!-- ERROR -->
-    <div *ngIf="errorMessage"
-         class="mt-4 bg-red-50 border-l-4 border-red-400 text-red-800 p-3 rounded">
+    <div
+      *ngIf="errorMessage"
+      class="mt-4 bg-red-50 border-l-4 border-red-400 text-red-800 p-3 rounded"
+    >
       {{ errorMessage }}
     </div>
-
   </div>
 </div>
 
-
 <!-- MODAL -->
-<div *ngIf="workData"
-     class="fixed inset-0 bg-black/60 flex justify-center items-start z-50 px-4 overflow-y-auto">
-
+<div
+  *ngIf="workData"
+  class="fixed inset-0 bg-black/60 flex justify-center items-start z-50 px-4 overflow-y-auto"
+>
   <div class="relative w-full max-w-[470px] mt-6 sm:mt-10">
-
     <!-- CLOSE BUTTON -->
     <button
-      (click)="workData=null"
-      class="absolute -top-7 right-0 border border-gray-300 bg-[#ff5758] text-white rounded-sm px-3 py-1 text-sm shadow-sm z-30">
+      (click)="workData = null"
+      class="absolute -top-7 right-0 border border-gray-300 bg-[#ff5758] text-white rounded-sm px-3 py-1 text-sm shadow-sm z-30"
+    >
       CLOSE
     </button>
 
     <!-- CERTIFICATE CONTAINER -->
     <div class="relative">
-
       <!-- IMAGE -->
       <img
         src="Certif.png"
-        class="w-full h-[55vh] sm:h-[85vh]  rounded-lg shadow-lg select-none pointer-events-none" />
+        class="w-full h-[55vh] sm:h-[85vh] rounded-lg shadow-lg select-none pointer-events-none"
+      />
 
       <!-- OVERLAY CONTENT -->
-  <div class="absolute inset-0 z-10 text-gray-800
-                pt-[18%] px-[6%]
-                text-[12px] sm:text-[13px] leading-5">
+      <div
+        class="absolute inset-0 z-10 text-gray-800 pt-[18%] px-[6%] text-[12px] sm:text-[13px] leading-5"
+      >
+        <table class="w-full border-separate border-spacing-y-2">
+          <tr>
+            <td class="font-semibold pr-2 align-top whitespace-nowrap">
+              Work Title:
+            </td>
+            <td class="break-words">
+              {{ workData?.title }}
+            </td>
+          </tr>
 
-      <table class="w-full border-separate border-spacing-y-2">
+          <tr>
+            <td class="font-semibold pr-2 align-top whitespace-nowrap">
+              Copyright Owner:
+            </td>
+            <td class="break-words">
+              {{ workData?.copyright_owner }}
+            </td>
+          </tr>
 
-        <tr>
-          <td class="font-semibold pr-2 align-top whitespace-nowrap">
-            Work Title:
-          </td>
-          <td class="break-words">
-            {{ workData?.title }}
-          </td>
-        </tr>
+          <tr *ngIf="workData?.additional_copyright_owners">
+            <td class="font-semibold pr-2 align-top whitespace-nowrap">
+              Additional Owners:
+            </td>
+            <td class="break-words">
+              {{ workData?.additional_copyright_owners }}
+            </td>
+          </tr>
 
-        <tr>
-          <td class="font-semibold pr-2 align-top whitespace-nowrap">
-            Copyright Owner:
-          </td>
-          <td class="break-words">
-            {{ workData?.copyright_owner }}
-          </td>
-        </tr>
+          <tr>
+            <td class="font-semibold pr-2 whitespace-nowrap">
+              Reference Number:
+            </td>
+            <td>{{ workData?.displayed_ID }}</td>
+          </tr>
 
-        <tr *ngIf="workData?.additional_copyright_owners">
-          <td class="font-semibold pr-2 align-top whitespace-nowrap">
-            Additional Owners:
-          </td>
-          <td class="break-words">
-            {{ workData?.additional_copyright_owners }}
-          </td>
-        </tr>
+          <tr>
+            <td class="font-semibold pr-2 whitespace-nowrap">
+              Registration Date:
+            </td>
+            <td>
+              {{
+                workData?.registration_date
+                  | date: "dd MMMM yyyy, HH:mm:ss" : "UTC" 
+              }} UTC
+            </td>
+          </tr>
 
-        <tr>
-          <td class="font-semibold pr-2 whitespace-nowrap">
-            Reference Number:
-          </td>
-          <td>{{ workData?.displayed_ID }}</td>
-        </tr>
+          <tr>
+            <td class="font-semibold pr-2 whitespace-nowrap">
+              Timestamp Authority:
+            </td>
+            <td>OpenTimestamps</td>
+          </tr>
 
-        <tr>
-          <td class="font-semibold pr-2 whitespace-nowrap">
-            Registration Date:
-          </td>
-          <td>{{ workData?.registration_date | date }}</td>
-        </tr>
+          <tr>
+            <td class="font-semibold pr-2 whitespace-nowrap">File Name:</td>
+            <td class="break-all">
+              {{ workData?.file_name }}
+            </td>
+          </tr>
 
-        <tr>
-          <td class="font-semibold pr-2 whitespace-nowrap">
-            Timestamp Authority:
-          </td>
-          <td>OpenTimestamps</td>
-        </tr>
-
-        <tr>
-          <td class="font-semibold pr-2 whitespace-nowrap">
-            File Name:
-          </td>
-          <td class="break-all">
-            {{ workData?.file_name }}
-          </td>
-        </tr>
-
-        <tr>
-          <td class="font-semibold pr-2 align-top whitespace-nowrap">
-            Fingerprint:
-          </td>
-          <td class="font-mono text-[10px] sm:text-[11px] break-all">
-            {{ workData?.file_fingerprint }}
-          </td>
-        </tr>
-
-      </table>
-
-    </div>
-
-
+          <tr>
+            <td class="font-semibold pr-2 align-top whitespace-nowrap">
+              Fingerprint:
+            </td>
+            <td class="font-mono text-[10px] sm:text-[11px] break-all">
+              {{ workData?.file_fingerprint }}
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
 
     <!-- ✅ ACTION BUTTONS (ALWAYS VISIBLE) -->
-<div class="mt-4 flex flex-row gap-2 relative z-20">
+    <div class="mt-4 flex flex-row gap-2 relative z-20">
+      <button
+        (click)="download()"
+        class="flex-1 bg-[#6f8faf] hover:bg-[#5f7f9f] text-white py-2 rounded-md text-sm transition"
+      >
+        Download Work
+      </button>
 
-  <button
-    (click)="download()"
-    class="flex-1 bg-[#6f8faf] hover:bg-[#5f7f9f] text-white py-2 rounded-md text-sm transition">
-    Download Work
-  </button>
+      <button
+        (click)="viewCertificate()"
+        class="flex-1 bg-[#567ba1] hover:bg-[#486a8f] text-white py-2 rounded-md text-sm transition"
+      >
+        Download Certificate
+      </button>
 
-  <button
-    (click)="viewCertificate()"
-    class="flex-1 bg-[#567ba1] hover:bg-[#486a8f] text-white py-2 rounded-md text-sm transition">
-    Download Certificate
-  </button>
-
-  <a
-    *ngIf="workData?.otsUrl"
-    [href]="workData.otsUrl"
-    target="_blank"
-    class="flex-1 bg-[#466d94] hover:bg-[#3b5f82] text-white py-2 rounded-md text-center text-sm transition">
-    Download OTS
-  </a>
-
-</div>
-
+      <a
+        *ngIf="workData?.otsUrl"
+        [href]="workData.otsUrl"
+        target="_blank"
+        class="flex-1 bg-[#466d94] hover:bg-[#3b5f82] text-white py-2 rounded-md text-center text-sm transition"
+      >
+        Download OTS
+      </a>
+    </div>
   </div>
-
 </div>

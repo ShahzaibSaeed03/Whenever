@@ -36,32 +36,21 @@ export class RegisterUserComponent implements OnInit {
 
   ngOnInit() {
 
-    this.form = this.fb.group({
+   this.form = this.fb.group({
+  firstName: ['', Validators.required],
+  lastName: ['', Validators.required],
 
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+  email: ['', [Validators.required, Validators.email]],
+  confirmEmail: ['', Validators.required],
+  password: ['', Validators.required],
 
-      email: ['', [Validators.required, Validators.email]],
-      confirmEmail: ['', Validators.required],
-      password: ['', Validators.required],
+  companyName: [''],
+  ownerName: [''],
 
-      companyName: [''],
-      ownerName: [''],
-
-      addressLine1: ['', Validators.required],
-      addressLine2: [''],
-
-      zip: ['', Validators.required],
-      city: ['', Validators.required],
-      state: [''],
-      country: ['', Validators.required],
-
-      phone: [''],
-      profession: [''],
-      refSource: [''],
-
-
-    });
+  phone: [''],
+  profession: [''],
+  refSource: ['']
+});
 
     /* RESTORE FORM AFTER REFRESH */
 

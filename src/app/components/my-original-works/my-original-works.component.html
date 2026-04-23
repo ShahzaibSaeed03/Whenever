@@ -36,7 +36,7 @@ This is the list of your Works:
       <label class="text-sm text-[#2f4e6f] font-semibold mb-1">ID</label>
       <input
         [(ngModel)]="filters.id"
-         (input)="search()"
+         
         class="bg-white border border-gray-400 px-2 py-1 w-[100px]"
       />
     </div>
@@ -46,7 +46,7 @@ This is the list of your Works:
       <label class="text-sm text-[#2f4e6f] font-semibold mb-1">Title</label>
       <input
         [(ngModel)]="filters.title"
-         (input)="search()"
+         
         class="bg-white border border-gray-400 px-2 py-1 w-[200px]"
       />
     </div>
@@ -57,7 +57,7 @@ This is the list of your Works:
       <input
         type="date"
         [(ngModel)]="filters.from"
-         (input)="search()"
+         
         class="bg-white border border-gray-400 px-2 py-1 w-[130px]"
       />
     </div>
@@ -68,7 +68,7 @@ This is the list of your Works:
       <input
         type="date"
         [(ngModel)]="filters.to"
-         (input)="search()"
+         
         class="bg-white border border-gray-400 px-2 py-1 w-[130px]"
       />
     </div>
@@ -448,7 +448,7 @@ Cancel
             </td>
             <td class="align-top">
               <a
-                (click)="downloadAllFiles(selectedCertificate)"
+                (click)="downloadOriginalFile(selectedCertificate)"
                 class="break-all cursor-pointer underline">
                 {{ selectedCertificate?.file_name }}
               </a>

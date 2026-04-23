@@ -29,7 +29,17 @@ ngOnInit(){
 
 
 }
+formatUTCDate(dateStr: string): string {
+  if (!dateStr) return '';
 
+  const date = new Date(dateStr);
+
+  const day = date.getUTCDate().toString().padStart(2, '0');
+  const month = date.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
+  const year = date.getUTCFullYear();
+
+  return `${day} ${month} ${year}`;
+}
 /* ACCESS WORK */
 access(){
 this.workService.accessByReference(this.reference,this.password)
